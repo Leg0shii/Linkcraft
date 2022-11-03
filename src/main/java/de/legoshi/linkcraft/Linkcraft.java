@@ -2,6 +2,7 @@ package de.legoshi.linkcraft;
 
 import de.legoshi.linkcraft.database.AsyncMySQL;
 import de.legoshi.linkcraft.database.DBManager;
+import de.legoshi.linkcraft.listener.ChatListener;
 import de.legoshi.linkcraft.listener.JoinListener;
 import de.legoshi.linkcraft.listener.QuitListener;
 import de.legoshi.linkcraft.manager.PlayerManager;
@@ -44,6 +45,7 @@ public final class Linkcraft extends JavaPlugin {
         PluginManager pM = Bukkit.getPluginManager();
         pM.registerEvents(new JoinListener(playerManager), this);
         pM.registerEvents(new QuitListener(playerManager), this);
+        pM.registerEvents(new ChatListener(playerManager), this);
     }
 
     private void registerCommands() {

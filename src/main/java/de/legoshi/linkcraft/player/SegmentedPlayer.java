@@ -1,4 +1,10 @@
 package de.legoshi.linkcraft.player;
 
-public class SegmentedPlayer implements IPlayer {
+import de.legoshi.linkcraft.tag.PlayerTag;
+import org.bukkit.entity.Player;
+
+public class SegmentedPlayer extends AbstractPlayer {
+    public SegmentedPlayer(Player player, PlayerTag playerTag) {
+        super(player, playerTag);
+    }
 }
