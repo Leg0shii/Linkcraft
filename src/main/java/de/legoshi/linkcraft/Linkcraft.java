@@ -12,6 +12,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.sql.SQLException;
+
 public final class Linkcraft extends JavaPlugin {
 
     private DBManager dbManager;
@@ -28,8 +30,12 @@ public final class Linkcraft extends JavaPlugin {
 
         instance = this;
 
-        this.dbManager = new DBManager();
-        this.mySQL = this.dbManager.initializeTables();
+        this.dbManager = new DBManager(this, LCConfig.getDBFileWriter().getString("db_prefix"));
+
+        try {
+            this.mySQL = this.dbManager.initializeTables();
+        } catch (SQLException ignored) {}
+
         this.playerManager = new PlayerManager();
 
         registerEvents();
@@ -38,7 +44,7 @@ public final class Linkcraft extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
+        mySQL.getMySQL().closeConnection();
     }
 
     private void registerEvents() {

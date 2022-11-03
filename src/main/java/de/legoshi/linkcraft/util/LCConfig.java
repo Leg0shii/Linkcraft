@@ -26,19 +26,21 @@ public class LCConfig {
 
     private static void initDBConfig() {
         File fileDB = new File(configPath + dbConfigName);
-        FileWriter replayConfigDB = new FileWriter(configPath, dbConfigName);
+        FileWriter lcDbConfig = new FileWriter(configPath, dbConfigName);
         if (!fileDB.exists()) {
             try {
-                fileDB.createNewFile();
-                replayConfigDB.setValue("host", "localhost");
-                replayConfigDB.setValue("port", 3306);
-                replayConfigDB.setValue("username", "root");
-                replayConfigDB.setValue("password", "root");
-                replayConfigDB.setValue("database", "replaytest");
+                if(fileDB.createNewFile()) {
+                    lcDbConfig.setValue("host", "localhost");
+                    lcDbConfig.setValue("port", 3306);
+                    lcDbConfig.setValue("username", "root");
+                    lcDbConfig.setValue("password", "root");
+                    lcDbConfig.setValue("database", "replaytest");
+                    lcDbConfig.setValue("db_prefix", "lc_");
+                }
             } catch (Exception e) {
-                Bukkit.getConsoleSender().sendMessage("Error with loading dbconfig....");
+                Bukkit.getConsoleSender().sendMessage("[LinkCraft] Error loading dbconfig....");
             }
-            replayConfigDB.save();
+            lcDbConfig.save();
         }
     }
 
