@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS `{p}players` (
 CREATE TABLE IF NOT EXISTS `{p}tags` (
   `id`          MEDIUMINT AUTO_INCREMENT NOT NULL,
   `name`        VARCHAR(100)             NOT NULL,
-  `description` TEXT
+  `description` TEXT,
   PRIMARY KEY (`id`)
 );
 
