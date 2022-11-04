@@ -61,7 +61,7 @@ public class DBManager {
         try (InputStream is = plugin.getResource("mysql.sql")) {
 
             statements = getStatements(is).stream().map(prefixProcessor).collect(Collectors.toList());
-            mySQL.getMySQL().isConnected(true);
+            // mySQL.getMySQL().isConnected(true);
             for(String statement : statements) {
                 mySQL.update(statement);
             }
