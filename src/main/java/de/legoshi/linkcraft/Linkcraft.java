@@ -31,11 +31,7 @@ public final class Linkcraft extends JavaPlugin {
         instance = this;
 
         this.dbManager = new DBManager(this, LCConfig.getDBFileWriter().getString("db_prefix"));
-
-        try {
-            this.mySQL = this.dbManager.initializeTables();
-        } catch (SQLException ignored) {}
-
+        this.mySQL = this.dbManager.initializeTables();
         this.playerManager = new PlayerManager();
 
         registerEvents();

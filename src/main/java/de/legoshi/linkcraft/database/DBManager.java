@@ -28,19 +28,11 @@ public class DBManager {
         this.prefixProcessor = (s -> s.replace("{p}", tablePrefix));
     }
 
-    public AsyncMySQL initializeTables() throws SQLException {
+    public AsyncMySQL initializeTables() {
         this.mySQL = connectToDB();
         if(mySQL != null) {
             Bukkit.getConsoleSender().sendMessage("[LinkCraft] DB connected");
-            boolean exists;
-            try(Connection conn = mySQL.getMySQL().getConnection()) {
-                exists = tableExists(conn, prefixProcessor.apply("{p}players"));
-            }
-
-            if(!exists) {
-                createSchema();
-            }
-
+            createSchema();
         } else {
             Bukkit.getConsoleSender().sendMessage("[LinkCraft] Cannot connect to DB");
         }
@@ -106,16 +98,4 @@ public class DBManager {
         }
         return statements;
     }
-
-    private boolean tableExists(Connection conn, String table) throws SQLException {
-        try(ResultSet rs = conn.getMetaData().getTables(null, null, "%", null)) {
-            while (rs.next()) {
-                if(rs.getString("TABLE_NAME").equals(table)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
 }
