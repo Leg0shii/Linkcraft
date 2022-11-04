@@ -22,4 +22,3 @@ CREATE TABLE IF NOT EXISTS `{p}effect_blocks` (
   `z`     INT                      NOT NULL,
   PRIMARY KEY (`id`)
 );
-CREATE INDEX IF NOT EXISTS `{p}effect_blocks_world` ON `{p}effect_blocks` (`world`);
