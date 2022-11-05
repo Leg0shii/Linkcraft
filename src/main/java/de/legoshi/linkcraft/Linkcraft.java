@@ -30,6 +30,7 @@ public final class Linkcraft extends JavaPlugin {
     private AsyncMySQL mySQL;
 
     private PlayerManager playerManager;
+    private CooldownManager cooldownManager;
     private LCCommandManager commandManager;
 
     @Getter
