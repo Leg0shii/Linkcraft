@@ -1,6 +1,5 @@
 package de.legoshi.linkcraft.util;
 
-import com.sun.tools.sjavac.comp.FileObjectWithLocation;
 import org.bukkit.Bukkit;
 
 import java.io.File;

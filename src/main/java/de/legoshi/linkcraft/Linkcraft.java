@@ -1,5 +1,7 @@
 package de.legoshi.linkcraft;
 
+import de.legoshi.linkcraft.command.LCCommandManager;
+import de.legoshi.linkcraft.command.tags.*;
 import de.legoshi.linkcraft.database.AsyncMySQL;
 import de.legoshi.linkcraft.database.DBManager;
 import de.legoshi.linkcraft.listener.ChatListener;
@@ -10,16 +12,25 @@ import de.legoshi.linkcraft.manager.CooldownManager;
 import de.legoshi.linkcraft.manager.PlayerManager;
 import de.legoshi.linkcraft.util.LCConfig;
 import lombok.Getter;
+import me.kodysimpson.simpapi.colors.ColorTranslator;
+import me.kodysimpson.simpapi.command.CommandList;
+import me.kodysimpson.simpapi.command.CommandManager;
+import me.kodysimpson.simpapi.command.SubCommand;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.sql.SQLException;
+import java.util.List;
 
 public final class Linkcraft extends JavaPlugin {
 
     private DBManager dbManager;
     private AsyncMySQL mySQL;
-    private CooldownManager cooldownManager;
+
     private PlayerManager playerManager;
+    private LCCommandManager commandManager;
 
     @Getter
     private static Linkcraft instance;
@@ -34,6 +45,7 @@ public final class Linkcraft extends JavaPlugin {
         this.mySQL = this.dbManager.initializeTables();
         this.playerManager = new PlayerManager();
         this.cooldownManager = new CooldownManager();
+        this.commandManager = new LCCommandManager();
 
         registerEvents();
         registerCommands();
