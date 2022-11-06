@@ -71,8 +71,8 @@
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
         <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
+            <id>unnamed-public</id>
+            <url>https://repo.unnamed.team/repository/unnamed-public/</url>
         </repository>
     </repositories>
 
@@ -97,9 +97,9 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.KodySimpson</groupId>
-            <artifactId>SimpAPI</artifactId>
-            <version>4.3.2</version>
+            <groupId>me.fixeddev</groupId>
+            <artifactId>commandflow-universal</artifactId>
+            <version>0.5.3</version>
         </dependency>
     </dependencies>
 </project>

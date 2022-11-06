@@ -1,42 +1,37 @@
 package de.legoshi.linkcraft.command;
 
-import de.legoshi.linkcraft.Linkcraft;
-import de.legoshi.linkcraft.command.tags.*;
-import de.legoshi.linkcraft.util.message.Message;
-import de.legoshi.linkcraft.util.message.Prefix;
-import me.kodysimpson.simpapi.colors.ColorTranslator;
-import me.kodysimpson.simpapi.command.CommandManager;
+import lombok.Getter;
+import me.fixeddev.commandflow.CommandManager;
+import me.fixeddev.commandflow.SimpleCommandManager;
+import me.fixeddev.commandflow.annotated.AnnotatedCommandTreeBuilder;
+import me.fixeddev.commandflow.annotated.AnnotatedCommandTreeBuilderImpl;
+import me.fixeddev.commandflow.annotated.part.PartInjector;
+import me.fixeddev.commandflow.annotated.part.defaults.DefaultsModule;
+import me.fixeddev.commandflow.command.Command;
+import me.fixeddev.commandflow.input.QuotedSpaceTokenizer;
 
+import java.util.List;
+
+@Getter
 public class LCCommandManager {
 
+    private final CommandManager commandManager;
+    private final AnnotatedCommandTreeBuilder treeBuilder;
+
     public LCCommandManager() {
+        this.commandManager = new SimpleCommandManager();
+        commandManager.setInputTokenizer(new QuotedSpaceTokenizer());
+
+        PartInjector injector = PartInjector.create();
+        injector.install(new DefaultsModule());
+        this.treeBuilder = new AnnotatedCommandTreeBuilderImpl(injector);
+
         registerCommands();
     }
 
     private void registerCommands() {
-        registerTagCommands();
-    }
-
-    private void registerTagCommands() {
-        try {
-            CommandManager.createCoreCommand(
-                    Linkcraft.getInstance(),
-                    "tags",
-                    Message.COMMAND_TAG_DESCRIPTION.msg(),
-                    "/tags",
-                    (player, subCommandList) -> {
-                        player.sendMessage(ColorTranslator.translateColorCodes(Message.COMMAND_HEADER.msg(Prefix.INFO, "Tags")));
-                        subCommandList.forEach(subCommand -> {
-                            if (player.hasPermission("lc.tags." + subCommand.getName())) {
-                                player.sendMessage(ColorTranslator.translateColorCodes("&3> &a" + subCommand.getSyntax()));
-                            }
-                        });
-                    },
-                    TagsAddCommand.class, TagsEditCommand.class, TagsRemoveCommand.class, TagsSetCommand.class, TagsUnsetCommand.class
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        List<Command> commands = treeBuilder.fromClass(new TagCommand());
+        commandManager.registerCommands(commands);
     }
 
 }
