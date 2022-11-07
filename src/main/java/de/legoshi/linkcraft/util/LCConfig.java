@@ -33,7 +33,7 @@ public class LCConfig {
                     lcDbConfig.setValue("port", 3306);
                     lcDbConfig.setValue("username", "root");
                     lcDbConfig.setValue("password", "root");
-                    lcDbConfig.setValue("database", "replaytest");
+                    lcDbConfig.setValue("database", "lc_database");
                     lcDbConfig.setValue("db_prefix", "lc_");
                 }
             } catch (Exception e) {
