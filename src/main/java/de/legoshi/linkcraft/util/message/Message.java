@@ -19,7 +19,8 @@ public enum Message {
 
     PLAYER_JOIN("{0} joined the Server!"),
     PLAYER_LEAVE("{0} left the Server!"),
-    CMD_COOLDOWN("Please wait {0} second(s) before your next command.");
+    CMD_COOLDOWN_GLOBAL("&cPlease wait {0} second(s) before your next command."),
+    CMD_COOLDOWN("&cPlease wait {0} second{s} before you can use this command again.");
 
     public final String m;
 
@@ -65,6 +66,15 @@ public enum Message {
             result = message.replace("{" + i + "}", Objects.nonNull(replacement) ? replacement : "<?>");
         }
         return result;
+    }
+
+    public static Message fromString(String string) {
+        for(Message m : Message.values()) {
+            if(m.name().equalsIgnoreCase(string)) {
+                return m;
+            }
+        }
+        return null;
     }
 
     public String getRawMessage() {

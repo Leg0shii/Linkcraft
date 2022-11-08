@@ -1,5 +1,5 @@
 name: Linkcraft
 version: '${project.version}'
 main: de.legoshi.linkcraft.Linkcraft
-authors: [ Legoshi, DKay, KingBranBran ]
+authors: [ Legoshi, Dkay, KingBranBran ]
 description: Plugin for Linkcraft's Server

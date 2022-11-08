@@ -37,7 +37,7 @@ public final class Linkcraft extends JavaPlugin {
         this.dbManager = new DBManager(this, LCConfig.getDBFileWriter().getString("db_prefix"));
         this.mySQL = this.dbManager.initializeTables();
         this.playerManager = new PlayerManager();
-        this.cooldownManager = new CooldownManager();
+        this.cooldownManager = new CooldownManager(dbManager);
 
         this.lcCommandManager = new LCCommandManager();
 

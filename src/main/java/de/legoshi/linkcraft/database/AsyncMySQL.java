@@ -95,8 +95,8 @@ public class AsyncMySQL {
      * The consumer object returns the ResultSet of the query.
      * @param statement sql query as PreparedStatement object
      */
-    public void query(PreparedStatement statement) {
-        sql.query(statement);
+    public ResultSet query(PreparedStatement statement) {
+        return sql.query(statement);
     }
 
     /**

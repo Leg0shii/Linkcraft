@@ -22,3 +22,20 @@ CREATE TABLE IF NOT EXISTS `{p}effect_blocks` (
   `z`     INT                      NOT NULL,
   PRIMARY KEY (`id`)
 );
+
+-- Cooldown time is stored in seconds
+-- Command is stored without slash ex: ("gg", "45000")
+CREATE TABLE IF NOT EXISTS `{p}command_cooldowns` (
+    `command`  VARCHAR(200) NOT NULL,
+    `cooldown` MEDIUMINT    NOT NULL,
+    `message`  TEXT,
+    PRIMARY KEY (`command`)
+);
+
+-- working example for longer cooldown commands
+INSERT IGNORE INTO `{p}command_cooldowns` (command, cooldown) VALUES ("gg", 45000);
+INSERT IGNORE INTO `{p}command_cooldowns` (command, cooldown) VALUES ("gl", 45000);
+INSERT IGNORE INTO `{p}command_cooldowns` (command, cooldown) VALUES ("rip", 45000);
+INSERT IGNORE INTO `{p}command_cooldowns` (command, cooldown) VALUES ("ham", 45000);
+INSERT IGNORE INTO `{p}command_cooldowns` (command, cooldown) VALUES ("bacon", 45000);
+INSERT IGNORE INTO `{p}command_cooldowns` (command, cooldown) VALUES ("eggs", 45000);

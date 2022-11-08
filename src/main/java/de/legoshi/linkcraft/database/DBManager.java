@@ -1,7 +1,9 @@
 package de.legoshi.linkcraft.database;
 import de.legoshi.linkcraft.Linkcraft;
+import de.legoshi.linkcraft.util.Cooldown;
 import de.legoshi.linkcraft.util.FileWriter;
 import de.legoshi.linkcraft.util.LCConfig;
+import de.legoshi.linkcraft.util.message.Message;
 import org.bukkit.Bukkit;
 
 import java.io.BufferedReader;
@@ -9,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ public class DBManager {
     public AsyncMySQL mySQL;
     private final Function<String, String> prefixProcessor;
     private final Linkcraft plugin;
+    private final String COMMAND_COOLDOWNS_SELECT = "SELECT * FROM {p}command_cooldowns WHERE LOWER(command)=LOWER(?);";
 
     public DBManager(Linkcraft plugin, String tablePrefix) {
         this.plugin = plugin;
@@ -97,5 +100,30 @@ public class DBManager {
             e.printStackTrace();
         }
         return statements;
+    }
+
+    // Not sure if we want this here, just putting it here atm
+    public Cooldown getCooldownInfo(String commandName) {
+        Cooldown cd = null;
+        PreparedStatement stmt = mySQL.prepare(prefixProcessor.apply(COMMAND_COOLDOWNS_SELECT));
+        try {
+            stmt.setString(1, commandName);
+            ResultSet rs = mySQL.query(stmt);
+
+            if(rs.next()) {
+                String message = rs.getString("message");
+                if(message != null) {
+                    // TODO: I don't like this code (should support custom messages not only from the Message enum)
+                    // My guess would probably being storing the message as a string on the cooldown object, but I think it's ok not to support this for the time being
+                    //Message msg = Message.fromString(message);
+                    //cd = new Cooldown(rs.getInt("cooldown"), msg == null ? Message.CMD_COOLDOWN : msg);
+                } else {
+                    cd = new Cooldown(rs.getInt("cooldown"), Message.CMD_COOLDOWN);
+                }
+            }
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return cd;
     }
 }

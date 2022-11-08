@@ -15,7 +15,7 @@ public class Cooldown {
     private final Message message;
 
     public Cooldown(long length) {
-        this(System.currentTimeMillis(), length, Message.CMD_COOLDOWN);
+        this(System.currentTimeMillis(), length, Message.CMD_COOLDOWN_GLOBAL);
     }
 
     public Cooldown(long length, Message message) {

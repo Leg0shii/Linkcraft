@@ -1,5 +1,6 @@
 package de.legoshi.linkcraft.manager;
 
+import de.legoshi.linkcraft.database.DBManager;
 import de.legoshi.linkcraft.util.Cooldown;
 import de.legoshi.linkcraft.util.message.Prefix;
 import org.bukkit.entity.Player;
@@ -13,12 +14,17 @@ public class CooldownManager {
 
     private final Map<Player, Cooldown> globalCooldowns = new HashMap<>();
     private final Map<Player, Map<String, Cooldown>> cooldowns = new HashMap<>();
+    private final DBManager dbManager;
+
+    public CooldownManager(DBManager dbManager) {
+        this.dbManager = dbManager;
+    }
 
     public boolean hasCooldown(Player player, String commandName) {
         if(containsPlayer(player)) {
             Map<String, Cooldown> pCds = cooldowns.get(player);
-            if(pCds.get(commandName) != null) {
-                return !pCds.get(commandName).isCooledDown();
+            if(pCds.get(commandName.toLowerCase()) != null) {
+                return !pCds.get(commandName.toLowerCase()).isCooledDown();
             }
         }
         return false;
@@ -45,7 +51,7 @@ public class CooldownManager {
     }
 
     public Cooldown getCooldown(Player player, String commandName) {
-        return cooldowns.get(player).get(commandName);
+        return cooldowns.get(player).get(commandName.toLowerCase());
     }
 
     public Cooldown getGlobalCooldown(Player player) {
@@ -58,12 +64,10 @@ public class CooldownManager {
                 cooldowns.put(player, new HashMap<>());
             }
 
-            // TODO: query database for custom cooldowns if it is a needed feature
-            // As
-            // Example: (data gotten from config or database), possibly check for aliases if possible, but that seems kinda broken?)
-            // if(commandName.equals("/help")) {
-            //    cooldowns.get(player).put(commandName, new Cooldown(10000, Message.PLAYER_JOIN));
-            // }
+            Cooldown cooldown = dbManager.getCooldownInfo(commandName.toLowerCase());
+            if(cooldown != null) {
+                cooldowns.get(player).put(commandName.toLowerCase(), cooldown);
+            }
         }
 
     }
