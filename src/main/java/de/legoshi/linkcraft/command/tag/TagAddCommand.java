@@ -9,16 +9,15 @@ import org.bukkit.command.CommandSender;
 
 import javax.inject.Inject;
 
-@RequiredArgsConstructor
-@Command(names = "add", permission = "lc.tags.add")
+@Command(names = "add", permission = "lc.tags.add", permissionMessage = "You cant do that!!!!")
 public class TagAddCommand implements CommandClass {
 
-    // @Inject private final DBManager dbManager;
+    @Inject private DBManager dbManager;
 
     @Command(names = "")
     public boolean addTags(CommandSender sender) {
-        sender.sendMessage(ChatColor.YELLOW + "Add a playertag");
-        //System.out.println(dbManager.message);
+        sender.sendMessage(ChatColor.YELLOW + "Add a playertag" + " " + dbManager.message);
+        System.out.println(dbManager.mySQL);
         return true;
     }
 

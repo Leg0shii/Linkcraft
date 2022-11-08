@@ -26,13 +26,19 @@ public class DBManager {
     private final Linkcraft plugin;
     private final String COMMAND_COOLDOWNS_SELECT = "SELECT * FROM {p}command_cooldowns WHERE LOWER(command)=LOWER(?);";
 
+    public String message;
+
     public DBManager(Linkcraft plugin, String tablePrefix) {
         this.plugin = plugin;
         this.prefixProcessor = (s -> s.replace("{p}", tablePrefix));
+
+        this.message = "hujodfhjsadfhjusdf";
+        this.mySQL = connectToDB();
+
+        System.out.println("Called");
     }
 
     public AsyncMySQL initializeTables() {
-        this.mySQL = connectToDB();
         if(mySQL != null) {
             Bukkit.getConsoleSender().sendMessage("[LinkCraft] DB connected");
             createSchema();

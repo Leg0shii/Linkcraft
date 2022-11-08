@@ -31,9 +31,6 @@ public final class Linkcraft extends JavaPlugin {
     public void onEnable() {
         LCConfig.initConfig();
 
-        // Injector injector = Injector.create(new LinkcraftModule(this));
-        // injector.injectMembers(this);
-
         this.dbManager = new DBManager(this, LCConfig.getDBFileWriter().getString("db_prefix"));
         this.mySQL = this.dbManager.initializeTables();
         this.playerManager = new PlayerManager();
