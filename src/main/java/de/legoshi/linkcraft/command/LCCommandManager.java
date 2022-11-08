@@ -1,37 +1,56 @@
 package de.legoshi.linkcraft.command;
 
+import de.legoshi.linkcraft.command.tag.TagCommand;
+import de.legoshi.linkcraft.database.DBManager;
 import lombok.Getter;
 import me.fixeddev.commandflow.CommandManager;
-import me.fixeddev.commandflow.SimpleCommandManager;
 import me.fixeddev.commandflow.annotated.AnnotatedCommandTreeBuilder;
 import me.fixeddev.commandflow.annotated.AnnotatedCommandTreeBuilderImpl;
+import me.fixeddev.commandflow.annotated.CommandClass;
+import me.fixeddev.commandflow.annotated.builder.AnnotatedCommandBuilderImpl;
 import me.fixeddev.commandflow.annotated.part.PartInjector;
+import me.fixeddev.commandflow.annotated.part.SimplePartInjector;
 import me.fixeddev.commandflow.annotated.part.defaults.DefaultsModule;
-import me.fixeddev.commandflow.command.Command;
-import me.fixeddev.commandflow.input.QuotedSpaceTokenizer;
+import me.fixeddev.commandflow.bukkit.factory.BukkitModule;
+import org.bukkit.plugin.Plugin;
+import team.unnamed.inject.Injector;
 
-import java.util.List;
+import javax.inject.Inject;
 
 @Getter
 public class LCCommandManager {
 
-    private final CommandManager commandManager;
-    private final AnnotatedCommandTreeBuilder treeBuilder;
+    @Inject private CommandManager commandManager;
+
+    @Inject private Plugin plugin;
+    @Inject private Injector injector;
+    // @Inject private DBManager dbManager;
+
+    @Inject private TagCommand tagCommand;
 
     public LCCommandManager() {
-        this.commandManager = new SimpleCommandManager();
-        commandManager.setInputTokenizer(new QuotedSpaceTokenizer());
-
-        PartInjector injector = PartInjector.create();
+        /* PartInjector injector = PartInjector.create();
         injector.install(new DefaultsModule());
-        this.treeBuilder = new AnnotatedCommandTreeBuilderImpl(injector);
+        injector.install(new BukkitModule());
 
-        registerCommands();
+        register(
+                tagCommand
+        ); */
     }
 
-    private void registerCommands() {
-        List<Command> commands = treeBuilder.fromClass(new TagCommand());
-        commandManager.registerCommands(commands);
+    private void register(CommandClass... commandClasses) {
+        PartInjector partInjector = new SimplePartInjector();
+        partInjector.install(new BukkitModule());
+        partInjector.install(new DefaultsModule());
+
+        AnnotatedCommandTreeBuilder treeBuilder = new AnnotatedCommandTreeBuilderImpl(
+                new AnnotatedCommandBuilderImpl(partInjector),
+                (clazz, parent) -> injector.getInstance(clazz)
+        );
+
+        for (CommandClass commandClass : commandClasses) {
+            commandManager.registerCommands(treeBuilder.fromClass(commandClass));
+        }
     }
 
 }

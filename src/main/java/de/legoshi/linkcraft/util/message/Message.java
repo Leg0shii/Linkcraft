@@ -21,7 +21,7 @@ public enum Message {
     PLAYER_LEAVE("{0} left the Server!"),
     CMD_COOLDOWN("Please wait {0} second(s) before your next command.");
 
-    final String m;
+    public final String m;
 
     Message(String message) {
         this.m = message;
