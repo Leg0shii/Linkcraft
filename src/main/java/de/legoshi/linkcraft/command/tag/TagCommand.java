@@ -26,7 +26,7 @@ public class TagCommand implements CommandClass {
     @Inject private DBManager databaseService;
 
     @Command(names = "help")
-    public boolean tagsHelp(CommandSender sender, @Named("sup") String sup) {
+    public boolean tagsHelp(CommandSender sender) {
         String message = MessageUtils.composeMessage(Messages.COMMAND_LIST_PAGE_HEADER, false, "tags");
         message = message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "tags", "help");
         message = message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "tags", "add", "<name>", "<rarity>", "[description]");
@@ -40,8 +40,8 @@ public class TagCommand implements CommandClass {
     }
 
     @Command(names = "")
-    public boolean tags(@Sender CommandSender sender, @Named("sup") String sup) {
-        sender.sendMessage(ChatColor.YELLOW + "Now your tags will be opened!!!" + databaseService.message);
+    public boolean tags(@Sender CommandSender sender) {
+        sender.sendMessage(ChatColor.YELLOW + "Now your tags will be opened!");
         System.out.println(databaseService.mySQL);
         return true;
     }

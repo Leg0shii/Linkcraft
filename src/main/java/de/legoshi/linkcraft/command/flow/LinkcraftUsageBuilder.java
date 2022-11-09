@@ -7,16 +7,12 @@ import lombok.RequiredArgsConstructor;
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.command.Command;
-import me.fixeddev.commandflow.part.CommandPart;
-import me.fixeddev.commandflow.part.defaults.SequentialCommandPart;
-import me.fixeddev.commandflow.part.defaults.SubCommandPart;
 import me.fixeddev.commandflow.translator.Translator;
 import me.fixeddev.commandflow.usage.UsageBuilder;
 import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 
-import javax.inject.Inject;
-import java.util.Arrays;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class LinkcraftUsageBuilder implements UsageBuilder {
@@ -40,21 +36,8 @@ public class LinkcraftUsageBuilder implements UsageBuilder {
             description = MessageUtils.messageOf(Messages.UNKNOWN_DESC);
         }
 
-        TextComponent.Builder builder = TextComponent.builder(label).append(" ").append(formatPart(partComponents));
-
-        // how do i remove the [subcommand] from the textcomponent
-        CommandPart part = command.getPart();
-        if (part instanceof SequentialCommandPart part1) {
-            for (CommandPart subCommand : part1.getParts()) {
-                if (subCommand instanceof SubCommandPart subCommandPart) {
-                    for (Command command1 : subCommandPart.getSubCommands()) {
-                        builder.append(":").append(command1.getName());
-                    }
-                }
-            }
-        }
-        TextComponent component = builder.build();
-        return MessageUtils.composeComponent(labelComponent, Arrays.asList(component, description), false);
+        TextComponent component =TextComponent.builder(label).build();
+        return MessageUtils.composeComponent(labelComponent, List.of(component), false);
     }
 
     private Component formatPart(Component component) {

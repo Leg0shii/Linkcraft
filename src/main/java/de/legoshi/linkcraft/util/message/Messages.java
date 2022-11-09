@@ -12,7 +12,7 @@ public enum Messages {
     COMMAND_HEADER("§3Command list for §7§l{0}", "help"),
     COMMAND_SYNTAX("/{0} {1} {2} {3} {4} {5} {6} {7} {8}", "help"),
     UNKNOWN_DESC("{0} command.", "description"),
-    USAGE_ENTRY("§f/{0} - {1}", "help"),
+    USAGE_ENTRY("§f/{0}", "help"),
     INVALID_COMMAND("command invalid", "error"),
 
     MESSAGE_GG("§6§lG§e§lG", "other"),
