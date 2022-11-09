@@ -20,8 +20,6 @@ public class LinkcraftTranslationProvider implements TranslationProvider {
         this.translations.put("command.subcommand.invalid", Messages.INVALID_COMMAND);
         this.translations.put("command.no-permission", Messages.PLAYER_NO_PERMISSION);
         this.translations.put("argument.no-more", Messages.INVALID_ARG_LENGTH);
-
-        this.translations.put("command.tag-description", Messages.COMMAND_TAG);
         this.translations.put("command.tag-usage", Messages.COMMAND_SYNTAX);
 
         // Getting all the enum's name descriptions of commands

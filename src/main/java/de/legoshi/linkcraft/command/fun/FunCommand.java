@@ -2,51 +2,48 @@ package de.legoshi.linkcraft.command.fun;
 
 import de.legoshi.linkcraft.util.message.MessageUtils;
 import de.legoshi.linkcraft.util.message.Messages;
-import de.legoshi.linkcraft.util.message.Prefix;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
-import me.fixeddev.commandflow.annotated.annotation.Required;
 import me.fixeddev.commandflow.bukkit.annotation.Sender;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class FunCommand implements CommandClass {
 
-    @Command(names = "gg", desc = "Write gg in chat.")
+    @Command(names = "gg", desc = "%translatable:gg.desc%")
     public void gg(@Sender CommandSender sender) {
         if (!(sender instanceof Player player)) return;
-        player.chat(MessageUtils.getMessageTranslated(Messages.COMMAND_GG));
+        player.chat(MessageUtils.getMessageTranslated(Messages.MESSAGE_GG));
     }
 
-    @Command(names = "gl", desc = "Write gl in chat.")
+    @Command(names = "gl", desc = "%translatable:gl.desc%")
     public void gl(@Sender CommandSender sender) {
         if (!(sender instanceof Player player)) return;
-        player.chat(MessageUtils.getMessageTranslated(Messages.COMMAND_GL));
+        player.chat(MessageUtils.getMessageTranslated(Messages.MESSAGE_GL));
     }
 
-    @Command(names = "rip", desc = "Write rip in chat.")
+    @Command(names = "rip", desc = "%translatable:rip.desc%")
     public void rip(@Sender CommandSender sender) {
         if (!(sender instanceof Player player)) return;
-        player.chat(MessageUtils.getMessageTranslated(Messages.COMMAND_RIP));
+        player.chat(MessageUtils.getMessageTranslated(Messages.MESSAGE_RIP));
     }
 
-    @Command(names = "ham", desc = "Write ham in chat.")
+    @Command(names = "ham", desc = "%translatable:ham.desc%")
     public void ham(@Sender CommandSender sender) {
         if (!(sender instanceof Player player)) return;
-        player.chat(MessageUtils.getMessageTranslated(Messages.COMMAND_HAM));
+        player.chat(MessageUtils.getMessageTranslated(Messages.MESSAGE_HAM));
     }
 
-    @Command(names = "bacon", desc = "Write bacon in chat.")
+    @Command(names = "bacon", desc = "%translatable:bacon.desc%")
     public void bacon(@Sender CommandSender sender) {
         if (!(sender instanceof Player player)) return;
-        player.chat(MessageUtils.getMessageTranslated(Messages.COMMAND_BACON));
+        player.chat(MessageUtils.getMessageTranslated(Messages.MESSAGE_BACON));
     }
 
-    @Command(names = "eggs", desc = "Write eggs in chat.")
+    @Command(names = "eggs", desc = "%translatable:eggs.desc%")
     public void eggs(@Sender CommandSender sender) {
         if (!(sender instanceof Player player)) return;
-        player.chat(MessageUtils.getMessageTranslated(Messages.COMMAND_EGGS));
+        player.chat(MessageUtils.getMessageTranslated(Messages.MESSAGE_EGGS));
     }
 
 }
