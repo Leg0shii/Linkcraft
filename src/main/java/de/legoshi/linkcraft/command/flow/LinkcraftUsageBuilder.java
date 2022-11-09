@@ -25,7 +25,7 @@ public class LinkcraftUsageBuilder implements UsageBuilder {
 
         String label = String.join(" ", commandContext.getLabels());
 
-        String labelComponent = MessageUtils.getMessageTranslated(Messages.USAGE_ENTRY, true);
+        String labelComponent = MessageUtils.getMessageTranslated(Messages.USAGE_ENTRY);
         Component partComponents = command.getPart().getLineRepresentation();
         Component description = getTranslatedDescription(command);
 
@@ -36,7 +36,7 @@ public class LinkcraftUsageBuilder implements UsageBuilder {
             description = MessageUtils.messageOf(Messages.UNKNOWN_DESC);
         }
 
-        TextComponent component =TextComponent.builder(label).build();
+        TextComponent component = TextComponent.builder(label).build();
         return MessageUtils.composeComponent(labelComponent, List.of(component), false);
     }
 

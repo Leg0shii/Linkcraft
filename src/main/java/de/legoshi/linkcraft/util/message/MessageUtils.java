@@ -1,9 +1,7 @@
 package de.legoshi.linkcraft.util.message;
 
-import com.google.common.base.Strings;
 import de.legoshi.linkcraft.Linkcraft;
 import de.legoshi.linkcraft.util.CommonsUtils;
-import de.legoshi.linkcraft.util.LinkcraftColor;
 import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 import net.kyori.text.event.ClickEvent;
@@ -158,10 +156,6 @@ public interface MessageUtils {
         return messageBuilder(message).color(color);
     }
 
-    static TextComponent.Builder messageBuilder(Messages message, LinkcraftColor color) {
-        return messageBuilder(message, color.getDefaultTextColor());
-    }
-
     static HoverEvent hoverTextOf(Messages message, Object... objects) {
         String text = getMessageTranslated(message);
         text = CommonsUtils.formatPlaceholder(text, objects);
@@ -197,22 +191,6 @@ public interface MessageUtils {
         return Linkcraft.getPlugin().getLogger();
     }
 
-    /**
-     * Translate any MargaretColor symbol to Legacy ChatColor.
-     *
-     * @param message - String converted to Legacy ChatColor.
-     */
-    static String translateMargaretColor(String message) {
-        for (int i = 0; i < LinkcraftColor.values().length; i++) {
-            LinkcraftColor color = LinkcraftColor.values()[i];
-            message = message.replace("$" + i, getChatColorOf(color).toString());
-        }
-
-        // Doesn't exist color number 5.
-        // Just using to reset colors.
-        return message.replace("$5", ChatColor.RESET.toString());
-    }
-
     static String translateChatColor(String s) {
         return ChatColor.translateAlternateColorCodes('&', s);
     }
@@ -229,7 +207,7 @@ public interface MessageUtils {
         TextComponent.Builder builder = newBuilder(prefix);
         String send = processMessage(message);
         builder.append(objects.length > 0 ? CommonsUtils.formatPlaceholder(send, objects) : send);
-        String m = toLegacy(builder.colorIfAbsent(LinkcraftColor.BASE.getDefaultTextColor()).build());
+        String m = toLegacy(builder.build());
         for (int i = objects.length; i < 10; i++) m = m.replace("{"+i+"} ", "").replace("{"+i+"}", "");
         return m;
     }
@@ -253,7 +231,7 @@ public interface MessageUtils {
     }
 
     static Component composeComponent(Component message, boolean prefix) {
-        return newBuilder(prefix).append(message).colorIfAbsent(LinkcraftColor.BASE.getDefaultTextColor()).build();
+        return newBuilder(prefix).append(message).build();
     }
 
     static TextComponent.Builder newBuilder(boolean prefix) {
@@ -314,7 +292,7 @@ public interface MessageUtils {
             message = String.valueOf(send);
         }
 
-        return translateMargaretColor(message);
+        return message;
     }
 
     static boolean componentIsEmpty(Component component) {
@@ -332,38 +310,11 @@ public interface MessageUtils {
      * @return Message translated or default.
      */
     static String getMessageTranslated(Messages message) {
-        return getMessageTranslated(message, true);
-    }
-
-    /**
-     * Get the message translated by the messages YamlFile.
-     *
-     * @param message  Message to get in yaml
-     * @param colorize Translate Margaret colors.
-     * @return Message translated or default.
-     */
-    static String getMessageTranslated(Messages message, boolean colorize) {
-        // FileConfiguration messagesConfig = MargaretYamlStorage.getMessageConfig();
-        // String translated = messagesConfig == null ? message.getMessage() : messagesConfig.getString(message.getNode(), message.getMessage());
-        String translated = message.getMessage();
-        return colorize ? translateMargaretColor(translated) : translated;
+        return message.getMessage();
     }
 
     static TextColor asTextColor(ChatColor chatColor) {
         return TextColor.valueOf(chatColor.name());
-    }
-
-    static TextColor getTextColorOf(LinkcraftColor linkcraftColor) {
-        /* FileConfiguration colorConfig = MargaretYamlStorage.getMessageColorsConfig();
-        if (colorConfig == null) {
-            return linkcraftColor.getDefaultTextColor();
-        } */
-        // String textColorName = colorConfig.getString(linkcraftColor.toString().toLowerCase());
-        return /* Strings.isNullOrEmpty(textColorName) ? */ linkcraftColor.getDefaultTextColor() /*: TextColor.valueOf(textColorName.toUpperCase())*/;
-    }
-
-    static ChatColor getChatColorOf(LinkcraftColor linkcraftColor) {
-        return ChatColor.valueOf(getTextColorOf(linkcraftColor).toString().toUpperCase());
     }
 
     static void sendMessage(CommandSender sender, Component send) {

@@ -34,12 +34,6 @@ public class FunCommand implements CommandClass {
         player.chat(MessageUtils.getMessageTranslated(Messages.MESSAGE_HAM));
     }
 
-    @Command(names = "bacon", desc = "%translatable:bacon.desc%")
-    public void bacon(@Sender CommandSender sender) {
-        if (!(sender instanceof Player player)) return;
-        player.chat(MessageUtils.getMessageTranslated(Messages.MESSAGE_BACON));
-    }
-
     @Command(names = "eggs", desc = "%translatable:eggs.desc%")
     public void eggs(@Sender CommandSender sender) {
         if (!(sender instanceof Player player)) return;

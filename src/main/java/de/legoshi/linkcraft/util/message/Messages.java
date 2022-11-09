@@ -19,7 +19,6 @@ public enum Messages {
     MESSAGE_GL("§2§lG§a§lL ☺", "other"),
     MESSAGE_RIP("§0§lR§8§lI§f§lP ☹", "other"),
     MESSAGE_HAM("§d§lha §cm", "other"),
-    MESSAGE_BACON("BACON", "other"),
     MESSAGE_EGGS("§6§lE§e§lG§6§lg§e§lS", "other"),
 
     TAGS_DESC("§fSee your tags! For help type /tags help", "description"),

@@ -3,15 +3,17 @@ package de.legoshi.linkcraft.command.tag;
 import de.legoshi.linkcraft.database.DBManager;
 import de.legoshi.linkcraft.util.message.MessageUtils;
 import de.legoshi.linkcraft.util.message.Messages;
+import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.annotated.CommandClass;
+import me.fixeddev.commandflow.annotated.annotation.ArgOrSub;
 import me.fixeddev.commandflow.annotated.annotation.Command;
+import me.fixeddev.commandflow.annotated.annotation.OptArg;
 import me.fixeddev.commandflow.annotated.annotation.SubCommandClasses;
 import me.fixeddev.commandflow.bukkit.annotation.Sender;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 @Command(names = "tags", desc = "%translatable:tags.desc%")
 @SubCommandClasses({
@@ -21,6 +23,7 @@ import javax.inject.Named;
         TagsSetCommand.class,
         TagsUnsetCommand.class
 })
+@ArgOrSub(value = true)
 public class TagCommand implements CommandClass {
 
     @Inject private DBManager databaseService;
@@ -40,9 +43,12 @@ public class TagCommand implements CommandClass {
     }
 
     @Command(names = "")
-    public boolean tags(@Sender CommandSender sender) {
+    public boolean tags(@Sender CommandSender sender, CommandContext commandContext) {
+        if (commandContext.getArguments().size() > 1) {
+            tagsHelp(sender);
+            return true;
+        }
         sender.sendMessage(ChatColor.YELLOW + "Now your tags will be opened!");
-        System.out.println(databaseService.mySQL);
         return true;
     }
 
