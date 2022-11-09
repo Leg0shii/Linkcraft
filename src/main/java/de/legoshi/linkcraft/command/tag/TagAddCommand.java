@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 @Command(names = "add", desc = "%translatable:tags.add.desc%")
 public class TagAddCommand implements CommandClass {
@@ -14,7 +15,7 @@ public class TagAddCommand implements CommandClass {
     @Inject private DBManager databaseService;
 
     @Command(names = "")
-    public boolean addTags(CommandSender sender) {
+    public boolean addTags(CommandSender sender, @Named("args") String ar) {
         sender.sendMessage(ChatColor.YELLOW + "Add a playertag");
         return true;
     }

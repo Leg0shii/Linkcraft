@@ -12,7 +12,7 @@ public enum Messages {
     COMMAND_HEADER("§3Command list for §7§l{0}", "help"),
     COMMAND_SYNTAX("/{0} {1} {2} {3} {4} {5} {6} {7} {8}", "help"),
     UNKNOWN_DESC("{0} command.", "description"),
-    USAGE_ENTRY("§f/{0}", "help"),
+    USAGE_ENTRY("§f/{0} - {1}", "help"),
     INVALID_COMMAND("command invalid", "error"),
 
     MESSAGE_GG("§6§lG§e§lG", "other"),
@@ -23,18 +23,18 @@ public enum Messages {
     MESSAGE_EGGS("§6§lE§e§lG§6§lg§e§lS", "other"),
 
     TAGS_DESC("§fSee your tags! For help type /tags help", "description"),
-    /* TAGS_ADD_DESC("Add a new tag to the servers tag list.", "description"),
+    TAGS_ADD_DESC("Add a new tag to the servers tag list.", "description"),
     TAGS_EDIT_DESC("Edit a currently existing tag.", "description"),
     TAGS_REMOVE_DESC("Delete a tag from the servers tag list.", "description"),
     TAGS_SET_DESC("Give a tag to a specified player.", "description"),
-    TAGS_UNSET_DESC("Remove a tag from a specified player.", "description"), */
+    TAGS_UNSET_DESC("Remove a tag from a specified player.", "description"),
 
-    GG_DESC("Write §6§lG§e§lG§f in chat.", "description"),
-    GL_DESC("Write §2§lG§a§lL ☺§f in chat.", "description"),
-    RIP_DESC("Write §0§lR§8§lI§f§lP ☹§f in chat.", "description"),
-    HAM_DESC("Write §d§lha §c§lm§f in chat.", "description"),
-    BACON_DESC("Write BACON in chat.", "description"),
-    EGGS_DESC("Write §6§lE§e§lG§6§lg§e§lS§f in chat.", "description"),
+    GG_DESC("§fWrite §6§lG§e§lG§f in chat.", "description"),
+    GL_DESC("§fWrite §2§lG§a§lL ☺§f in chat.", "description"),
+    RIP_DESC("§fWrite §0§lR§8§lI§f§lP ☹§f in chat.", "description"),
+    HAM_DESC("§fWrite §d§lha §c§lm§f in chat.", "description"),
+    BACON_DESC("§fWrite BACON in chat.", "description"),
+    EGGS_DESC("§fWrite §6§lE§e§lG§6§lg§e§lS§f in chat.", "description"),
 
     PLAYER_JOIN("{0} joined the Server!", "info"),
     PLAYER_LEAVE("{0} left the Server!", "info"),

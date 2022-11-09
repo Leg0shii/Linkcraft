@@ -12,10 +12,15 @@ import me.fixeddev.commandflow.annotated.part.PartInjector;
 import me.fixeddev.commandflow.annotated.part.SimplePartInjector;
 import me.fixeddev.commandflow.annotated.part.defaults.DefaultsModule;
 import me.fixeddev.commandflow.bukkit.factory.BukkitModule;
+import me.fixeddev.commandflow.command.Command;
 import org.bukkit.plugin.Plugin;
 import team.unnamed.inject.Injector;
 
 import javax.inject.Inject;
+import java.util.Map;
+import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class CommandService implements Service {
 
