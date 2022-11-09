@@ -1,28 +1,18 @@
 package de.legoshi.linkcraft.listener;
 
-import de.legoshi.linkcraft.command.LCCommandManager;
+import de.legoshi.linkcraft.database.DatabaseService;
 import de.legoshi.linkcraft.manager.CooldownManager;
-import lombok.RequiredArgsConstructor;
-import me.fixeddev.commandflow.CommandManager;
-import me.fixeddev.commandflow.Namespace;
-import me.fixeddev.commandflow.NamespaceImpl;
-import me.fixeddev.commandflow.exception.CommandException;
-import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.server.ServerCommandEvent;
 
-import java.util.Arrays;
+import javax.inject.Inject;
 
-@RequiredArgsConstructor
 public class CommandListener implements Listener {
 
-    private final CooldownManager cooldownManager;
-    private final LCCommandManager lcCommandManager;
+    // @Inject private DatabaseService dbManager;
+    @Inject private CooldownManager cooldownManager;
 
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent event) {

@@ -9,10 +9,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-@RequiredArgsConstructor
+import javax.inject.Inject;
+
 public class ChatListener implements Listener {
 
-    private final PlayerManager playerManager;
+    @Inject private PlayerManager playerManager;
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {

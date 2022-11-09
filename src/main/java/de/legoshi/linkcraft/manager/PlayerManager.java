@@ -11,8 +11,7 @@ import java.util.HashMap;
 
 public class PlayerManager {
 
-    @Getter
-    private final HashMap<Player, AbstractPlayer> hashMap;
+    @Getter private final HashMap<Player, AbstractPlayer> hashMap;
 
     public PlayerManager() {
         this.hashMap = new HashMap<>();

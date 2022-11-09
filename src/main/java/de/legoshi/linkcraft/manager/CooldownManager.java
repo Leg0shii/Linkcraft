@@ -1,24 +1,24 @@
 package de.legoshi.linkcraft.manager;
 
-import de.legoshi.linkcraft.database.DBManager;
+import de.legoshi.linkcraft.database.DatabaseService;
 import de.legoshi.linkcraft.util.Cooldown;
 import de.legoshi.linkcraft.util.message.Prefix;
 import org.bukkit.entity.Player;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CooldownManager {
+
+    @Inject @Named("database") private DatabaseService databaseService;
 
     // TODO: Possibly switch to config value/ect
     private final long GLOBAL_COOLDOWN = 1000;
 
     private final Map<Player, Cooldown> globalCooldowns = new HashMap<>();
     private final Map<Player, Map<String, Cooldown>> cooldowns = new HashMap<>();
-    private final DBManager dbManager;
-
-    public CooldownManager(DBManager dbManager) {
-        this.dbManager = dbManager;
-    }
 
     public boolean hasCooldown(Player player, String commandName) {
         if(containsPlayer(player)) {
@@ -64,7 +64,7 @@ public class CooldownManager {
                 cooldowns.put(player, new HashMap<>());
             }
 
-            Cooldown cooldown = dbManager.getCooldownInfo(commandName.toLowerCase());
+            Cooldown cooldown = databaseService.getCooldownInfo(commandName.toLowerCase());
             if(cooldown != null) {
                 cooldowns.get(player).put(commandName.toLowerCase(), cooldown);
             }

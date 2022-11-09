@@ -1,11 +1,14 @@
 package de.legoshi.linkcraft.database;
-import de.legoshi.linkcraft.Linkcraft;
+import de.legoshi.linkcraft.service.Service;
 import de.legoshi.linkcraft.util.Cooldown;
 import de.legoshi.linkcraft.util.FileWriter;
 import de.legoshi.linkcraft.util.LCConfig;
 import de.legoshi.linkcraft.util.message.Message;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 
+import javax.inject.Inject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,33 +22,35 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class DBManager {
+public class DatabaseService implements Service {
+
+    @Inject private Plugin plugin;
 
     public AsyncMySQL mySQL;
-    private final Function<String, String> prefixProcessor;
-    private final Linkcraft plugin;
+    private Function<String, String> prefixProcessor;
     private final String COMMAND_COOLDOWNS_SELECT = "SELECT * FROM {p}command_cooldowns WHERE LOWER(command)=LOWER(?);";
 
     public String message;
 
-    public DBManager(Linkcraft plugin, String tablePrefix) {
-        this.plugin = plugin;
-        this.prefixProcessor = (s -> s.replace("{p}", tablePrefix));
+    @Override
+    public void start() {
+        this.prefixProcessor = (s -> s.replace("{p}", "lc_"));
 
         this.message = "hujodfhjsadfhjusdf";
-        this.mySQL = connectToDB();
 
-        System.out.println("Called");
+        this.mySQL = connectToDB();
+        initializeTables();
+
+        System.out.println("Database service started.");
     }
 
-    public AsyncMySQL initializeTables() {
+    public void initializeTables() {
         if(mySQL != null) {
             Bukkit.getConsoleSender().sendMessage("[LinkCraft] DB connected");
             createSchema();
         } else {
             Bukkit.getConsoleSender().sendMessage("[LinkCraft] Cannot connect to DB");
         }
-        return mySQL;
     }
 
     public AsyncMySQL connectToDB() {
@@ -131,5 +136,10 @@ public class DBManager {
             e.printStackTrace();
         }
         return cd;
+    }
+
+    @Override
+    public void stop() {
+
     }
 }

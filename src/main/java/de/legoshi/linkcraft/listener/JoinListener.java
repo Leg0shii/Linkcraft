@@ -10,10 +10,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-@RequiredArgsConstructor
+import javax.inject.Inject;
+
 public class JoinListener implements Listener {
 
-    private final PlayerManager playerManager;
+    @Inject private PlayerManager playerManager;
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
