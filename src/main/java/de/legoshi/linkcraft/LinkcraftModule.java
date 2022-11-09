@@ -1,5 +1,6 @@
 package de.legoshi.linkcraft;
 
+import de.legoshi.linkcraft.command.flow.FlowModule;
 import de.legoshi.linkcraft.database.module.DatabaseModule;
 import de.legoshi.linkcraft.manager.module.ManagerModule;
 import de.legoshi.linkcraft.service.module.ServiceModule;
@@ -19,6 +20,9 @@ public class LinkcraftModule extends AbstractModule {
         bind(Plugin.class).toInstance(this.plugin);
 
         install(new DatabaseModule(plugin));
+
+        install(new FlowModule());
+
         install(new ServiceModule());
         install(new ManagerModule());
     }
