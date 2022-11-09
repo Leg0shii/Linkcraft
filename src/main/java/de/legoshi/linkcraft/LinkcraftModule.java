@@ -1,5 +1,6 @@
 package de.legoshi.linkcraft;
 
+import de.legoshi.linkcraft.database.module.DatabaseModule;
 import de.legoshi.linkcraft.manager.module.ManagerModule;
 import de.legoshi.linkcraft.service.module.ServiceModule;
 import org.bukkit.plugin.Plugin;
@@ -17,6 +18,7 @@ public class LinkcraftModule extends AbstractModule {
     protected void configure() {
         bind(Plugin.class).toInstance(this.plugin);
 
+        install(new DatabaseModule(plugin));
         install(new ServiceModule());
         install(new ManagerModule());
     }

@@ -1,6 +1,6 @@
 package de.legoshi.linkcraft.manager;
 
-import de.legoshi.linkcraft.database.DatabaseService;
+import de.legoshi.linkcraft.database.DBManager;
 import de.legoshi.linkcraft.util.Cooldown;
 import de.legoshi.linkcraft.util.message.Prefix;
 import org.bukkit.entity.Player;
@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class CooldownManager {
 
-    @Inject @Named("database") private DatabaseService databaseService;
+    @Inject private DBManager databaseService;
 
     // TODO: Possibly switch to config value/ect
     private final long GLOBAL_COOLDOWN = 1000;

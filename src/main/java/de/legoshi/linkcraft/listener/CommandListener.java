@@ -1,6 +1,5 @@
 package de.legoshi.linkcraft.listener;
 
-import de.legoshi.linkcraft.database.DatabaseService;
 import de.legoshi.linkcraft.manager.CooldownManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

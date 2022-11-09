@@ -8,11 +8,8 @@ public class ManagerModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(PlayerManager.class).toProvider(PlayerManager::new).singleton();
-        bind(CooldownManager.class).toProvider(CooldownManager::new).singleton();
-
-        // bind(PlayerManager.class).toProvider(PlayerManager::new).singleton();
-        // bind(CooldownManager.class).toProvider(CooldownManager::new).singleton();
+        bind(PlayerManager.class).to(PlayerManager.class).singleton();
+        bind(CooldownManager.class).to(CooldownManager.class).singleton();
     }
 
 }

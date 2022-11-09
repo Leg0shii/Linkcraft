@@ -1,10 +1,8 @@
 package de.legoshi.linkcraft.database;
-import de.legoshi.linkcraft.service.Service;
 import de.legoshi.linkcraft.util.Cooldown;
 import de.legoshi.linkcraft.util.FileWriter;
 import de.legoshi.linkcraft.util.LCConfig;
 import de.legoshi.linkcraft.util.message.Message;
-import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -22,26 +20,25 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class DatabaseService implements Service {
+public class DBManager {
 
-    @Inject private Plugin plugin;
-
+    private Plugin plugin;
     public AsyncMySQL mySQL;
+
     private Function<String, String> prefixProcessor;
     private final String COMMAND_COOLDOWNS_SELECT = "SELECT * FROM {p}command_cooldowns WHERE LOWER(command)=LOWER(?);";
 
     public String message;
 
-    @Override
-    public void start() {
+    public DBManager(Plugin plugin) {
+        System.out.println("DB Start init");
+        this.plugin = plugin;
         this.prefixProcessor = (s -> s.replace("{p}", "lc_"));
-
         this.message = "hujodfhjsadfhjusdf";
-
         this.mySQL = connectToDB();
-        initializeTables();
 
-        System.out.println("Database service started.");
+        initializeTables();
+        System.out.println("DB End init");
     }
 
     public void initializeTables() {
@@ -138,8 +135,4 @@ public class DatabaseService implements Service {
         return cd;
     }
 
-    @Override
-    public void stop() {
-
-    }
 }

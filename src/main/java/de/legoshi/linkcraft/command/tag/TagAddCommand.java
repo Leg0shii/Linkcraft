@@ -1,18 +1,19 @@
 package de.legoshi.linkcraft.command.tag;
 
-import de.legoshi.linkcraft.database.DatabaseService;
+import de.legoshi.linkcraft.database.DBManager;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
+import me.fixeddev.commandflow.annotated.annotation.Usage;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
-@Command(names = "add", permission = "lc.tags.add", permissionMessage = "You cant do that!!!!")
+@Command(names = "add", desc = "DESCRIPTIONADD",permission = "lc.tags.add", permissionMessage = "You cant do that!!!!")
+@Usage(value = "This is for adding Tags.")
 public class TagAddCommand implements CommandClass {
 
-    @Inject private DatabaseService databaseService;
+    @Inject private DBManager databaseService;
 
     @Command(names = "")
     public boolean addTags(CommandSender sender) {
