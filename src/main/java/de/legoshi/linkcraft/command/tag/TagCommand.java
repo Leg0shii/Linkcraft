@@ -11,7 +11,11 @@ import org.bukkit.command.CommandSender;
 
 import javax.inject.Inject;
 
-@Command(names = "tags")
+
+// Note: Another issue that im not sure of a workaround to is that annotations require constants.
+// This is a problem because we cannot use something like: Message.NO_PERMISSION.msg(Prefix.INFO) in the annotations
+// By the way, you can remove any of these comments after you read them of course :P
+@Command(names = "tags", desc = "Opens tag selection menu")
 @SubCommandClasses({
         TagAddCommand.class,
         TagsEditCommand.class,
@@ -23,8 +27,7 @@ public class TagCommand implements CommandClass {
 
     @Inject private DBManager databaseService;
 
-    @Command(names = "", desc = "DESCRIPTION")
-    @Usage(value = "This is for showing tags.")
+    @Command(names = "")
     public boolean tags(@Sender CommandSender sender) {
         sender.sendMessage(ChatColor.YELLOW + "Now your tags will be opened!!!" + databaseService.message);
         System.out.println(databaseService.mySQL);

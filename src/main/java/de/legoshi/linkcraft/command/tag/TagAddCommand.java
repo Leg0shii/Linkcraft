@@ -10,7 +10,6 @@ import org.bukkit.command.CommandSender;
 import javax.inject.Inject;
 
 @Command(names = "add", desc = "DESCRIPTIONADD",permission = "lc.tags.add", permissionMessage = "You cant do that!!!!")
-@Usage(value = "This is for adding Tags.")
 public class TagAddCommand implements CommandClass {
 
     @Inject private DBManager databaseService;

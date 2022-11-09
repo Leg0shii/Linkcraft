@@ -19,8 +19,11 @@ public enum Message {
 
     PLAYER_JOIN("{0} joined the Server!"),
     PLAYER_LEAVE("{0} left the Server!"),
+
     CMD_COOLDOWN_GLOBAL("&cPlease wait {0} second(s) before your next command."),
-    CMD_COOLDOWN("&cPlease wait {0} second{s} before you can use this command again.");
+    CMD_COOLDOWN("&cPlease wait {0} second(s) before you can use this command again."),
+
+    NO_PERMISSION("&cYou don't have permission to run that command!");
 
     public final String m;
 

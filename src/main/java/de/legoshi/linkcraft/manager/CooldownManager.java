@@ -6,7 +6,6 @@ import de.legoshi.linkcraft.util.message.Prefix;
 import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.HashMap;
 import java.util.Map;
 
