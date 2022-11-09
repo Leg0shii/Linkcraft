@@ -2,7 +2,10 @@ package de.legoshi.linkcraft.manager;
 
 import de.legoshi.linkcraft.database.DBManager;
 import de.legoshi.linkcraft.util.Cooldown;
+import de.legoshi.linkcraft.util.message.MessageUtils;
+import de.legoshi.linkcraft.util.message.Messages;
 import de.legoshi.linkcraft.util.message.Prefix;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
@@ -76,6 +79,6 @@ public class CooldownManager {
     }
 
     public String getMessage(Cooldown cooldown) {
-        return cooldown.getMessage().msg(Prefix.INFO, Long.toString(cooldown.timeLeft()));
+        return MessageUtils.composeMessage(cooldown.getMessage(), true, Long.toString(cooldown.timeLeft()));
     }
 }

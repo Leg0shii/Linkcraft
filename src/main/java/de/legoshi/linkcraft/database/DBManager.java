@@ -2,11 +2,10 @@ package de.legoshi.linkcraft.database;
 import de.legoshi.linkcraft.util.Cooldown;
 import de.legoshi.linkcraft.util.FileWriter;
 import de.legoshi.linkcraft.util.LCConfig;
-import de.legoshi.linkcraft.util.message.Message;
+import de.legoshi.linkcraft.util.message.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
-import javax.inject.Inject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -126,7 +125,7 @@ public class DBManager {
                     //Message msg = Message.fromString(message);
                     //cd = new Cooldown(rs.getInt("cooldown"), msg == null ? Message.CMD_COOLDOWN : msg);
                 } else {
-                    cd = new Cooldown(rs.getInt("cooldown"), Message.CMD_COOLDOWN);
+                    cd = new Cooldown(rs.getInt("cooldown"), Messages.CMD_COOLDOWN);
                 }
             }
         } catch(SQLException e) {

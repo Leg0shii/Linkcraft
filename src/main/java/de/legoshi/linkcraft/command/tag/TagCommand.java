@@ -1,6 +1,8 @@
 package de.legoshi.linkcraft.command.tag;
 
 import de.legoshi.linkcraft.database.DBManager;
+import de.legoshi.linkcraft.util.message.MessageUtils;
+import de.legoshi.linkcraft.util.message.Messages;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.SubCommandClasses;
@@ -10,12 +12,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import javax.inject.Inject;
+import java.util.Arrays;
 
-
-// Note: Another issue that im not sure of a workaround to is that annotations require constants.
-// This is a problem because we cannot use something like: Message.NO_PERMISSION.msg(Prefix.INFO) in the annotations
-// By the way, you can remove any of these comments after you read them of course :P
-@Command(names = "tags", desc = "Opens tag selection menu")
+@Command(names = "tags", desc = "%translatable:command.tag-description%")
 @SubCommandClasses({
         TagAddCommand.class,
         TagsEditCommand.class,
@@ -26,6 +25,20 @@ import javax.inject.Inject;
 public class TagCommand implements CommandClass {
 
     @Inject private DBManager databaseService;
+
+    @Command(names = "help")
+    public boolean tagsHelp(CommandSender sender) {
+        String message = MessageUtils.composeMessage(Messages.COMMAND_LIST_PAGE_HEADER, false, "tags");
+        message = message + "\n" + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "tags", "help");
+        message = message + "\n" + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "tags", "add", "<name>", "<rarity>", "[description]");
+        message =  message + "\n" + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "tags", "edit", "<name:rarity:desc>", "<tag_id>", "<value>");
+        message = message + "\n" + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "tags", "remove", "<tag_id>");
+        message = message + "\n" + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "tags", "set", "<user_name>", "<tag_id>");
+        message = message + "\n" + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "tags", "edit", "<user_name>", "<tag_id:all>");
+        message = message + "\n" + MessageUtils.composeMessage(Messages.COMMAND_LIST_PAGE_FOOTER, false);
+        MessageUtils.sendMessage(sender, message);
+        return true;
+    }
 
     @Command(names = "")
     public boolean tags(@Sender CommandSender sender) {

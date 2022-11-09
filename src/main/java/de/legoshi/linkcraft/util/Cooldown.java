@@ -1,6 +1,6 @@
 package de.legoshi.linkcraft.util;
 
-import de.legoshi.linkcraft.util.message.Message;
+import de.legoshi.linkcraft.util.message.Messages;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -12,13 +12,13 @@ public class Cooldown {
     
     private final long used;
     private final long length;
-    private final Message message;
+    private final Messages message;
 
     public Cooldown(long length) {
-        this(System.currentTimeMillis(), length, Message.CMD_COOLDOWN_GLOBAL);
+        this(System.currentTimeMillis(), length, Messages.CMD_COOLDOWN_GLOBAL);
     }
 
-    public Cooldown(long length, Message message) {
+    public Cooldown(long length, Messages message) {
         this(System.currentTimeMillis(), length, message);
     }
 

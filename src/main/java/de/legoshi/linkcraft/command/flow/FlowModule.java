@@ -3,6 +3,8 @@ package de.legoshi.linkcraft.command.flow;
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.bukkit.BukkitCommandManager;
+import me.fixeddev.commandflow.translator.DefaultTranslator;
+import me.fixeddev.commandflow.translator.Translator;
 import me.fixeddev.commandflow.usage.DefaultUsageBuilder;
 import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
@@ -22,14 +24,8 @@ public class FlowModule extends AbstractModule {
     @Singleton
     public CommandManager provideCommandManager(Plugin plugin) {
         CommandManager commandManager = new BukkitCommandManager(plugin.getName());
-        commandManager.setUsageBuilder(new DefaultUsageBuilder() {
-            @Override
-            public Component getUsage(CommandContext commandContext) {
-                return TextComponent.of("Usage: ")
-                        .color(TextColor.RED)
-                        .append(super.getUsage(commandContext));
-            }
-        });
+        commandManager.setUsageBuilder(new LinkcraftUsageBuilder(commandManager));
+        commandManager.setTranslator(new LinkcraftTranslator());
         return commandManager;
     }
 }
