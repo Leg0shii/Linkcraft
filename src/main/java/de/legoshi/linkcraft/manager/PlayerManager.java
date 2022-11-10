@@ -1,7 +1,7 @@
 package de.legoshi.linkcraft.manager;
 
 import de.legoshi.linkcraft.database.DBManager;
-import de.legoshi.linkcraft.database.SavableManager;
+import de.legoshi.linkcraft.database.SaveableManager;
 import de.legoshi.linkcraft.player.AbstractPlayer;
 import de.legoshi.linkcraft.player.IPlayer;
 import de.legoshi.linkcraft.player.playertype.StandardPlayer;
@@ -11,9 +11,8 @@ import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
 import java.util.HashMap;
-import java.util.List;
 
-public class PlayerManager implements SavableManager<AbstractPlayer> {
+public class PlayerManager implements SaveableManager<AbstractPlayer> {
 
     @Inject private DBManager dbManager;
     @Getter private final HashMap<Player, AbstractPlayer> hashMap;

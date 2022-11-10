@@ -1,6 +1,6 @@
 package de.legoshi.linkcraft.database;
 
-public interface SavableManager<T> {
+public interface SaveableManager<T> {
 
     void initObject(T t);
 
