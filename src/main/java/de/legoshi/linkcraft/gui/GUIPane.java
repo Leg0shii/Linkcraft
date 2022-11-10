@@ -4,22 +4,38 @@ import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+
 import org.bukkit.inventory.ItemStack;
+
 
 public abstract class GUIPane {
 
-    private GUIPane parent;
-    private Player player;
-    private String[] guiSetup;
+    protected InventoryGui parent;
+    protected InventoryGui current;
 
-    private StaticGuiElement returnToParent;
+    protected Player holder;
+    protected StaticGuiElement returnToParent;
+
+    public GUIPane(Player player, InventoryGui parent) {
+        this.holder = player;
+        this.parent = parent;
+        loadReturnToParent();
+    }
+
+    public void openGui() {
+        this.current.show(this.holder);
+    }
+
+    protected abstract void registerGuiElements();
 
     private void loadReturnToParent() {
-        this.returnToParent = new StaticGuiElement('a', new ItemStack(Material.REDSTONE), click -> {
-            player.closeInventory();
-            // player.openInventory(parent.get);
+        this.returnToParent = new StaticGuiElement('q', new ItemStack(Material.REDSTONE), click -> {
+            if (parent != null) {
+                this.holder.closeInventory();
+                parent.draw(holder);
+            }
             return true;
-        }, "&a&lNew Replays");
+        }, "&c&lBack");
     }
 
 }

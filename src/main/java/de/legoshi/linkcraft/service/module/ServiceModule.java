@@ -1,9 +1,6 @@
 package de.legoshi.linkcraft.service.module;
 
-import de.legoshi.linkcraft.service.CommandService;
-import de.legoshi.linkcraft.service.EventService;
-import de.legoshi.linkcraft.service.LinkcraftService;
-import de.legoshi.linkcraft.service.Service;
+import de.legoshi.linkcraft.service.*;
 import team.unnamed.inject.AbstractModule;
 
 public class ServiceModule extends AbstractModule {
