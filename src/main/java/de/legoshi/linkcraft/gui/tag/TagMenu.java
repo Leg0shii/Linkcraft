@@ -23,6 +23,7 @@ public class TagMenu extends GUIPane {
         super(player, parent);
         this.current = new InventoryGui((JavaPlugin) Linkcraft.getPlugin(), player, title, guiSetup);
         registerGuiElements();
+        fullCloseOnEsc();
     }
 
     @Override

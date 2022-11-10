@@ -1,7 +1,6 @@
 package de.legoshi.linkcraft.gui.tag;
 
 import de.legoshi.linkcraft.Linkcraft;
-import de.legoshi.linkcraft.gui.GUIPane;
 import de.legoshi.linkcraft.gui.GUIScrollable;
 import de.legoshi.linkcraft.tag.TagRarity;
 import de.themoep.inventorygui.InventoryGui;
@@ -24,6 +23,7 @@ public class TagHolder extends GUIScrollable {
         this.title = rarity.name() + " tags";
         this.current = new InventoryGui((JavaPlugin) Linkcraft.getPlugin(), player, title, guiSetup);
         registerGuiElements();
+        fullCloseOnEsc();
     }
 
     @Override
