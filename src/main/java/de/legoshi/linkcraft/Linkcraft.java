@@ -1,5 +1,6 @@
 package de.legoshi.linkcraft;
 
+import de.legoshi.linkcraft.gui.tag.TagMenu;
 import de.legoshi.linkcraft.service.Service;
 import de.legoshi.linkcraft.util.LCConfig;
 import lombok.Getter;

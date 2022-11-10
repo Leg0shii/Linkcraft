@@ -1,13 +1,20 @@
 package de.legoshi.linkcraft.gui;
 
+import de.legoshi.linkcraft.database.DBManager;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
+
+import javax.inject.Inject;
 
 
 public abstract class GUIPane {
+
+    @Inject protected Plugin plugin;
+    @Inject protected DBManager dbManager;
 
     protected InventoryGui parent;
     protected InventoryGui current;
@@ -15,14 +22,10 @@ public abstract class GUIPane {
     protected Player holder;
     protected StaticGuiElement returnToParent;
 
-    public GUIPane(Player player, InventoryGui parent) {
+    public void openGui(Player player, InventoryGui parent) {
         this.holder = player;
         this.parent = parent;
         loadReturnToParent();
-    }
-
-    public void openGui() {
-        this.current.show(this.holder);
     }
 
     protected abstract void registerGuiElements();

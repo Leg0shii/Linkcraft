@@ -11,8 +11,8 @@ public abstract class GUIScrollable extends GUIPane {
     protected StaticGuiElement pageUp;
     protected StaticGuiElement pageDown;
 
-    public GUIScrollable(Player player, InventoryGui parent) {
-        super(player, parent);
+    public void openGui(Player player, InventoryGui parent) {
+        super.openGui(player, parent);
         registerPageElements();
     }
 

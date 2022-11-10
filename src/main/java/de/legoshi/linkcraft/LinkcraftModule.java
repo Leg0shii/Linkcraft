@@ -2,6 +2,7 @@ package de.legoshi.linkcraft;
 
 import de.legoshi.linkcraft.command.flow.FlowModule;
 import de.legoshi.linkcraft.database.module.DatabaseModule;
+import de.legoshi.linkcraft.gui.module.GuiModule;
 import de.legoshi.linkcraft.manager.module.ManagerModule;
 import de.legoshi.linkcraft.service.module.ServiceModule;
 import org.bukkit.plugin.Plugin;
@@ -25,6 +26,8 @@ public class LinkcraftModule extends AbstractModule {
 
         install(new ServiceModule());
         install(new ManagerModule());
+
+        install(new GuiModule());
     }
 
 }

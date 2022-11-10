@@ -1,6 +1,6 @@
 package de.legoshi.linkcraft.gui.tag;
 
-import de.legoshi.linkcraft.Linkcraft;
+import de.legoshi.linkcraft.database.DBManager;
 import de.legoshi.linkcraft.gui.GUIPane;
 import de.legoshi.linkcraft.tag.TagRarity;
 import de.themoep.inventorygui.InventoryGui;
@@ -10,7 +10,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.inject.Inject;
+
 public class TagMenu extends GUIPane {
+
+    @Inject private TagHolder tagHolder;
 
     private final String title = "Tag Menu";
     private final String[] guiSetup = {
@@ -19,33 +23,34 @@ public class TagMenu extends GUIPane {
             "         ",
     };
 
-    public TagMenu(Player player, InventoryGui parent) {
-        super(player, parent);
-        this.current = new InventoryGui((JavaPlugin) Linkcraft.getPlugin(), player, title, guiSetup);
+    public void openGui(Player player, InventoryGui parent) {
+        super.openGui(player, parent);
+        this.current = new InventoryGui((JavaPlugin) plugin, player, title, guiSetup);
         registerGuiElements();
         fullCloseOnEsc();
+        this.current.show(this.holder);
     }
 
     @Override
     protected void registerGuiElements() {
         // use different heads as items later
         StaticGuiElement basicElement = new StaticGuiElement('a', new ItemStack(Material.COAL),click -> {
-            new TagHolder(this.holder, this.current, TagRarity.BASIC).openGui();
+            tagHolder.openGui(this.holder, this.current, TagRarity.BASIC);
             return true;
         }, "&a&lBasic");
 
         StaticGuiElement rareElement = new StaticGuiElement('b', new ItemStack(Material.IRON_INGOT),click -> {
-            new TagHolder(this.holder, this.current, TagRarity.RARE).openGui();
+            tagHolder.openGui(this.holder, this.current, TagRarity.RARE);
             return true;
         }, "&a&lRare");
 
         StaticGuiElement epicElement = new StaticGuiElement('c', new ItemStack(Material.GOLD_INGOT),click -> {
-            new TagHolder(this.holder, this.current, TagRarity.EPIC).openGui();
+            tagHolder.openGui(this.holder, this.current, TagRarity.EPIC);
             return true;
         }, "&a&lEpic");
 
         StaticGuiElement legendaryElement = new StaticGuiElement('d', new ItemStack(Material.DIAMOND),click -> {
-            new TagHolder(this.holder, this.current, TagRarity.LEGENDARY).openGui();
+            tagHolder.openGui(this.holder, this.current, TagRarity.LEGENDARY);
             return true;
         }, "&a&lLegendary");
 

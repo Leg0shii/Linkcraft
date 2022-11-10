@@ -8,10 +8,8 @@ import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.ArgOrSub;
 import me.fixeddev.commandflow.annotated.annotation.Command;
-import me.fixeddev.commandflow.annotated.annotation.OptArg;
 import me.fixeddev.commandflow.annotated.annotation.SubCommandClasses;
 import me.fixeddev.commandflow.bukkit.annotation.Sender;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -29,6 +27,7 @@ import javax.inject.Inject;
 public class TagCommand implements CommandClass {
 
     @Inject private DBManager databaseService;
+    @Inject private TagMenu tagMenu;
 
     @Command(names = "help")
     public boolean tagsHelp(CommandSender sender) {
@@ -56,7 +55,7 @@ public class TagCommand implements CommandClass {
             return false;
         }
 
-        new TagMenu(player, null).openGui();
+        tagMenu.openGui(player, null);
         return true;
     }
 

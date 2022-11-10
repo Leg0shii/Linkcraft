@@ -9,7 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class TagHolder extends GUIScrollable {
 
-    private final String title;
+    private String title;
     private final String[] guiSetup = {
             "ggggggggu",
             "ggggggggf",
@@ -18,12 +18,13 @@ public class TagHolder extends GUIScrollable {
             "ggggggggd",
     };
 
-    public TagHolder(Player player, InventoryGui parent, TagRarity rarity) {
-        super(player, parent);
+    public void openGui(Player player, InventoryGui parent, TagRarity rarity) {
+        super.openGui(player, parent);
         this.title = rarity.name() + " tags";
         this.current = new InventoryGui((JavaPlugin) Linkcraft.getPlugin(), player, title, guiSetup);
         registerGuiElements();
         fullCloseOnEsc();
+        this.current.show(this.holder);
     }
 
     @Override
