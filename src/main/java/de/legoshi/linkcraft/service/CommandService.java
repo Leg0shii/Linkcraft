@@ -1,6 +1,7 @@
 package de.legoshi.linkcraft.service;
 
 import de.legoshi.linkcraft.command.fun.FunCommand;
+import de.legoshi.linkcraft.command.sign.SignCommand;
 import de.legoshi.linkcraft.command.tag.TagCommand;
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.CommandManager;
@@ -31,13 +32,15 @@ public class CommandService implements Service {
 
     @Inject private TagCommand tagCommand;
     @Inject private FunCommand funCommand;
+    @Inject private SignCommand signCommand;
 
     @Override
     public void start() {
         System.out.println("Started command service.");
         register(
                 tagCommand,
-                funCommand
+                funCommand,
+                signCommand
         );
     }
 

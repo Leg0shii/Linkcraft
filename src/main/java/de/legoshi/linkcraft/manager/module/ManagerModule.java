@@ -10,7 +10,6 @@ public class ManagerModule extends AbstractModule {
     protected void configure() {
         bind(PlayerManager.class).singleton();
         bind(CooldownManager.class).singleton();
-
     }
 
 }

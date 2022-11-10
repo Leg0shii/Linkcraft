@@ -1,9 +1,6 @@
 package de.legoshi.linkcraft.service;
 
-import de.legoshi.linkcraft.listener.ChatListener;
-import de.legoshi.linkcraft.listener.CommandListener;
-import de.legoshi.linkcraft.listener.JoinListener;
-import de.legoshi.linkcraft.listener.QuitListener;
+import de.legoshi.linkcraft.listener.*;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -18,6 +15,7 @@ public class EventService implements Service {
     @Inject private QuitListener quitListener;
     @Inject private ChatListener chatListener;
     @Inject private CommandListener commandListener;
+    @Inject private PlayerInteractListener interactListener;
 
     @Override
     public void start() {
@@ -26,7 +24,8 @@ public class EventService implements Service {
                 joinListener,
                 quitListener,
                 chatListener,
-                commandListener
+                commandListener,
+                interactListener
         );
     }
 

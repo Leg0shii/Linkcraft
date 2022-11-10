@@ -9,4 +9,15 @@ public class RankupPlayer extends AbstractPlayer {
         super(player, playerTag);
     }
 
+    @Override
+    public void playerEndSignClick() {
+        // teleport player to spawn
+        playerRankUp();
+        // send message in chat and play sound
+    }
+
+    private void playerRankUp() {
+        // update player permission to next rank
+    }
+
 }
