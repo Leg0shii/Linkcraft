@@ -1,7 +1,11 @@
-package de.legoshi.linkcraft.player;
+package de.legoshi.linkcraft.player.playertype;
 
+import de.legoshi.linkcraft.player.AbstractPlayer;
 import de.legoshi.linkcraft.tag.PlayerTag;
 import org.bukkit.entity.Player;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class SegmentedPlayer extends AbstractPlayer {
 
@@ -17,6 +21,11 @@ public class SegmentedPlayer extends AbstractPlayer {
     @Override
     public void playerEndSignClick() {
 
+    }
+
+    @Override
+    public HashMap<String, Object> getKeyValueList() {
+        return null;
     }
 
 }

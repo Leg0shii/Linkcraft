@@ -1,11 +1,15 @@
-package de.legoshi.linkcraft.player;
+package de.legoshi.linkcraft.player.playertype;
 
+import de.legoshi.linkcraft.player.AbstractPlayer;
 import de.legoshi.linkcraft.tag.PlayerTag;
 import org.bukkit.entity.Player;
 
-public class MazePlayer extends AbstractPlayer {
+import java.util.HashMap;
+import java.util.List;
 
-    public MazePlayer(Player player, PlayerTag playerTag) {
+public class RankUpPlayer extends AbstractPlayer {
+
+    public RankUpPlayer(Player player, PlayerTag playerTag) {
         super(player, playerTag);
     }
 
@@ -20,4 +24,8 @@ public class MazePlayer extends AbstractPlayer {
         // update player permission to next rank
     }
 
+    @Override
+    public HashMap<String, Object> getKeyValueList() {
+        return null;
+    }
 }

@@ -27,17 +27,12 @@ public class DBManager {
     private Function<String, String> prefixProcessor;
     private final String COMMAND_COOLDOWNS_SELECT = "SELECT * FROM {p}command_cooldowns WHERE LOWER(command)=LOWER(?);";
 
-    public String message;
-
     public DBManager(Plugin plugin) {
-        System.out.println("DB Start init");
         this.plugin = plugin;
         this.prefixProcessor = (s -> s.replace("{p}", "lc_"));
-        this.message = "hujodfhjsadfhjusdf";
         this.mySQL = connectToDB();
 
         initializeTables();
-        System.out.println("DB End init");
     }
 
     public void initializeTables() {
