@@ -4,10 +4,10 @@ public interface SavableManager<T> {
 
     void initObject(T t);
 
-    void saveObject(T t);
-
     void updateObject(T t);
 
-    T requestObject(String where);
+    void deleteObject(String id);
+
+    T requestObjectById(String id);
 
 }

@@ -4,6 +4,7 @@ import de.legoshi.linkcraft.manager.PlayerManager;
 import de.legoshi.linkcraft.player.AbstractPlayer;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,8 +23,8 @@ public class ChatListener implements Listener {
         AbstractPlayer aPlayer = playerManager.getHashMap().get(player);
         String playerMessage = event.getMessage();
 
-        String updatedMessage = aPlayer.getPlayerTag().getDisplayName() + " "
-                + player.getDisplayName() + "> "
+        String updatedMessage = ChatColor.translateAlternateColorCodes('&', aPlayer.getPlayerTag().getDisplayName()) + " §r"
+                + ChatColor.translateAlternateColorCodes('&', player.getDisplayName()) + "§7» "
                 + playerMessage;
 
         //updatedMessage = "§4§l#12 §b«§3«§2«§a§lXVII§2»§3»§b» §b§0" + player.getDisplayName() + " §7» " + playerMessage;

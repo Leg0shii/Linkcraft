@@ -3,6 +3,7 @@ package de.legoshi.linkcraft.player;
 import de.legoshi.linkcraft.tag.PlayerTag;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.entity.Player;
 
 @Getter
@@ -10,7 +11,7 @@ import org.bukkit.entity.Player;
 public abstract class AbstractPlayer implements IPlayer {
 
     protected Player player;
-    protected PlayerTag playerTag;
+    @Setter protected PlayerTag playerTag;
 
     @Override
     public void playerCPSignClick(String location) {
