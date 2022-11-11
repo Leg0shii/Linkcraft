@@ -14,7 +14,7 @@ public abstract class AbstractPlayer implements IPlayer, Saveable {
     protected PlayerTag playerTag;
 
     @Override
-    public void playerCPSignClick() {
+    public void playerCPSignClick(String location) {
 
     }
 
@@ -31,6 +31,12 @@ public abstract class AbstractPlayer implements IPlayer, Saveable {
     @Override
     public void playerTeleportSignClick() {
 
+    }
+
+    // Could make abstract...
+    @Override
+    public boolean canUseEffectBlocks() {
+        return true;
     }
 
 

@@ -47,6 +47,7 @@ public enum Messages {
     COMMAND_LIST_PAGE_FOOTER("§0--------------------------------", "help"),
 
     PLAYER_NO_PERMISSION("§cYou don't have permission to run that command!", "error"),
+    EFFECT_BLOCK_NO_PERMISSION("§cYou do not have permissions to click this!", "error"),
     INVALID_ARG_LENGTH("INVALID_ARG_LENGTH", "error");
 
     private final String message;

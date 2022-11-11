@@ -18,6 +18,8 @@ public class JoinListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
+        // we can just use this method instead of broadcasting (unless there is a reason to)
+        event.setJoinMessage("");
         Player player = event.getPlayer();
         playerManager.playerJoin(player);
         MessageUtils.broadcast(Messages.PLAYER_JOIN, true, player.getName());

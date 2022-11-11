@@ -40,6 +40,10 @@ public class PlayerManager implements SaveableManager<AbstractPlayer> {
         hashMap.remove(player);
     }
 
+    public AbstractPlayer getPlayer(Player player) {
+        return hashMap.get(player);
+    }
+
     @Override
     public void initObject(AbstractPlayer abstractPlayer) {
         HashMap<String, Object> tupleList = abstractPlayer.getKeyValueList();

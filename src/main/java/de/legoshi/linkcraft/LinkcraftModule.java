@@ -1,5 +1,6 @@
 package de.legoshi.linkcraft;
 
+import de.legoshi.linkcraft.blockeffect.module.BlockEffectModule;
 import de.legoshi.linkcraft.command.flow.FlowModule;
 import de.legoshi.linkcraft.database.module.DatabaseModule;
 import de.legoshi.linkcraft.gui.module.GuiModule;
@@ -28,6 +29,8 @@ public class LinkcraftModule extends AbstractModule {
         install(new ManagerModule());
 
         install(new GuiModule());
+
+        install(new BlockEffectModule());
     }
 
 }

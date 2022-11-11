@@ -25,6 +25,8 @@ public class ChatListener implements Listener {
         String updatedMessage = aPlayer.getPlayerTag().getDisplayName() + " "
                 + player.getDisplayName() + "> "
                 + playerMessage;
+
+        //updatedMessage = "§4§l#12 §b«§3«§2«§a§lXVII§2»§3»§b» §b§0" + player.getDisplayName() + " §7» " + playerMessage;
         for (Player all : Bukkit.getOnlinePlayers()) all.sendMessage(updatedMessage);
     }
 

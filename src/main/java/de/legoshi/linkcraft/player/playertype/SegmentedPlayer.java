@@ -14,8 +14,8 @@ public class SegmentedPlayer extends AbstractPlayer {
     }
 
     @Override
-    public void playerCPSignClick() {
-
+    public void playerCPSignClick(String location) {
+        // Update current map CP with new location string..
     }
 
     @Override
