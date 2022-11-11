@@ -24,8 +24,4 @@ public class MazePlayer extends AbstractPlayer {
         // update player permission to next rank
     }
 
-    @Override
-    public HashMap<String, Object> getKeyValueList() {
-        return null;
-    }
 }

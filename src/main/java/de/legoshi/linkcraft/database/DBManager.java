@@ -3,6 +3,7 @@ import de.legoshi.linkcraft.util.Cooldown;
 import de.legoshi.linkcraft.util.FileWriter;
 import de.legoshi.linkcraft.util.LCConfig;
 import de.legoshi.linkcraft.util.message.Messages;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -15,6 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -22,10 +24,10 @@ import java.util.stream.Collectors;
 public class DBManager {
 
     private Plugin plugin;
-    public AsyncMySQL mySQL;
+    @Getter private AsyncMySQL mySQL;
 
-    private Function<String, String> prefixProcessor;
-    private final String COMMAND_COOLDOWNS_SELECT = "SELECT * FROM {p}command_cooldowns WHERE LOWER(command)=LOWER(?);";
+    @Getter private Function<String, String> prefixProcessor;
+    @Getter private final String COMMAND_COOLDOWNS_SELECT = "SELECT * FROM {p}command_cooldowns WHERE LOWER(command)=LOWER(?);";
 
     public DBManager(Plugin plugin) {
         this.plugin = plugin;
@@ -104,29 +106,30 @@ public class DBManager {
         return statements;
     }
 
-    // Not sure if we want this here, just putting it here atm
-    public Cooldown getCooldownInfo(String commandName) {
-        Cooldown cd = null;
-        PreparedStatement stmt = mySQL.prepare(prefixProcessor.apply(COMMAND_COOLDOWNS_SELECT));
-        try {
-            stmt.setString(1, commandName);
-            ResultSet rs = mySQL.query(stmt);
+    /* public void insertObjectIntoDatabase(Saveable saveable) {
+        HashMap<String, Object> tupleList = saveable.getKeyValueList();
+        HashMap<String, HashMap<String, Object>> tableKeyValueList = new HashMap<>();
 
-            if(rs.next()) {
-                String message = rs.getString("message");
-                if(message != null) {
-                    // TODO: I don't like this code (should support custom messages not only from the Message enum)
-                    // My guess would probably being storing the message as a string on the cooldown object, but I think it's ok not to support this for the time being
-                    //Message msg = Message.fromString(message);
-                    //cd = new Cooldown(rs.getInt("cooldown"), msg == null ? Message.CMD_COOLDOWN : msg);
-                } else {
-                    cd = new Cooldown(rs.getInt("cooldown"), Messages.CMD_COOLDOWN);
-                }
+        for (String key : tupleList.keySet()) {
+            String[] args = key.split("\\.");
+            String table = args[0];
+            if (!tableKeyValueList.containsKey(table)) {
+                tableKeyValueList.put(table, new HashMap<>());
             }
-        } catch(SQLException e) {
-            e.printStackTrace();
+            tableKeyValueList.get(table).put(key, tupleList.get(key));
         }
-        return cd;
-    }
+
+        for (String tableKey : tableKeyValueList.keySet()) {
+            HashMap<String, Object> list = tableKeyValueList.get(tableKey);
+            String keys = "";
+            String values = "";
+            for (String key : list.keySet()) {
+                keys = keys.equals("") ? key : keys + ", " + key;
+                String value = (String) list.get(key);
+                values = values.equals("") ? value : values + ", " + value;
+            }
+            mySQL.query("INSERT INTO " + tableKey + " (" + keys + ") VALUES (" + values + ");");
+        }
+    } */
 
 }

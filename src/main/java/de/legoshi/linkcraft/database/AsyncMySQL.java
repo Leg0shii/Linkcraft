@@ -10,11 +10,9 @@ import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 /**
- *
  * @author Sandro Hahn (xShadoow)
  * @version 0.2.1
  * @category MySQL Connection Utils
- *
  */
 public class AsyncMySQL {
 
@@ -25,10 +23,11 @@ public class AsyncMySQL {
     /**
      * Called when a new AsyncMySQL object is created.
      * Tries to establish connection immediately.
-     * @param owner plugin instance
-     * @param host ip address of mysql server
-     * @param port port of mysql server (usually 3306)
-     * @param user username (usually "root")
+     *
+     * @param owner    plugin instance
+     * @param host     ip address of mysql server
+     * @param port     port of mysql server (usually 3306)
+     * @param user     username (usually "root")
      * @param password password of username
      * @param database database to connect to
      */
@@ -42,6 +41,7 @@ public class AsyncMySQL {
 
     /**
      * Executes a mysql update asynchronous using a PreparedStatement object.
+     *
      * @param statement sql update as PreparedStatement object
      */
     public void update(PreparedStatement statement) {
@@ -51,6 +51,7 @@ public class AsyncMySQL {
     /**
      * Executes a mysql update asynchronous using a String object.
      * String argument gets converted to a PreparedStatement object automatically.
+     *
      * @param statement sql update as a String object
      */
     public void update(String statement) {
@@ -61,7 +62,8 @@ public class AsyncMySQL {
      * Can be used to insert a new record into the database asynchronous if "auto increment"
      * is turned on for the "ID" column.
      * The returned integer in the consumer is the id that got generated.
-     * @param insert sql insert query as a String
+     *
+     * @param insert   sql insert query as a String
      * @param consumer consumer object that returns the generated id
      */
     public void insert(String insert, Consumer<Integer> consumer) {
@@ -77,14 +79,15 @@ public class AsyncMySQL {
 
                 if (rs.next()) {
 
-                    Integer integer = new Integer(rs.getInt(1));
+                    Integer integer = rs.getInt(1);
                     Bukkit.getScheduler().runTask(plugin, () -> consumer.accept(integer));
 
                 }
 
                 rs.close();
 
-            } catch(SQLException ex) { }
+            } catch (SQLException ex) {
+            }
 
         });
 
@@ -93,6 +96,7 @@ public class AsyncMySQL {
     /**
      * Executes a sql query asynchronous using a PreparedStatement object.
      * The consumer object returns the ResultSet of the query.
+     *
      * @param statement sql query as PreparedStatement object
      */
     public ResultSet query(PreparedStatement statement) {
@@ -103,6 +107,7 @@ public class AsyncMySQL {
      * Executes a sql query asynchronous using a String object.
      * String object gets converted to a PreparedStatement automatically.
      * The consumer object returns the ResultSet of the query.
+     *
      * @param statement sql query as a String object
      */
     public ResultSet query(String statement) {
@@ -111,6 +116,7 @@ public class AsyncMySQL {
 
     /**
      * Used to convert a String object query/update to a PreparedStatement object
+     *
      * @param query sql query/update as a String object
      * @return the query as a PreparedStatement object
      */
@@ -120,13 +126,16 @@ public class AsyncMySQL {
 
             return sql.getConnection().prepareStatement(query);
 
-        } catch(SQLException ignored) { ignored.printStackTrace(); }
+        } catch (SQLException ignored) {
+            ignored.printStackTrace();
+        }
 
         return null;
     }
 
     /**
      * Getter for inner mysql class
+     *
      * @return the inner mysql class
      */
     public MySQL getMySQL() {
@@ -158,6 +167,7 @@ public class AsyncMySQL {
         /**
          * Called when AsyncMySQL object is created. Establishes mysql connection
          * using the given login credentials.
+         *
          * @return connection object
          * @return null if no connection was made
          */
@@ -172,8 +182,7 @@ public class AsyncMySQL {
                     return;
                 }
                 Class.forName("com.mysql.cj.jdbc.Driver");
-                this.conn = DriverManager.getConnection("jdbc:mysql://" + this.host+ ":" + this.port + "/" + this.database +
-                        "?useSSL=false&autoReconnect=true&characterEncoding=latin1&useConfigs=maxPerformance", this.user, this.password);
+                this.conn = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database + "?useSSL=false&autoReconnect=true&characterEncoding=latin1&useConfigs=maxPerformance", this.user, this.password);
                 //&characterEncoding=latin1&useConfigs=maxPerformance
             }
 
@@ -188,7 +197,9 @@ public class AsyncMySQL {
 
                 this.conn.close();
 
-            } catch (SQLException ignored) { ignored.printStackTrace();} finally {
+            } catch (SQLException ignored) {
+                ignored.printStackTrace();
+            } finally {
 
                 this.conn = null;
 
@@ -198,6 +209,7 @@ public class AsyncMySQL {
 
         /**
          * Checks if connection is established.
+         *
          * @return true if connected to mysql server
          * @return false if not connected to mysql server
          */
@@ -205,7 +217,7 @@ public class AsyncMySQL {
 
             try {
 
-                if((this.conn == null) || (!this.conn.isValid(10)) || (this.conn.isClosed())) {
+                if ((this.conn == null) || (!this.conn.isValid(10)) || (this.conn.isClosed())) {
 
                     return false;
                 } else {
@@ -213,7 +225,9 @@ public class AsyncMySQL {
                     return true;
                 }
 
-            } catch (SQLException ignored) { ignored.printStackTrace(); }
+            } catch (SQLException ignored) {
+                ignored.printStackTrace();
+            }
 
             return false;
         }
@@ -221,6 +235,7 @@ public class AsyncMySQL {
         /**
          * Checks if connection is established. If reconnect is true it will try
          * to reconnect if connection isnt established.
+         *
          * @param reconnect whether it should try to reconnect
          * @return true if connected to mysql server
          * @return false if not connected to mysql server
@@ -229,7 +244,7 @@ public class AsyncMySQL {
 
             try {
 
-                if((this.conn == null) || (!this.conn.isValid(10)) || (this.conn.isClosed())) {
+                if ((this.conn == null) || (!this.conn.isValid(10)) || (this.conn.isClosed())) {
 
                     reconnect();
 
@@ -239,13 +254,16 @@ public class AsyncMySQL {
                     return true;
                 }
 
-            } catch (SQLException | ClassNotFoundException ignored) { ignored.printStackTrace(); }
+            } catch (SQLException | ClassNotFoundException ignored) {
+                ignored.printStackTrace();
+            }
 
             return false;
         }
 
         /**
          * Call this to reconnect to the mysql server.
+         *
          * @return true if successfully reconnected or already connected
          * @return false if failed to reconnect
          */
@@ -253,12 +271,12 @@ public class AsyncMySQL {
 
             Bukkit.getConsoleSender().sendMessage("try conn");
 
-            if(!isConnected()) {
+            if (!isConnected()) {
 
                 Bukkit.getConsoleSender().sendMessage("recon");
                 openConnection();
 
-                if(isConnected()) {
+                if (isConnected()) {
                     Bukkit.getConsoleSender().sendMessage("reconn succ");
                     return true;
                 } else {
@@ -276,6 +294,7 @@ public class AsyncMySQL {
 
         /**
          * Getter for Connection object
+         *
          * @return connection object
          */
         public Connection getConnection() {
@@ -285,25 +304,29 @@ public class AsyncMySQL {
         /**
          * Executes a mysql update SYNCHRONOUS (Use with caution!) using a String object.
          * String argument gets converted to a PreparedStatement object automatically.
+         *
          * @param query sql update as a String object
          */
         public void queryUpdate(String query) {
 
-            try(PreparedStatement statement = conn.prepareStatement(query)) {
+            try (PreparedStatement statement = conn.prepareStatement(query)) {
 
                 queryUpdate(statement);
 
-            } catch(SQLException ignored) { ignored.printStackTrace(); }
+            } catch (SQLException ignored) {
+                ignored.printStackTrace();
+            }
 
         }
 
         /**
          * Executes a mysql update SYNCHRONOUS (Use with caution!) using a PreparedStatement object.
+         *
          * @param statement sql update as a PreparedStatement object
          */
         public void queryUpdate(PreparedStatement statement) {
 
-            if(!isConnected()) {
+            if (!isConnected()) {
                 return;
             }
 
@@ -311,13 +334,16 @@ public class AsyncMySQL {
 
                 statement.executeUpdate();
 
-            } catch (SQLException ignored) { ignored.printStackTrace(); }
+            } catch (SQLException ignored) {
+                ignored.printStackTrace();
+            }
 
         }
 
         /**
          * Executes a sql query SYNCHRONOUS (Use with caution!) using a String object.
          * String object gets converted to a PreparedStatement automatically.
+         *
          * @param query sql query as a String object
          * @return the ResultSet of the query
          */
@@ -327,19 +353,22 @@ public class AsyncMySQL {
 
                 return query(conn.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY));
 
-            } catch(SQLException ignored) { ignored.printStackTrace(); }
+            } catch (SQLException ignored) {
+                ignored.printStackTrace();
+            }
 
             return null;
         }
 
         /**
          * Executes a sql query SYNCHRONOUS (Use with caution!) using a PreparedStatement object.
+         *
          * @param statement sql query as a PreparedStatement object
          * @return the ResultSet of the query
          */
         public ResultSet query(PreparedStatement statement) {
 
-            if(!isConnected()) {
+            if (!isConnected()) {
                 return null;
             }
 
@@ -347,7 +376,9 @@ public class AsyncMySQL {
 
                 return statement.executeQuery();
 
-            } catch(SQLException ignored) { ignored.printStackTrace(); }
+            } catch (SQLException ignored) {
+                ignored.printStackTrace();
+            }
 
             return null;
         }

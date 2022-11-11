@@ -30,15 +30,12 @@ public class PlayerInteractListener implements Listener {
         // May require passing the abstract player to execute effects as well
         Player p = event.getPlayer();
         AbstractPlayer player = playerManager.getPlayer(p);
-        if(player.canUseEffectBlocks()) {
-            Block block = event.getClickedBlock();
-            if(blockEffectManager.isEffectBlock(block)) {
-                blockEffectManager.executeEffects(event);
-            }
-        } else {
-            // not sure if this is how we send messages anymore
+        if(!player.canUseEffectBlocks()) {
             p.sendMessage(Messages.EFFECT_BLOCK_NO_PERMISSION.getMessage());
+            return;
         }
+
+        blockEffectManager.executeEffects(event);
     }
 
 }

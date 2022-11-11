@@ -4,8 +4,10 @@ import de.legoshi.linkcraft.player.AbstractPlayer;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import java.util.HashMap;
+
 @RequiredArgsConstructor
-public class BlockCheckpointEffect extends BlockEffect{
+public class BlockCheckpointEffect extends BlockEffect {
 
     private final String location;
 
@@ -14,4 +16,5 @@ public class BlockCheckpointEffect extends BlockEffect{
         AbstractPlayer player = playerManager.getPlayer(event.getPlayer());
         player.playerCPSignClick(location);
     }
+
 }

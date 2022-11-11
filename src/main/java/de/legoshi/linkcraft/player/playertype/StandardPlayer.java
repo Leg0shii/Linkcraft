@@ -12,12 +12,4 @@ public class StandardPlayer extends AbstractPlayer {
         super(player, playerTag);
     }
 
-    @Override
-    public HashMap<String, Object> getKeyValueList() {
-        HashMap<String, Object> list = new HashMap<>();
-        list.put("playerName", player.getName());
-        list.put("playerUUID", player.getUniqueId().toString());
-        return list;
-    }
-
 }

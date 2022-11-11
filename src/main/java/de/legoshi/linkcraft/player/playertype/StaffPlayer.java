@@ -13,9 +13,4 @@ public class StaffPlayer extends AbstractPlayer {
         super(player, playerTag);
     }
 
-    @Override
-    public HashMap<String, Object> getKeyValueList() {
-        return null;
-    }
-
 }

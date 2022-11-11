@@ -23,9 +23,4 @@ public class SegmentedPlayer extends AbstractPlayer {
 
     }
 
-    @Override
-    public HashMap<String, Object> getKeyValueList() {
-        return null;
-    }
-
 }
