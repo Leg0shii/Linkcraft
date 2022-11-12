@@ -1,6 +1,7 @@
 package de.legoshi.linkcraft.service;
 
 import de.legoshi.linkcraft.command.fun.FunCommand;
+import de.legoshi.linkcraft.command.map.MapsCommand;
 import de.legoshi.linkcraft.command.sign.SignCommand;
 import de.legoshi.linkcraft.command.tag.TagCommand;
 import me.fixeddev.commandflow.CommandContext;
@@ -32,6 +33,7 @@ public class CommandService implements Service {
 
     @Inject private TagCommand tagCommand;
     @Inject private FunCommand funCommand;
+    @Inject private MapsCommand mapsCommand;
     @Inject private SignCommand signCommand;
 
     @Override
@@ -40,6 +42,7 @@ public class CommandService implements Service {
         register(
                 tagCommand,
                 funCommand,
+                mapsCommand,
                 signCommand
         );
     }

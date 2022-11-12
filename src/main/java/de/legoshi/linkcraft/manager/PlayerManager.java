@@ -86,8 +86,7 @@ public class PlayerManager implements SavableManager<AbstractPlayer> {
             e.printStackTrace();
         }
         PlayerTag playerTag = tagManager.requestObjectById(tagId);
-        StandardPlayer standardPlayer = new StandardPlayer(null, playerTag);
-        return standardPlayer;
+        return new StandardPlayer(null, playerTag);
     }
 
     private boolean isInDatabase(Player player) {

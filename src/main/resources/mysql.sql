@@ -27,6 +27,31 @@ CREATE TABLE IF NOT EXISTS `{p}player_tags`
     FOREIGN KEY (`tag_id`) REFERENCES `{p}tags` (`tag_id`)
 );
 
+CREATE TABLE IF NOT EXISTS `{p}maps`
+(
+    `id`                MEDIUMINT AUTO_INCREMENT NOT NULL,
+    `name`              VARCHAR(100)             NOT NULL,
+    `type`              TINYINT                  NOT NULL,
+    `difficulty`        DOUBLE                   NOT NULL,
+    `builder_names`     VARCHAR(200)             NOT NULL,
+    `release_date`      DATE      DEFAULT (CURRENT_DATE),
+    `spawn_location_id` MEDIUMINT DEFAULT (0),
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`spawn_location_id`) REFERENCES `{p}locations` (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `{p}map_completions`
+(
+    `id`              INT AUTO_INCREMENT NOT NULL,
+    `map_id`          MEDIUMINT          NOT NULL,
+    `user_id`         VARCHAR(36)        NOT NULL,
+    `completion`      BOOL DEFAULT (FALSE),
+    `completion_date` DATE DEFAULT (CURRENT_DATE),
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES `{p}players` (`user_id`),
+    FOREIGN KEY (`map_id`) REFERENCES `{p}maps` (`id`)
+);
+
 CREATE TABLE IF NOT EXISTS `{p}command_cooldowns`
 (
     `command`  VARCHAR(100) NOT NULL,
