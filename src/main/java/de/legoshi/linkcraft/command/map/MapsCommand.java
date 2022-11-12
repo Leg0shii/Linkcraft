@@ -2,6 +2,7 @@ package de.legoshi.linkcraft.command.map;
 
 
 import de.legoshi.linkcraft.command.tag.*;
+import de.legoshi.linkcraft.gui.map.MapMenu;
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.ArgOrSub;
@@ -10,6 +11,8 @@ import me.fixeddev.commandflow.annotated.annotation.SubCommandClasses;
 import me.fixeddev.commandflow.bukkit.annotation.Sender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import javax.inject.Inject;
 
 // /maps
 // /maps help
@@ -33,6 +36,8 @@ import org.bukkit.entity.Player;
 @ArgOrSub(value = true)
 public class MapsCommand implements CommandClass {
 
+    @Inject private MapMenu mapMenu;
+
     @Command(names = "")
     public boolean maps(@Sender CommandSender sender, CommandContext commandContext) {
         if (commandContext.getArguments().size() > 1) {
@@ -45,7 +50,7 @@ public class MapsCommand implements CommandClass {
             return false;
         }
 
-        // open maps gui
+        mapMenu.openGui(player, null);
         return true;
     }
 

@@ -24,6 +24,7 @@ public class TagMenu extends GUIPane {
             "         ",
     };
 
+    @Override
     public void openGui(Player player, InventoryGui parent) {
         super.openGui(player, parent);
         this.current = new InventoryGui((JavaPlugin) plugin, player, title, guiSetup);
@@ -34,7 +35,6 @@ public class TagMenu extends GUIPane {
 
     @Override
     protected void registerGuiElements() {
-        // use different heads as items later
         StaticGuiElement basicElement = new StaticGuiElement('a', CustomHeads.commonTagHead, click -> {
             tagHolder.openGui(this.holder, this.current, TagRarity.COMMON, 1);
             return true;

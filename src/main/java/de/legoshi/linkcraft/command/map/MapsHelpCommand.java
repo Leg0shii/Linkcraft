@@ -13,10 +13,10 @@ public class MapsHelpCommand implements CommandClass {
     public boolean help(CommandSender sender) {
         String message = MessageUtils.composeMessage(Messages.COMMAND_LIST_PAGE_HEADER, false, "maps");
         message = message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "maps", "help");
-        message = message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "maps", "add", "<name>", "<type>", "<difficulty>", "<builders>");
+        message = message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "maps", "add", "<name>", "<type>", "<length>", "<difficulty>", "<builders>");
         message =  message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "maps", "setstart");
         message =  message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "maps", "setend <sign:plate>");
-        message =  message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "maps", "edit", "<name:type:difficulty:builders>", "<map_id>", "<value>");
+        message =  message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "maps", "edit", "<name:type:difficulty:builders:release:length>", "<map_id>", "<value>");
         message = message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "maps", "remove", "<map_id>");
         message = message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "maps", "setvictor", "<user_name>", "<map_id>");
         message = message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "maps", "unsetvictor", "<user_name>", "<map_id:all>");

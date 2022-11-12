@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS `{p}maps`
     `id`                MEDIUMINT AUTO_INCREMENT NOT NULL,
     `name`              VARCHAR(100)             NOT NULL,
     `type`              TINYINT                  NOT NULL,
+    `length`            TINYINT   DEFAULT (1)    NOT NULL,
     `difficulty`        DOUBLE                   NOT NULL,
     `builder_names`     VARCHAR(200)             NOT NULL,
     `release_date`      DATE      DEFAULT (CURRENT_DATE),
