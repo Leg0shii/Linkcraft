@@ -61,7 +61,7 @@ public class TagManager implements SavableManager<PlayerTag> {
                 playerTag.setTagID(id);
                 playerTag.setDisplayName(resultSet.getString("name"));
                 playerTag.setDescription(resultSet.getString("description"));
-                playerTag.setTagRarity(TagRarity.valueOf(resultSet.getString("rarity")));
+                playerTag.setTagRarity(resultSet.getString("rarity"));
             }
         } catch (Exception e) {
             e.printStackTrace();

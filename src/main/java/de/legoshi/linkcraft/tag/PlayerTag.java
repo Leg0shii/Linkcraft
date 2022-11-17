@@ -1,5 +1,6 @@
 package de.legoshi.linkcraft.tag;
 
+import de.legoshi.linkcraft.map.MapType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,14 @@ public class PlayerTag {
         this.displayName = displayName;
         this.description = description;
         this.tagRarity = TagRarity.values()[tagRarity];
+    }
+
+    public void setTagRarity(String value) {
+        try {
+            this.tagRarity = TagRarity.values()[Integer.parseInt(value)];
+        } catch (Exception e) {
+            this.tagRarity = TagRarity.NONE;
+        }
     }
 
 }

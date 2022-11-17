@@ -4,6 +4,7 @@ import de.legoshi.linkcraft.tag.TagRarity;
 
 public enum MapType {
 
+    NONE,
     RANK_UP,
     BONUS,
     STANDARD,

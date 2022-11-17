@@ -23,27 +23,43 @@ public class StandardMap {
     public StandardMap(String mapName, int mapType, int mapLength, double difficulty, String builderNames, int locId) {
         this.locationId = locId;
         this.mapName = mapName;
-        this.mapType = MapType.values()[mapType];
-        this.mapLength = MapLength.values()[mapLength];
-        this.difficulty = difficulty;
+        setMapType("" + mapType);
+        setMapLength("" + mapLength);
+        setDifficulty("" + difficulty);
         this.builderNames = builderNames;
     }
 
     public StandardMap(String mapName, int mapType, int mapLength, double difficulty, String releaseDate, String builderNames) {
         this.mapName = mapName;
-        this.mapType = MapType.values()[mapType];
-        this.mapLength = MapLength.values()[mapLength];
-        this.difficulty = difficulty;
+        setMapType("" + mapType);
+        setMapLength("" + mapLength);
+        setDifficulty("" + difficulty);
         this.releaseDate = releaseDate;
         this.builderNames = builderNames;
     }
 
-    public StandardMap(String mapName, int mapType, int mapLength, double difficulty, String releaseDate) {
-        this.mapName = mapName;
-        this.mapType = MapType.values()[mapType];
-        this.mapLength = MapLength.values()[mapLength];
-        this.difficulty = difficulty;
-        this.releaseDate = releaseDate;
+    public void setMapType(String value) {
+        try {
+            this.mapType = MapType.values()[Integer.parseInt(value)];
+        } catch (Exception e) {
+            this.mapType = MapType.NONE;
+        }
+    }
+
+    public void setMapLength(String value) {
+        try {
+        this.mapLength = MapLength.values()[Integer.parseInt(value)];
+        } catch (Exception e) {
+            this.mapLength = MapLength.NONE;
+        }
+    }
+
+    public void setDifficulty(String value) {
+        try {
+            this.difficulty = Double.parseDouble(value);
+        } catch (Exception e) {
+            this.difficulty = -1;
+        }
     }
 
 }

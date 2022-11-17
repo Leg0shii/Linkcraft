@@ -3,9 +3,7 @@ package de.legoshi.linkcraft.command.map;
 import de.legoshi.linkcraft.manager.LocationManager;
 import de.legoshi.linkcraft.manager.MapManager;
 import de.legoshi.linkcraft.map.MapLength;
-import de.legoshi.linkcraft.map.MapType;
 import de.legoshi.linkcraft.map.StandardMap;
-import de.legoshi.linkcraft.tag.PlayerTag;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.Named;
@@ -14,7 +12,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
-import java.sql.ResultSet;
 
 @Command(names = "add")
 public class MapsAddCommand implements CommandClass {
@@ -40,7 +37,7 @@ public class MapsAddCommand implements CommandClass {
 
         StandardMap standardMap = new StandardMap(name, type, length, difficulty, builders, mapId);
         mapManager.initObject(standardMap);
-        sender.sendMessage("Successfully added new map " + name + " with type " + MapType.values()[type].name()
+        sender.sendMessage("Successfully added new map " + name + " with type " + standardMap.getMapType().name()
                 + " and length " + MapLength.values()[length].name() + " and difficulty " + difficulty + " and the builders " + builders);
         return true;
     }

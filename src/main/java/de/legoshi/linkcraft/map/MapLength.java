@@ -2,6 +2,7 @@ package de.legoshi.linkcraft.map;
 
 public enum MapLength {
 
+    NONE,
     EXTREMELY_LONG,
     STANDARD,
     EXTREMELY_SHORT;
