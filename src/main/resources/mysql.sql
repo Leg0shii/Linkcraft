@@ -41,6 +41,10 @@ CREATE TABLE IF NOT EXISTS `{p}maps`
     FOREIGN KEY (`spawn_location_id`) REFERENCES `{p}locations` (`id`)
 );
 
+// rename to map_attempts
+// add jump count
+// add playtime
+// add last time played
 CREATE TABLE IF NOT EXISTS `{p}map_completions`
 (
     `id`              INT AUTO_INCREMENT NOT NULL,

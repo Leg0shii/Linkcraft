@@ -15,15 +15,6 @@ import org.bukkit.entity.Player;
 import javax.inject.Inject;
 
 // /maps
-// /maps help
-// /maps add <name> <type> <difficulty> <builders>
-// /maps setstart
-// /maps settag <tag_id>
-// /maps setend <sign:plate>
-// /maps edit <name:type:difficulty:builders> <value>
-// /maps remove <map-id>
-// /maps setvictor <map-id> <user-name>
-// /maps unsetvictor <map-id> <user-name:all>
 @Command(names = "maps", desc = "%translatable:maps.desc%")
 @SubCommandClasses({
         MapsAddCommand.class,

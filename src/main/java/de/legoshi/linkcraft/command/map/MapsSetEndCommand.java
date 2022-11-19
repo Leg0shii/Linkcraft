@@ -1,4 +1,17 @@
 package de.legoshi.linkcraft.command.map;
 
-public class MapsSetEndCommand {
+import me.fixeddev.commandflow.annotated.CommandClass;
+import me.fixeddev.commandflow.annotated.annotation.Command;
+import org.bukkit.command.CommandSender;
+
+// /maps setend <sign:plate>
+@Command(names = "setend")
+public class MapsSetEndCommand implements CommandClass {
+
+    @Command(names = "")
+    public boolean remove(CommandSender sender) {
+        sender.sendMessage("To be implemented");
+        return true;
+    }
+
 }

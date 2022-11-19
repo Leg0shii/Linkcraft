@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
 
 import javax.inject.Inject;
 
-// /"maps", "edit", "<name:type:difficulty:builders:release:length>", "<map_id>", "<value>" <value>
+// /maps edit <name:type:difficulty:builders:release:length> <map_id> <value>
 @Command(names = "edit")
 public class MapsEditCommand implements CommandClass {
 

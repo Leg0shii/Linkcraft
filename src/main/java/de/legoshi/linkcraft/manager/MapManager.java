@@ -74,4 +74,14 @@ public class MapManager implements SavableManager<StandardMap> {
         return new StandardMap();
     }
 
+    public void addVictor(int id, String uuid) {
+        AsyncMySQL mySQL = dbManager.getMySQL();
+        mySQL.query("INSERT INTO lc_map_completions SET map_id = " + id +", user_id = '" + uuid + "', map_completion = true;");
+    }
+
+    public void removeVictor(int id, String uuid) {
+        AsyncMySQL mySQL = dbManager.getMySQL();
+        mySQL.query("DELETE FROM lc_map_completions WHERE map_id = " + id + " AND user_id = '" + uuid + "' AND map_completion = true;");
+    }
+
 }

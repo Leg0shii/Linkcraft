@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
 
+// /maps add <name> <type> <length> <difficulty> <builders>
 @Command(names = "add")
 public class MapsAddCommand implements CommandClass {
 

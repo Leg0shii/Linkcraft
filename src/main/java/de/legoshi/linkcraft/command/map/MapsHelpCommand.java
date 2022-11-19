@@ -6,6 +6,7 @@ import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import org.bukkit.command.CommandSender;
 
+// /maps help
 @Command(names = "help")
 public class MapsHelpCommand implements CommandClass {
 
