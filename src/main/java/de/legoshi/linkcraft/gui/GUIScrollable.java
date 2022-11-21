@@ -21,18 +21,25 @@ public abstract class GUIScrollable extends GUIPane {
     protected abstract boolean getPage();
 
     private void registerPageElements() {
-        this.pageUp = new StaticGuiElement('u', new ItemStack(Material.ARROW, 1), (click -> {
+        this.pageUp = new StaticGuiElement('u', new ItemStack(Material.ARROW, page + 1), (click -> {
             if(page > 0) {
                 page--;
+                pageDown.setNumber(page + 2);
+                pageUp.setNumber(page + 1);
                 getPage();
-                click.getGui().setPageNumber(page);
+                click.getGui().setPageNumber(click.getGui().getPageNumber(holder));
+                click.getGui().playClickSound();
             }
             return true;
         }), "Previous page");
 
-        this.pageDown = new StaticGuiElement('d', new ItemStack(Material.ARROW, 1), (click -> {
+        this.pageDown = new StaticGuiElement('d', new ItemStack(Material.ARROW, page + 2), (click -> {
             page++;
             if(getPage()) {
+                pageDown.setNumber(page + 2);
+                pageUp.setNumber(page + 1);
+                click.getGui().setPageNumber(click.getGui().getPageNumber(holder) + 2);
+                click.getGui().playClickSound();
                 click.getGui().setPageNumber(page);
             } else {
                 page--;
