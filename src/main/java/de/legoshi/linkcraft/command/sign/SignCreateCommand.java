@@ -16,7 +16,6 @@ public class SignCreateCommand implements CommandClass {
 
     @Command(names = "tag")
     public boolean signCreateTag(CommandSender commandSender, @Named(value = "tagId") String tagId) {
-
         return true;
     }
 

@@ -1,37 +1,27 @@
 package de.legoshi.linkcraft.database;
-import de.legoshi.linkcraft.util.Cooldown;
 import de.legoshi.linkcraft.util.FileWriter;
 import de.legoshi.linkcraft.util.LCConfig;
-import de.legoshi.linkcraft.util.message.Messages;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class DBManager {
 
     private Plugin plugin;
     @Getter private AsyncMySQL mySQL;
-
-    @Getter private Function<String, String> prefixProcessor;
-    @Getter private final String COMMAND_COOLDOWNS_SELECT = "SELECT * FROM {p}command_cooldowns WHERE LOWER(command)=LOWER(?);";
+    
+    @Getter private final String COMMAND_COOLDOWNS_SELECT = "SELECT * FROM lc_command_cooldowns WHERE LOWER(command)=LOWER(?);";
 
     public DBManager(Plugin plugin) {
         this.plugin = plugin;
-        this.prefixProcessor = (s -> s.replace("{p}", "lc_"));
         this.mySQL = connectToDB();
 
         initializeTables();
@@ -64,15 +54,10 @@ public class DBManager {
     }
 
     private void createSchema() {
-        List<String> statements;
         try (InputStream is = plugin.getResource("mysql.sql")) {
-
-            statements = getStatements(is).stream().map(prefixProcessor).collect(Collectors.toList());
-            // mySQL.getMySQL().isConnected(true);
-            for(String statement : statements) {
+            for(String statement : getStatements(is)) {
                 mySQL.update(statement);
             }
-
         } catch(IOException e) {
             e.printStackTrace();
         }
@@ -85,7 +70,7 @@ public class DBManager {
             String line;
             while((line = br.readLine()) != null) {
 
-                if(!line.startsWith("--")) {
+                if(!line.startsWith("--") && !line.startsWith("//")) {
                     sb.append(line);
 
                     if(line.endsWith(";")) {

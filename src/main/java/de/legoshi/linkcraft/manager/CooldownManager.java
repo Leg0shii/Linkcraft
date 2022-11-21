@@ -5,8 +5,6 @@ import de.legoshi.linkcraft.database.DBManager;
 import de.legoshi.linkcraft.util.Cooldown;
 import de.legoshi.linkcraft.util.message.MessageUtils;
 import de.legoshi.linkcraft.util.message.Messages;
-import de.legoshi.linkcraft.util.message.Prefix;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
@@ -89,7 +87,7 @@ public class CooldownManager {
     public Cooldown getCooldownInfo(String commandName) {
         Cooldown cd = null;
         AsyncMySQL mySQL = dbManager.getMySQL();
-        PreparedStatement stmt = mySQL.prepare(dbManager.getPrefixProcessor().apply(dbManager.getCOMMAND_COOLDOWNS_SELECT()));
+        PreparedStatement stmt = mySQL.prepare(dbManager.getCOMMAND_COOLDOWNS_SELECT());
         try {
             stmt.setString(1, commandName);
             ResultSet rs = mySQL.query(stmt);

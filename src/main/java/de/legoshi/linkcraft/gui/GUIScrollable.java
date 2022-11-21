@@ -10,25 +10,34 @@ public abstract class GUIScrollable extends GUIPane {
 
     protected StaticGuiElement pageUp;
     protected StaticGuiElement pageDown;
-
-    protected final int pageVolume = 40;
-    protected int page;
+    protected int page = 0;
+    protected int pageVolume = 40;
 
     public void openGui(Player player, InventoryGui parent) {
         super.openGui(player, parent);
         registerPageElements();
     }
 
+    protected abstract boolean getPage();
+
     private void registerPageElements() {
-        this.pageUp = new StaticGuiElement('u', new ItemStack(Material.ARROW, 1), click -> {
-
+        this.pageUp = new StaticGuiElement('u', new ItemStack(Material.ARROW, 1), (click -> {
+            if(page > 0) {
+                page--;
+                getPage();
+                click.getGui().setPageNumber(page);
+            }
             return true;
-        }, "Previous Page");
+        }), "Previous page");
 
-        this.pageDown = new StaticGuiElement('d', new ItemStack(Material.ARROW, 1), click -> {
-
+        this.pageDown = new StaticGuiElement('d', new ItemStack(Material.ARROW, 1), (click -> {
+            page++;
+            if(getPage()) {
+                click.getGui().setPageNumber(page);
+            } else {
+                page--;
+            }
             return true;
-        }, "Next Page");
+        }), "Next page");
     }
-
 }

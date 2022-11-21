@@ -11,9 +11,10 @@ import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 
-public class PlayerManager implements SavableManager<AbstractPlayer> {
+public class PlayerManager implements SavableManager<AbstractPlayer, String> {
 
     @Inject private DBManager dbManager;
     @Inject private TagManager tagManager;
@@ -35,8 +36,14 @@ public class PlayerManager implements SavableManager<AbstractPlayer> {
             // and create a save whenever he leaves to where he can return back
             iPlayer = new StandardPlayer(player, tempPlayer.getPlayerTag());
         }
+        saveName(player);
 
         hashMap.put(player, iPlayer);
+    }
+
+    public void saveName(Player player) {
+        String uniqueID = player.getUniqueId().toString();
+        dbManager.getMySQL().update("UPDATE lc_players SET name='" + player.getName() + "' WHERE user_id='" + uniqueID + "';");
     }
 
     public void playerQuit(Player player) {
@@ -52,15 +59,17 @@ public class PlayerManager implements SavableManager<AbstractPlayer> {
     @Override
     public void initObject(AbstractPlayer abstractPlayer) {
         AsyncMySQL mySQL = dbManager.getMySQL();
+
         String uniqueID = abstractPlayer.getPlayer().getUniqueId().toString();
-        mySQL.update("INSERT INTO lc_players (user_id) VALUES ('" + uniqueID + "');");
+        String name = abstractPlayer.getPlayer().getDisplayName();
+        mySQL.update("INSERT INTO lc_players (user_id, name) VALUES ('" + uniqueID + "', '" + name + "');");
     }
 
     @Override
     public void updateObject(AbstractPlayer abstractPlayer) {
         AsyncMySQL mySQL = dbManager.getMySQL();
         String uniqueId = abstractPlayer.getPlayer().getUniqueId().toString();
-        String tagId = abstractPlayer.getPlayerTag().getTagID();
+        int tagId = abstractPlayer.getPlayerTag().getTagID();
         mySQL.update("UPDATE lc_players SET tag_id = " + tagId + " WHERE user_id = '" + uniqueId + "';");
     }
 
@@ -77,16 +86,20 @@ public class PlayerManager implements SavableManager<AbstractPlayer> {
     public AbstractPlayer requestObjectById(String id) {
         AsyncMySQL mySQL = dbManager.getMySQL();
         ResultSet resultSet = mySQL.query("SELECT tag_id FROM lc_players WHERE user_id ='" + id + "';");
-        String tagId = "1";
+        int tagId = 0;
         try {
             if (resultSet.next()) {
-                tagId = "" + resultSet.getInt("tag_id");
+                tagId = resultSet.getInt("tag_id");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        PlayerTag playerTag = tagManager.requestObjectById(tagId);
-        return new StandardPlayer(null, playerTag);
+        PlayerTag playerTag = new PlayerTag();
+        if(tagId != 0) {
+            playerTag = tagManager.requestObjectById(tagId);
+        }
+        StandardPlayer standardPlayer = new StandardPlayer(null, playerTag);
+        return standardPlayer;
     }
 
     private boolean isInDatabase(Player player) {
@@ -98,6 +111,35 @@ public class PlayerManager implements SavableManager<AbstractPlayer> {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public String uuidByName(String name) {
+        String uuid = "";
+        ResultSet rs = dbManager.getMySQL().query("SELECT user_id FROM lc_players WHERE name='" + name + "';");
+
+        try {
+            if(rs.next()) {
+                uuid = rs.getString("user_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return uuid;
+    }
+
+    public int playerCount() {
+        int count = 0;
+        ResultSet rs = dbManager.getMySQL().query("SELECT COUNT(*) AS 'count' FROM lc_players;");
+
+        try {
+            if(rs.next()) {
+                count = rs.getInt("count");
+            }
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+
+        return count;
     }
 
 }

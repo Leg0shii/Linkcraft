@@ -18,10 +18,12 @@ import javax.inject.Inject;
 @Command(names = "tags", desc = "%translatable:tags.desc%")
 @SubCommandClasses({
         TagAddCommand.class,
-        TagsEditCommand.class,
-        TagsRemoveCommand.class,
-        TagsSetCommand.class,
-        TagsUnsetCommand.class
+        TagEditCommand.class,
+        TagRemoveCommand.class,
+        TagSetCommand.class,
+        TagUnsetCommand.class,
+        TagGiveCommand.class,
+        TagDeleteCommand.class,
 })
 @ArgOrSub(value = true)
 public class TagCommand implements CommandClass {
@@ -32,12 +34,13 @@ public class TagCommand implements CommandClass {
     @Command(names = "help")
     public boolean tagsHelp(CommandSender sender) {
         String message = MessageUtils.composeMessage(Messages.COMMAND_LIST_PAGE_HEADER, false, "tags");
-        message = message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "tags", "help");
-        message = message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "tags", "add", "<name>", "<rarity>", "[description]");
-        message =  message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "tags", "edit", "<name:rarity:desc>", "<tag_id>", "<value>");
-        message = message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "tags", "remove", "<tag_id>");
+        message = message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "tags", "add", "<name>", "<rarity>", "<type>", "[description]");
+        message = message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "tags", "edit", "<tag_id>", "<name:rarity:type:desc>", "<value>");
+        message = message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "tags", "remove", "<user_name>", "<tag_id:all>");
         message = message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "tags", "set", "<user_name>", "<tag_id>");
-        message = message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "tags", "edit", "<user_name>", "<tag_id:all>");
+        message = message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "tags", "unset", "<user_name>");
+        message = message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "tags", "give", "<user_name>", "<tag_id>");
+        message = message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "tags", "delete", "<tag_id>");
         message = message + "\n" + MessageUtils.composeMessage(Messages.COMMAND_LIST_PAGE_FOOTER, false);
         MessageUtils.sendMessage(sender, message);
         return true;

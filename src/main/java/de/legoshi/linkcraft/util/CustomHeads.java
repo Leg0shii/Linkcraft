@@ -40,6 +40,7 @@ public class CustomHeads {
     public static ItemStack rareTagHead = create("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDQ2ODgxNDFlYzc4ZGVkN2JhZWU1ZmZjOTczOTAyMjRhZTllMjMyNzg1MTRkYmYyODQ1OGJmZWE2MiJ9fX0=");
     public static ItemStack epicTagHead = create("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzQ1MTg5N2Q3Zjc0N2E5MDFjMTgzYmZlZTJlZDE3NGYzNTY1NWM5NjZmOWFkZjZlMmM3NjMwYTAzYTgxNTViZCJ9fX0===");
     public static ItemStack legendaryTagHead = create("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGNjNDE0ZmJiNmE5MzU5NzgzMzE4Y2EwYmYxN2E4Njg4ZjkyYmZhMzk4MDI3N2FiYmZkZjY5ZjFlZGViMzQifX19");
+    public static ItemStack resetHead = create("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmFjYTRkNjk1ZTRlN2Y0N2ZhZDU4Y2YzNzFjMmMwZTIxM2ZiM2QxMDIzMjYxMWQ3M2QwNzUzNzRjODk4MCJ9fX0=");
 
     static {
         String versionString = Bukkit.getBukkitVersion();

@@ -6,12 +6,11 @@ import de.legoshi.linkcraft.database.SavableManager;
 import de.legoshi.linkcraft.map.MapLength;
 import de.legoshi.linkcraft.map.MapType;
 import de.legoshi.linkcraft.map.StandardMap;
-import org.bukkit.Location;
 
 import javax.inject.Inject;
 import java.sql.ResultSet;
 
-public class MapManager implements SavableManager<StandardMap> {
+public class MapManager implements SavableManager<StandardMap, String> {
 
     @Inject private DBManager dbManager;
 

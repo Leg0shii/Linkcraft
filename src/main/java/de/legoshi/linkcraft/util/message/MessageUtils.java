@@ -209,7 +209,7 @@ public interface MessageUtils {
         builder.append(objects.length > 0 ? CommonsUtils.formatPlaceholder(send, objects) : send);
         String m = toLegacy(builder.build());
         for (int i = objects.length; i < 10; i++) m = m.replace("{"+i+"} ", "").replace("{"+i+"}", "");
-        return m;
+        return translateChatColor(m);
     }
 
     static Component composeComponent(String base, TextComponent.Builder[] builders, boolean prefix) {

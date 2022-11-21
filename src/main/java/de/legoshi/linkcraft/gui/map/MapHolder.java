@@ -8,8 +8,6 @@ import de.legoshi.linkcraft.manager.PlayerManager;
 import de.legoshi.linkcraft.map.MapLength;
 import de.legoshi.linkcraft.map.MapType;
 import de.legoshi.linkcraft.player.AbstractPlayer;
-import de.legoshi.linkcraft.tag.PlayerTag;
-import de.legoshi.linkcraft.tag.TagRarity;
 import de.themoep.inventorygui.GuiElementGroup;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
@@ -19,7 +17,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import javax.inject.Inject;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -55,7 +52,8 @@ public class MapHolder extends GUIScrollable {
     protected void registerGuiElements() {
         AsyncMySQL mySQL = dbManager.getMySQL();
         int mapTypePosition = MapType.getMapPosition(mapType);
-        ResultSet resultSet = mySQL.query("SELECT * FROM lc_maps WHERE type = " + mapTypePosition + " LIMIT " + (pageVolume * (page - 1)) + ", 40;");
+        ResultSet resultSet = mySQL.query("SELECT * FROM lc_maps WHERE type = " + mapTypePosition + ";");
+        // ResultSet resultSet = mySQL.query("SELECT * FROM lc_maps WHERE type = " + mapTypePosition + " LIMIT " + (pageVolume * (page - 1)) + ", 40;");
 
         GuiElementGroup group = new GuiElementGroup('g');
         this.current.addElement(new StaticGuiElement('f', new ItemStack(Material.STAINED_GLASS_PANE, 1), click -> true, " "));
@@ -109,4 +107,8 @@ public class MapHolder extends GUIScrollable {
         return staticGuiElement;
     }
 
+    @Override
+    protected boolean getPage() {
+        return false;
+    }
 }

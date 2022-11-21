@@ -4,7 +4,8 @@ public enum Prefix {
 
     INFO("&6&l[Linkcraft]&7 "),
     ERROR("&c[Error]&7 "),
-    SUCCESS("&a[Success]&7 ");
+    SUCCESS("&a[Success]&7 "),
+    TEST("&6&l[Test]&7" );
 
     private final String p;
 

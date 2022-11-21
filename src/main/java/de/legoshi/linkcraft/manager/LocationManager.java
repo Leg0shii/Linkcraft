@@ -3,17 +3,13 @@ package de.legoshi.linkcraft.manager;
 import de.legoshi.linkcraft.database.AsyncMySQL;
 import de.legoshi.linkcraft.database.DBManager;
 import de.legoshi.linkcraft.database.SavableManager;
-import de.legoshi.linkcraft.map.MapLength;
-import de.legoshi.linkcraft.map.MapType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-
 import javax.inject.Inject;
-import java.nio.Buffer;
 import java.sql.ResultSet;
 
-public class LocationManager implements SavableManager<Location> {
+public class LocationManager implements SavableManager<Location, String> {
 
     @Inject private DBManager dbManager;
 

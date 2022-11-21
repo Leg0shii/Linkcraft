@@ -1,13 +1,19 @@
 package de.legoshi.linkcraft.gui.tag;
 
-import com.sun.tools.javac.Main;
 import de.legoshi.linkcraft.Linkcraft;
-import de.legoshi.linkcraft.database.AsyncMySQL;
 import de.legoshi.linkcraft.gui.GUIScrollable;
 import de.legoshi.linkcraft.manager.PlayerManager;
+import de.legoshi.linkcraft.manager.TagManager;
 import de.legoshi.linkcraft.player.AbstractPlayer;
 import de.legoshi.linkcraft.tag.PlayerTag;
+import de.legoshi.linkcraft.tag.TagData;
 import de.legoshi.linkcraft.tag.TagRarity;
+import de.legoshi.linkcraft.tag.TagType;
+import de.legoshi.linkcraft.util.CommonsUtils;
+import de.legoshi.linkcraft.util.CustomHeads;
+import de.legoshi.linkcraft.util.ItemUtils;
+import de.legoshi.linkcraft.util.message.MessageUtils;
+import de.legoshi.linkcraft.util.message.Messages;
 import de.themoep.inventorygui.GuiElementGroup;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
@@ -16,87 +22,147 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import javax.inject.Inject;
-import javax.swing.text.html.HTML;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class TagHolder extends GUIScrollable {
 
     @Inject private PlayerManager playerManager;
-    private TagRarity tagRarity;
+    @Inject private TagManager tagManager;
 
+    private TagRarity tagRarity;
+    private int tagRarityPos;
+    private int playerCount;
+    private DecimalFormat df;
     private String title;
     private final String[] guiSetup = {
             "ggggggggu",
-            "ggggggggf",
             "ggggggggq",
-            "ggggggggf",
+            "ggggggggr",
+            "ggggggggq",
             "ggggggggd",
     };
 
-    public void openGui(Player player, InventoryGui parent, TagRarity rarity, int page) {
+    public void openGui(Player player, InventoryGui parent, TagRarity rarity) {
         super.openGui(player, parent);
-        this.page = page;
         this.tagRarity = rarity;
-        this.title = rarity.name() + " tags";
-        this.current = new InventoryGui((JavaPlugin) Linkcraft.getPlugin(), player, title, guiSetup);
-        registerGuiElements();
+        this.tagRarityPos = TagRarity.getTagPosition(tagRarity);
+        // TODO: add total player tag count to title?
+        this.title = CommonsUtils.capatalize(rarity.name().toLowerCase()) + " tags";
+        this.current = new InventoryGui((JavaPlugin)Linkcraft.getPlugin(), player, title, guiSetup);
+        this.playerCount = playerManager.playerCount();
+        this.df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+        df.setMinimumFractionDigits(2);
         fullCloseOnEsc();
+        registerGuiElements();
         this.current.show(this.holder);
     }
 
     @Override
-    protected void registerGuiElements() {
-        AsyncMySQL mySQL = dbManager.getMySQL();
-        int tagRarityPos = TagRarity.getTagPosition(tagRarity);
-        ResultSet resultSet = mySQL.query("SELECT tag_id, name, rarity, description " +
-                "FROM lc_tags WHERE rarity = " + tagRarityPos + " LIMIT " + (pageVolume * (page - 1)) + ", 40;");
+    protected boolean getPage() {
+        ArrayList<TagData> tagData = tagManager.getTags(tagRarityPos, holder, page, pageVolume);
+        if(tagData.isEmpty()) {
+            return false;
+        }
+        this.current.removeElement('g');
 
         GuiElementGroup group = new GuiElementGroup('g');
-        this.current.addElement(new StaticGuiElement('f', new ItemStack(Material.STAINED_GLASS_PANE, 1), click -> true, " "));
-
-        try {
-            if (resultSet != null) {
-                while (resultSet.next()) {
-                    group.addElement(mapElements(resultSet));
-                }
-                this.current.addElement(group);
-            } else {
-
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        for (TagData tag : tagData) {
+            group.addElement(addTag(tag));
+            this.current.addElement(group);
         }
-
-        this.current.addElements(this.pageUp, this.pageDown, this.returnToParent);
+        return true;
     }
 
-    private StaticGuiElement mapElements(ResultSet resultSet) throws SQLException {
-        int tagId = resultSet.getInt("tag_id");
-        String name = resultSet.getString("name");
-        String desc = resultSet.getString("description");
-        int rarity = resultSet.getInt("rarity");
-        TagRarity tagRarity = TagRarity.values()[rarity];
+    @Override
+    protected void registerGuiElements() {
+        getPage();
 
-        StaticGuiElement staticGuiElement;
-        staticGuiElement = new StaticGuiElement('g', new ItemStack(Material.NAME_TAG), click -> {
-            AbstractPlayer abstractPlayer = playerManager.getPlayer((Player) click.getWhoClicked());
-            abstractPlayer.setPlayerTag(new PlayerTag("" + tagId, name, desc, TagRarity.values()[rarity]));
+        StaticGuiElement resetTag = new StaticGuiElement('r', CustomHeads.resetHead, click -> {
+            if(tagManager.hasTag(holder)) {
+                holder.performCommand("tags unset");
+                current.close();
+            } else {
+                holder.sendMessage(MessageUtils.composeMessage(Messages.TAGS_UNSET_NONE, true));
+            }
+
+            return true;
+        }, "§cRemove tag");
+
+        this.current.addElements(this.pageUp, this.pageDown, this.returnToParent, resetTag);
+    }
+
+    private StaticGuiElement addTag(TagData tagData) {
+        int tagId = tagData.getTagId();
+        String name = tagData.getName();
+        String desc = tagData.getDescription();
+        int rarity = tagData.getRarity();
+        int type = tagData.getType();
+        String date = tagData.getDate() != null ? tagData.getDate() : "Not collected";
+        TagRarity tagRarity = TagRarity.values()[rarity];
+        TagType tagType = TagType.values()[type];
+        String cName = MessageUtils.translateChatColor(name);
+        String cDesc = ChatColor.GRAY + desc;
+        String plural = tagData.getOwnedBy() == 1 ? "player" : "players";
+        String example = playerManager.getPlayer(holder).sampleChat(name, "msg");
+        //String percentOwned = df.format((tagData.getOwnedBy() / (float)playerCount) * 100L) + "%";
+
+        ItemStack tagItem = new ItemStack(Material.NAME_TAG, 1);
+
+        // If the tag is collected, add enchantment glow
+        if(tagData.getDate() != null) {
+            ItemUtils.addGlow(tagItem);
+        }
+        // TODO: Add some way to let the player know their current tag?
+
+        return new StaticGuiElement('g', tagItem, click -> {
+            if(tagManager.hasTag(holder, tagId)) {
+                AbstractPlayer abstractPlayer = playerManager.getPlayer(holder);
+                tagManager.setTag(holder, tagId);
+                abstractPlayer.setPlayerTag(new PlayerTag(tagId, name, desc, TagRarity.values()[rarity], TagType.values()[type]));
+                holder.sendMessage(MessageUtils.composeMessage(Messages.TAGS_SELECT, true, name));
+                current.close();
+            } else {
+                holder.sendMessage(MessageUtils.composeMessage(Messages.TAGS_NOT_UNLOCKED, true, name));
+            }
             return true; // returning true will cancel the click event and stop taking the item
         },
-                "§r" + name + ChatColor.WHITE + " (" + tagId + ")",
-                "\n§l§6-----Tag Information-----\n" +
-                "§r§l§6» §eType:        §7" + "TODO" + "\n" +
-                "§r§l§6» §eRarity:      §7" + TagRarity.toColor(tagRarity) + tagRarity + "\n" +
-                "§r§l§6» §eDescription: §7" + desc + "\n\n" +
-                "§l§6-----Your Stats-----\n" +
-                "§r§l§6» §eCollected: §7" + "TODO (DATE)\n" +
-                "§r§l§6» §eTotal:      §7" + "TODO (0/0) 0%\n" +
-                "§8 right click - show leaderboard\n"
+                // TODO: Carry description colour over to next line?
+                "§r" + cName + ChatColor.WHITE + " (" + tagId + ")",
+                "§l§6-----Tag Information-----\n" +
+                "§r§l§6» §eType: §7" + TagType.toColor(tagType) + tagType + "\n" +
+                "§r§l§6» §eRarity: §7" + TagRarity.toColor(tagRarity) + tagRarity + "\n" +
+                "§r§l§6» §eDescription: §7" + CommonsUtils.wrap(cDesc, 17, 30) + "\n\n" +
+                "§l§6-----Tag Stats-----\n" +
+                "§r§l§6» §eCollected: §7" + date + "\n" +
+                "§r§l§6» §eOwned by: §7" + difficulty(tagData.getOwnedBy()) +  tagData.getOwnedBy() + " " + plural + "\n\n" + //+ "/" + playerCount + ") " + percentOwned + "\n" +
+                example + "\n"
                 );
-        return staticGuiElement;
     }
+
+    // im tired... ik this is horrible
+    // TODO: get from config?
+    private ChatColor difficulty(int beaten) {
+        ChatColor c;
+        if(beaten <= 5) {
+            c = ChatColor.DARK_PURPLE;
+        } else if(beaten <= 15) {
+            c = ChatColor.DARK_RED;
+        } else if(beaten <= 30) {
+            c = ChatColor.RED;
+        } else if(beaten <= 75) {
+            c = ChatColor.GOLD;
+        } else if(beaten <= 150) {
+            c = ChatColor.YELLOW;
+        } else if(beaten <= 350) {
+            c = ChatColor.GREEN;
+        } else {
+            c = ChatColor.DARK_GREEN;
+        }
+        return c;
+    }
+
 
 }

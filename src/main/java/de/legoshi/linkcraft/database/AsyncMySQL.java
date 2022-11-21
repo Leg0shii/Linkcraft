@@ -182,7 +182,7 @@ public class AsyncMySQL {
                     return;
                 }
                 Class.forName("com.mysql.cj.jdbc.Driver");
-                this.conn = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database + "?useSSL=false&autoReconnect=true&characterEncoding=latin1&useConfigs=maxPerformance", this.user, this.password);
+                this.conn = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database + "?useSSL=false&autoReconnect=true&characterEncoding=UTF-8&useUnicode=yes&useConfigs=maxPerformance", this.user, this.password);
                 //&characterEncoding=latin1&useConfigs=maxPerformance
             }
 

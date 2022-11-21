@@ -3,6 +3,8 @@ package de.legoshi.linkcraft.util;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import me.fixeddev.commandflow.stack.ArgumentStack;
+import org.bukkit.ChatColor;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
@@ -316,6 +318,32 @@ public interface CommonsUtils {
         return builder.toString();
     }
 
+    static String joinArguments(ArgumentStack as) {
+        StringBuilder sb = new StringBuilder();
+        if(as.hasNext()) {
+            sb.append(as.next());
+            while (as.hasNext()) {
+                sb.append(" ").append(as.next());
+            }
+        }
+        return sb.toString();
+    }
+
+    // I'm sure there is a much better word wrapping implementation..
+    static String wrap(String desc, int start, int increment) {
+        if(desc.length() > start) {
+            StringBuilder sb = new StringBuilder(desc);
+            for(int i = start; i < desc.length(); i += increment) {
+                if(sb.lastIndexOf(" ", i) != -1) {
+                    sb.insert(sb.lastIndexOf(" ", i), "\n" + ChatColor.getLastColors(sb.substring(0, i)));
+                }
+            }
+            desc = sb.toString();
+        }
+        return desc;
+
+    }
+
     /**
      * Check if string parameters is null or empty,
      * and if is, will throw NullPointerException.
@@ -409,6 +437,10 @@ public interface CommonsUtils {
         }
 
         return message;
+    }
+
+    static String capatalize(String string) {
+        return string.substring(0, 1).toUpperCase() + string.substring(1);
     }
 
     /**
