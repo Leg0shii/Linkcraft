@@ -1,5 +1,6 @@
 package de.legoshi.linkcraft.command.tag;
 
+import de.legoshi.linkcraft.manager.PlayerManager;
 import de.legoshi.linkcraft.manager.TagManager;
 import de.legoshi.linkcraft.tag.PlayerTag;
 import de.legoshi.linkcraft.util.CommonsUtils;
@@ -16,32 +17,36 @@ import javax.inject.Named;
 public class TagRemoveCommand implements CommandClass {
     @Inject
     private TagManager tagManager;
+    @Inject
+    private PlayerManager playerManager;
 
     @Command(names = "")
     public boolean removeTag(CommandSender sender, @Named("player") String player, @Named("tag") String tagId) {
-        if(!tagManager.playerExists(player)) {
+        if (!playerManager.playerExists(player)) {
             sender.sendMessage(MessageUtils.composeMessage(Messages.NEVER_JOINED, true, player));
+            return false;
         }
-        else if(CommonsUtils.isNumeric(tagId)) {
-            int id = (int)Float.parseFloat(tagId);
-            if(!tagManager.tagExists(id)) {
-                sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_NO_TAG, true, id));
-            }
-            else if(!tagManager.hasTag(player, id)) {
-                sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_HASNT_UNLOCKED, true, player, id));
-            }
-            else {
-                PlayerTag tag = tagManager.requestObjectById(id);
-                tagManager.removeTag(player, id);
-                sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_REMOVE_TAG, true, player, tag.getDisplayName()));
-            }
-        }
-        else if(tagId.equalsIgnoreCase("all")) {
+
+        if (tagId.equalsIgnoreCase("all")) {
             int amountRemoved = tagManager.removeAllTags(player);
             sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_REMOVE_TAGS, true, amountRemoved, player));
+            return true;
         }
-        else {
+
+        if (!CommonsUtils.isNumeric(tagId)) {
             sender.sendMessage(MessageUtils.composeMessage(Messages.INVALID_ARG, true, tagId));
+            return false;
+        }
+
+        int id = (int) Float.parseFloat(tagId);
+        if (!tagManager.tagExists(id)) {
+            sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_NO_TAG, true, id));
+        } else if (!tagManager.hasTag(player, id)) {
+            sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_HASNT_UNLOCKED, true, player, id));
+        } else {
+            PlayerTag tag = tagManager.requestObjectById(id);
+            tagManager.removeTag(player, id);
+            sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_REMOVE_TAG, true, player, tag.getDisplayName()));
         }
 
         return true;

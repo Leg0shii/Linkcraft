@@ -1,5 +1,6 @@
 package de.legoshi.linkcraft.command.tag;
 
+import de.legoshi.linkcraft.manager.PlayerManager;
 import de.legoshi.linkcraft.manager.TagManager;
 import de.legoshi.linkcraft.tag.PlayerTag;
 import de.legoshi.linkcraft.util.message.MessageUtils;
@@ -13,17 +14,18 @@ import javax.inject.Inject;
 // Is this for admins or players (I assumed admins, so I made it override whether a player has the tag unlocked
 @Command(names = "set", desc = "%translatable:tags.set.desc%")
 public class TagSetCommand implements CommandClass {
-    @Inject private TagManager tagManager;
+    @Inject
+    private TagManager tagManager;
+    @Inject
+    private PlayerManager playerManager;
 
     @Command(names = "")
     public boolean setTag(CommandSender sender, String player, int tagId) {
-        if(!tagManager.playerExists(player)) {
+        if (!playerManager.playerExists(player)) {
             sender.sendMessage(MessageUtils.composeMessage(Messages.NEVER_JOINED, true, player));
-        }
-        else if(!tagManager.tagExists(tagId)) {
+        } else if (!tagManager.tagExists(tagId)) {
             sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_NO_TAG, true, tagId));
-        }
-        else {
+        } else {
             // Not sure who this should message...
             PlayerTag tag = tagManager.requestObjectById(tagId);
             tagManager.setTag(player, tagId);

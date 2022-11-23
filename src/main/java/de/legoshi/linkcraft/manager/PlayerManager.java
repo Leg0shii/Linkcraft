@@ -113,6 +113,18 @@ public class PlayerManager implements SavableManager<AbstractPlayer, String> {
         return false;
     }
 
+    public boolean playerExists(String player) {
+        boolean result = false;
+        ResultSet rs = dbManager.getMySQL().query("SELECT * FROM lc_players WHERE name='" + player + "';");
+        try {
+            result = rs.next();
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
     public String uuidByName(String name) {
         String uuid = "";
         ResultSet rs = dbManager.getMySQL().query("SELECT user_id FROM lc_players WHERE name='" + name + "';");

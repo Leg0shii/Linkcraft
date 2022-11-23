@@ -25,9 +25,7 @@ public class TagEditCommand implements CommandClass {
         PlayerTag tag = tagManager.requestObjectById(tagId);
         boolean valid = true;
         switch(field.toLowerCase()) {
-            case "name" -> {
-                tag.setDisplayName(value);
-            }
+            case "name" -> tag.setDisplayName(value);
             case "rarity" -> {
                 if(!CommonsUtils.isNumeric(value)) {
                     sender.sendMessage(MessageUtils.composeMessage(Messages.REQUIRE_INTEGER, true, "Rarity"));

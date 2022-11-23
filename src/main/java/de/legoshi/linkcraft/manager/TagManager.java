@@ -107,18 +107,6 @@ public class TagManager implements SavableManager<PlayerTag, Integer> {
         return playerTag;
     }
 
-    public boolean playerExists(String player) {
-        boolean result = false;
-        ResultSet rs = dbManager.getMySQL().query("SELECT * FROM lc_players WHERE name='" + player + "';");
-        try {
-            result = rs.next();
-        } catch(SQLException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
-
     public boolean tagExists(int tagId) {
         boolean result = false;
         ResultSet rs = dbManager.getMySQL().query("SELECT * FROM lc_tags WHERE tag_id=" + tagId + ";");
@@ -144,19 +132,8 @@ public class TagManager implements SavableManager<PlayerTag, Integer> {
     }
 
     public boolean hasTag(Player player, int tagId) {
-        boolean result = false;
         String playerID = player.getUniqueId().toString();
-        ResultSet rs = dbManager.getMySQL().query("SELECT tag_id FROM lc_player_tags WHERE user_id='" + playerID + "'" + " AND tag_id=" + tagId);
-
-        try {
-            if(rs.next()) {
-                result = true;
-            }
-        } catch(SQLException e) {
-            e.printStackTrace();
-        }
-
-        return result;
+        return hasTag(playerID, tagId);
     }
 
     public boolean hasTag(Player player) {

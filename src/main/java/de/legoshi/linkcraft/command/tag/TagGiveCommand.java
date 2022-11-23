@@ -1,5 +1,6 @@
 package de.legoshi.linkcraft.command.tag;
 
+import de.legoshi.linkcraft.manager.PlayerManager;
 import de.legoshi.linkcraft.manager.TagManager;
 import de.legoshi.linkcraft.tag.PlayerTag;
 import de.legoshi.linkcraft.util.message.MessageUtils;
@@ -13,20 +14,20 @@ import javax.inject.Named;
 
 @Command(names = "give", desc = "%translatable:tags.give.desc%")
 public class TagGiveCommand implements CommandClass {
-    @Inject private TagManager tagManager;
+    @Inject
+    private TagManager tagManager;
+    @Inject
+    private PlayerManager playerManager;
 
     @Command(names = "")
     public boolean giveTag(CommandSender sender, @Named("player") String player, @Named("tag") int tagId) {
-        if(!tagManager.playerExists(player)) {
+        if (!playerManager.playerExists(player)) {
             sender.sendMessage(MessageUtils.composeMessage(Messages.NEVER_JOINED, true, player));
-        }
-        else if(!tagManager.tagExists(tagId)) {
+        } else if (!tagManager.tagExists(tagId)) {
             sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_NO_TAG, true, tagId));
-        }
-        else if(tagManager.hasTag(player, tagId)) {
+        } else if (tagManager.hasTag(player, tagId)) {
             sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_HAS_TAG, true, player, tagId));
-        }
-        else {
+        } else {
             tagManager.giveTag(player, tagId);
             PlayerTag tag = tagManager.requestObjectById(tagId);
             sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_GAVE_TAG, true, player, tag.getDisplayName()));
