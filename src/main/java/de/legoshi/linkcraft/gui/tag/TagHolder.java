@@ -48,15 +48,16 @@ public class TagHolder extends GUIScrollable {
         super.openGui(player, parent);
         this.tagRarity = rarity;
         this.tagRarityPos = TagRarity.getTagPosition(tagRarity);
-        // TODO: add total player tag count to title?
         this.title = CommonsUtils.capatalize(rarity.name().toLowerCase()) + " tags";
         this.current = new InventoryGui((JavaPlugin)Linkcraft.getPlugin(), player, title, guiSetup);
         this.playerCount = playerManager.playerCount();
         this.df = new DecimalFormat();
+
         df.setMaximumFractionDigits(2);
         df.setMinimumFractionDigits(2);
         fullCloseOnEsc();
         registerGuiElements();
+
         this.current.show(this.holder);
     }
 
@@ -66,6 +67,7 @@ public class TagHolder extends GUIScrollable {
         if(tagData.isEmpty()) {
             return false;
         }
+
         this.current.removeElement('g');
 
         GuiElementGroup group = new GuiElementGroup('g');

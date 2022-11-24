@@ -21,6 +21,7 @@ public abstract class GUIScrollable extends GUIPane {
     protected abstract boolean getPage();
 
     private void registerPageElements() {
+        this.page = 0;
         this.pageUp = new StaticGuiElement('u', new ItemStack(Material.ARROW, page + 1), (click -> {
             if(page > 0) {
                 page--;

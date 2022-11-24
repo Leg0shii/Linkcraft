@@ -132,8 +132,8 @@ public class TagManager implements SavableManager<PlayerTag, Integer> {
     }
 
     public boolean hasTag(Player player, int tagId) {
-        String playerID = player.getUniqueId().toString();
-        return hasTag(playerID, tagId);
+        String playerName = player.getName();
+        return hasTag(playerName, tagId);
     }
 
     public boolean hasTag(Player player) {
