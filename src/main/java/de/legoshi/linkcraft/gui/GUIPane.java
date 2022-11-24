@@ -13,9 +13,6 @@ import javax.inject.Inject;
 
 public abstract class GUIPane {
 
-    @Inject protected Plugin plugin;
-    @Inject protected DBManager dbManager;
-
     protected InventoryGui parent;
     protected InventoryGui current;
 

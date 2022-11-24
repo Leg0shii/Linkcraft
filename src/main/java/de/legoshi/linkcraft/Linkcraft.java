@@ -13,6 +13,7 @@ import javax.inject.Inject;
 public final class Linkcraft extends JavaPlugin {
 
     @Getter private static Plugin plugin;
+    @Getter private Injector injector;
 
     @Inject private Service service;
 
@@ -21,7 +22,7 @@ public final class Linkcraft extends JavaPlugin {
         LCConfig.initConfig();
         plugin = this;
 
-        Injector injector = Injector.create(new LinkcraftModule(this));
+        injector = Injector.create(new LinkcraftModule(this));
         injector.injectMembers(this);
 
         service.start();

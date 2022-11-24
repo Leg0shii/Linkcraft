@@ -11,6 +11,7 @@ import me.fixeddev.commandflow.annotated.annotation.SubCommandClasses;
 import me.fixeddev.commandflow.bukkit.annotation.Sender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import team.unnamed.inject.Injector;
 
 import javax.inject.Inject;
 
@@ -27,7 +28,7 @@ import javax.inject.Inject;
 @ArgOrSub(value = true)
 public class MapsCommand implements CommandClass {
 
-    @Inject private MapMenu mapMenu;
+    @Inject private Injector injector;
 
     @Command(names = "")
     public boolean maps(@Sender CommandSender sender, CommandContext commandContext) {
@@ -41,7 +42,7 @@ public class MapsCommand implements CommandClass {
             return false;
         }
 
-        mapMenu.openGui(player, null);
+        injector.getInstance(MapMenu.class).openGui(player, null);
         return true;
     }
 

@@ -1,5 +1,6 @@
 package de.legoshi.linkcraft.gui.map;
 
+import de.legoshi.linkcraft.Linkcraft;
 import de.legoshi.linkcraft.gui.GUIPane;
 import de.legoshi.linkcraft.map.MapType;
 import de.legoshi.linkcraft.tag.TagRarity;
@@ -10,12 +11,15 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import team.unnamed.inject.Injector;
 
 import javax.inject.Inject;
+import java.util.Map;
 
 public class MapMenu extends GUIPane {
 
-    @Inject private MapHolder mapHolder;
+    @Inject private Injector injector;
+    private MapHolder mapHolder;
 
     private final String title = "Map Menu";
     private final String[] guiSetup = {
@@ -30,10 +34,11 @@ public class MapMenu extends GUIPane {
     @Override
     public void openGui(Player player, InventoryGui parent) {
         super.openGui(player, parent);
-        this.current = new InventoryGui((JavaPlugin) plugin, player, title, guiSetup);
+        this.current = new InventoryGui((JavaPlugin) Linkcraft.getPlugin(), player, title, guiSetup);
         registerGuiElements();
         fullCloseOnEsc();
         this.current.show(this.holder);
+        this.mapHolder = injector.getInstance(MapHolder.class);
     }
 
     @Override

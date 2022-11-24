@@ -2,6 +2,7 @@ package de.legoshi.linkcraft.gui.map;
 
 import de.legoshi.linkcraft.Linkcraft;
 import de.legoshi.linkcraft.database.AsyncMySQL;
+import de.legoshi.linkcraft.database.DBManager;
 import de.legoshi.linkcraft.gui.GUIScrollable;
 import de.legoshi.linkcraft.manager.LocationManager;
 import de.legoshi.linkcraft.manager.PlayerManager;
@@ -23,8 +24,8 @@ import java.sql.SQLException;
 
 public class MapHolder extends GUIScrollable {
 
-    @Inject
-    private PlayerManager playerManager;
+    @Inject private DBManager dbManager;
+    @Inject private PlayerManager playerManager;
     @Inject private LocationManager locationManager;
 
     private MapType mapType;
