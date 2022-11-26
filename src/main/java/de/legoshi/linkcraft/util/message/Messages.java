@@ -5,7 +5,7 @@ import java.util.Set;
 
 public enum Messages {
 
-    INFO("§6§l[Linkcraft]§7 ", "prefix"),
+    INFO("§3§l[§b§lLinkcraft§3§l]§7 ", "prefix"),
     ERROR("§c[Error]§7 ", "prefix"),
     SUCCESS("§a[Success]§7 ", "prefix"),
 
@@ -46,13 +46,20 @@ public enum Messages {
     TAGS_UNSET_TAG_OTHER("§a{0}'s tag has been unset", "info"),
     TAGS_UNSET_NONE("§cYou have no tag equipped!", "error"),
 
-    MAPS_ADD_MAP("§aSuccessfully added new map §r{0} with difficulty §r{1}.", "info"),
-    MAPS_EDIT_MAP("§aSuccessfully edited map §r{0}§'s value §r{1} §ato §r{2}§a.", "info"),
+    MAPS_ADD_MAP("§aSuccessfully added new map §r{0} §awith difficulty §r{1}§a.", "info"),
+    MAPS_EDIT_MAP("§aSuccessfully edited map §r{0}§a's value §r{1} §ato §r{2}§a.", "info"),
     MAPS_SET_START_MAP("§aSuccessfully set a new start for map §r{0}§a.", "info"),
     MAPS_REMOVE_MAP("§aSuccessfully removed map §r{0}§a.", "info"),
     MAPS_SET_VICTOR_MAP("§aSuccessfully added §r{0}§a as a victor to map §r{1}§a.", "info"),
+    MAPS_UNSET_VICTOR_MAP("§aSuccessfully removed §r{0}§a as a victor from map §r{1}§a.", "info"),
 
-    MAPS_ID_NOT_EXIST("§cId §r{0}§c doesn't exist.", "error"),
+    MAPS_LOCATION_ERROR("§cCouldn't save the location", "error"),
+    MAPS_ADD_ERROR("§cCouldn't add the map.", "error"),
+    MAPS_VICTOR_ERROR("§cCouldn't set the victor.", "error"),
+    MAPS_UNSET_VICTOR_ERROR("§cCouldn't unset the victor.", "error"),
+    MAPS_EDIT_ERROR("§cCouldn't edit the map.", "error"),
+    MAPS_REMOVE_ERROR("§cCouldn't remove the map.", "error"),
+    MAPS_SET_START_ERROR("§cCouldn't set a new start for the map.", "error"),
 
     GG_DESC("§Sends §6§lG§e§lG§f in chat.", "description"),
     GL_DESC("§Sends §2§lG§a§lL ☺§f in chat.", "description"),

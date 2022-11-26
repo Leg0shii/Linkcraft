@@ -35,13 +35,16 @@ public class MapsAddCommand implements CommandClass {
             sender.sendMessage(MessageUtils.composeMessage(Messages.NOT_A_PLAYER.getMessage(), true));
             return false;
         }
+
         Location spawn = player.getLocation();
-        locationManager.initObject(spawn);
+        boolean success = locationManager.initObject(spawn);
         int mapId = locationManager.requestIdByPos(spawn.getX(), spawn.getY(), spawn.getZ());
 
         StandardMap standardMap = new StandardMap(name, type, length, difficulty, builders, mapId);
-        mapManager.initObject(standardMap);
-        sender.sendMessage(MessageUtils.composeMessage(Messages.MAPS_ADD_MAP, true, name, difficulty));
+        success = success && mapManager.initObject(standardMap);
+
+        if (success) sender.sendMessage(MessageUtils.composeMessage(Messages.MAPS_ADD_MAP, true, name, difficulty));
+        else sender.sendMessage(MessageUtils.composeMessage(Messages.MAPS_ADD_ERROR, true));
         return true;
     }
 }

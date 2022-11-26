@@ -33,8 +33,9 @@ public class MapsEditCommand implements CommandClass {
             case "length" -> standardMap.setMapLength(value);
         }
 
-        mapManager.updateObject(standardMap);
-        sender.sendMessage(MessageUtils.composeMessage(Messages.MAPS_EDIT_MAP, true, map_id, type, value));
+        boolean success = mapManager.updateObject(standardMap);
+        if (success) sender.sendMessage(MessageUtils.composeMessage(Messages.MAPS_EDIT_MAP, true, map_id, type, value));
+        else sender.sendMessage(MessageUtils.composeMessage(Messages.MAPS_EDIT_ERROR, true));
         return true;
     }
 

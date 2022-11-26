@@ -23,7 +23,7 @@ public class MapsSetVictorCommand implements CommandClass {
             String uuid = Bukkit.getOfflinePlayer(userName).getUniqueId().toString();
             boolean success = mapManager.addVictor(id, uuid);
             if (success) sender.sendMessage(MessageUtils.composeMessage(Messages.MAPS_SET_VICTOR_MAP, true, userName, id));
-            else sender.sendMessage(MessageUtils.composeMessage(Messages.MAPS_ID_NOT_EXIST, true, id));
+            else sender.sendMessage(MessageUtils.composeMessage(Messages.MAPS_VICTOR_ERROR, true, id));
         } catch (Exception e) {
             sender.sendMessage(MessageUtils.composeMessage(Messages.PLAYER_NOT_EXIST, true));
         }

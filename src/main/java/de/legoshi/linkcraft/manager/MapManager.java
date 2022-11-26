@@ -39,7 +39,7 @@ public class MapManager implements SavableManager<StandardMap, String> {
             stmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
-
+            return false;
         }
         return true;
     }
@@ -92,7 +92,7 @@ public class MapManager implements SavableManager<StandardMap, String> {
             stmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            // intentionally removed the return here because the map itself got deleted
         }
 
         return true;

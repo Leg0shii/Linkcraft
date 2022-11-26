@@ -45,11 +45,12 @@ import javax.inject.Inject;
 public class MapsCommand implements CommandClass {
 
     @Inject private Injector injector;
+    @Inject private MapsHelpCommand mapsHelpCommand;
 
     @Command(names = "")
     public boolean maps(@Sender CommandSender sender, CommandContext commandContext) {
         if (commandContext.getArguments().size() > 1) {
-            // send help
+            mapsHelpCommand.help(sender);
             return false;
         }
 

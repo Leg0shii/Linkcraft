@@ -30,7 +30,11 @@ public class MapsSetStartCommand implements CommandClass {
 
         Bukkit.getScheduler().runTaskAsynchronously(Linkcraft.getPlugin(), () -> {
             Location location = player.getLocation();
-            locationManager.initObject(location);
+            boolean success = locationManager.initObject(location);
+            if(!success) {
+                sender.sendMessage(MessageUtils.composeMessage(Messages.MAPS_LOCATION_ERROR, true));
+                return;
+            }
 
             // this is awful
             try {
@@ -42,8 +46,9 @@ public class MapsSetStartCommand implements CommandClass {
             int id = locationManager.requestIdByPos(location.getX(), location.getY(), location.getZ());
             if (id == -1) player.sendMessage(MessageUtils.composeMessage(Messages.ERROR_FATAL, true));
             else {
-                mapManager.updateStartLocation(mapId, id);
-                player.sendMessage(MessageUtils.composeMessage(Messages.MAPS_SET_START_MAP, true, mapId));
+                success = mapManager.updateStartLocation(mapId, id);
+                if (success) player.sendMessage(MessageUtils.composeMessage(Messages.MAPS_SET_START_MAP, true, mapId));
+                else player.sendMessage(MessageUtils.composeMessage(Messages.MAPS_SET_START_ERROR, true));
             }
         });
         return true;
