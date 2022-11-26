@@ -3,6 +3,8 @@ package de.legoshi.linkcraft.command.map;
 
 import de.legoshi.linkcraft.command.tag.*;
 import de.legoshi.linkcraft.gui.map.MapMenu;
+import de.legoshi.linkcraft.util.message.MessageUtils;
+import de.legoshi.linkcraft.util.message.Messages;
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.ArgOrSub;
@@ -15,6 +17,18 @@ import team.unnamed.inject.Injector;
 
 import javax.inject.Inject;
 
+// TODO:
+/*
+- Total completions (color based): x completions
+- add completion date from user (newest)
+- add completion time (duration, fastest attempt?)
+
+- define values for numbers in /maps help
+
+- only allow predefined key values to be set for /maps edit
+- have confirmation for deleting maps (showing results on doing that: deleting 5000 saves)
+ */
+
 // /maps
 @Command(names = "maps", desc = "%translatable:maps.desc%")
 @SubCommandClasses({
@@ -23,7 +37,9 @@ import javax.inject.Inject;
         MapsHelpCommand.class,
         MapsRemoveCommand.class,
         MapsSetVictorCommand.class,
-        MapsUnSetVictorCommand.class
+        MapsUnSetVictorCommand.class,
+        MapsSetStartCommand.class,
+        MapsSetEndCommand.class
 })
 @ArgOrSub(value = true)
 public class MapsCommand implements CommandClass {
@@ -38,7 +54,7 @@ public class MapsCommand implements CommandClass {
         }
 
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("no player");
+            sender.sendMessage(MessageUtils.composeMessage(Messages.NOT_A_PLAYER.getMessage(), true));
             return false;
         }
 

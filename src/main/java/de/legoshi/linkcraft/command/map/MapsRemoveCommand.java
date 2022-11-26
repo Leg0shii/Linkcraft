@@ -1,6 +1,8 @@
 package de.legoshi.linkcraft.command.map;
 
 import de.legoshi.linkcraft.manager.MapManager;
+import de.legoshi.linkcraft.util.message.MessageUtils;
+import de.legoshi.linkcraft.util.message.Messages;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import org.bukkit.command.CommandSender;
@@ -16,7 +18,7 @@ public class MapsRemoveCommand implements CommandClass {
     @Command(names = "")
     public boolean remove(CommandSender sender, int id) {
         mapManager.deleteObject(String.valueOf(id));
-        sender.sendMessage("Successfully deleted map with id " + id);
+        sender.sendMessage(MessageUtils.composeMessage(Messages.MAPS_REMOVE_MAP, true, id));
         return true;
     }
 

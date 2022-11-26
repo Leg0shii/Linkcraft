@@ -62,4 +62,12 @@ public class StandardMap {
         }
     }
 
+    public void setLocationId(String value) {
+        try {
+            this.locationId = Integer.parseInt(value);
+        } catch (Exception e) {
+            this.locationId = 1;
+        }
+    }
+
 }

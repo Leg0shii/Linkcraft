@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 @Command(names = "setend")
 public class MapsSetEndCommand implements CommandClass {
 
+    // bind to sign/plate
     @Command(names = "")
     public boolean remove(CommandSender sender) {
         sender.sendMessage("To be implemented");

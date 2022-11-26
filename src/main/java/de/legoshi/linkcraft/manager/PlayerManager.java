@@ -57,28 +57,32 @@ public class PlayerManager implements SavableManager<AbstractPlayer, String> {
     }
 
     @Override
-    public void initObject(AbstractPlayer abstractPlayer) {
+    public boolean initObject(AbstractPlayer abstractPlayer) {
         AsyncMySQL mySQL = dbManager.getMySQL();
 
         String uniqueID = abstractPlayer.getPlayer().getUniqueId().toString();
         String name = abstractPlayer.getPlayer().getDisplayName();
         mySQL.update("INSERT INTO lc_players (user_id, name) VALUES ('" + uniqueID + "', '" + name + "');");
+
+        return true;
     }
 
     @Override
-    public void updateObject(AbstractPlayer abstractPlayer) {
+    public boolean updateObject(AbstractPlayer abstractPlayer) {
         AsyncMySQL mySQL = dbManager.getMySQL();
         String uniqueId = abstractPlayer.getPlayer().getUniqueId().toString();
         int tagId = abstractPlayer.getPlayerTag().getTagID();
         mySQL.update("UPDATE lc_players SET tag_id = " + tagId + " WHERE user_id = '" + uniqueId + "';");
+        return true;
     }
 
     @Override
-    public void deleteObject(String id) {
+    public boolean deleteObject(String id) {
         // delete everything player related in here
         // player_tags db
         // player saves
         // player permissions
+        return true;
     }
 
     // this is implemented bad

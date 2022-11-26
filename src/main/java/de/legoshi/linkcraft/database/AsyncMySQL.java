@@ -310,11 +310,9 @@ public class AsyncMySQL {
         public void queryUpdate(String query) {
 
             try (PreparedStatement statement = conn.prepareStatement(query)) {
-
                 queryUpdate(statement);
-
-            } catch (SQLException ignored) {
-                ignored.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
 
         }

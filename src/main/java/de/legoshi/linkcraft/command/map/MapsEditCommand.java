@@ -1,9 +1,9 @@
 package de.legoshi.linkcraft.command.map;
 
 import de.legoshi.linkcraft.manager.MapManager;
-import de.legoshi.linkcraft.map.MapLength;
-import de.legoshi.linkcraft.map.MapType;
 import de.legoshi.linkcraft.map.StandardMap;
+import de.legoshi.linkcraft.util.message.MessageUtils;
+import de.legoshi.linkcraft.util.message.Messages;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.Named;
@@ -20,10 +20,10 @@ public class MapsEditCommand implements CommandClass {
 
     @Command(names = "")
     public boolean edit(CommandSender sender,
+                        @Named(value = "map_id") int map_id,
                         @Named(value = "type") String type,
-                        @Named(value = "map_id") String map_id,
                         @Named(value = "value") String value) {
-        StandardMap standardMap = mapManager.requestObjectById(map_id);
+        StandardMap standardMap = mapManager.requestObjectById("" + map_id);
         switch (type) {
             case "name" -> standardMap.setMapName(value);
             case "type" -> standardMap.setMapType(value);
@@ -32,7 +32,9 @@ public class MapsEditCommand implements CommandClass {
             case "release" -> standardMap.setReleaseDate(value);
             case "length" -> standardMap.setMapLength(value);
         }
+
         mapManager.updateObject(standardMap);
+        sender.sendMessage(MessageUtils.composeMessage(Messages.MAPS_EDIT_MAP, true, map_id, type, value));
         return true;
     }
 

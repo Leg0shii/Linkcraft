@@ -14,21 +14,22 @@ public class LocationManager implements SavableManager<Location, String> {
     @Inject private DBManager dbManager;
 
     @Override
-    public void initObject(Location location) {
+    public boolean initObject(Location location) {
         AsyncMySQL mySQL = dbManager.getMySQL();
         mySQL.update("INSERT INTO lc_locations (world, x, y, z, yaw, pitch) VALUES " +
                 "('" + location.getWorld().getName() + "', '" + location.getX() + "', '" + location.getY() + "', '"
                 + location.getZ() + "', '" + location.getYaw() + "', '" + location.getPitch() + "');");
+        return true;
     }
 
     @Override
-    public void updateObject(Location location) {
-
+    public boolean updateObject(Location location) {
+        return true;
     }
 
     @Override
-    public void deleteObject(String id) {
-
+    public boolean deleteObject(String id) {
+        return true;
     }
 
     @Override

@@ -23,7 +23,7 @@ public class TagManager implements SavableManager<PlayerTag, Integer> {
     @Inject private PlayerManager playerManager;
 
     @Override
-    public void initObject(PlayerTag playerTag) {
+    public boolean initObject(PlayerTag playerTag) {
         String sql = "INSERT INTO lc_tags (name, description, rarity, type) VALUES (?,?,?,?);";
         AsyncMySQL mySQL = dbManager.getMySQL();
         String name = playerTag.getDisplayName();
@@ -40,10 +40,11 @@ public class TagManager implements SavableManager<PlayerTag, Integer> {
         } catch(SQLException e) {
             e.printStackTrace();
         }
+        return true;
     }
 
     @Override
-    public void updateObject(PlayerTag playerTag) {
+    public boolean updateObject(PlayerTag playerTag) {
         String sql = """
         UPDATE lc_tags
         SET name=?,description=?,rarity=?,type=?
@@ -73,10 +74,12 @@ public class TagManager implements SavableManager<PlayerTag, Integer> {
                 abstractPlayer.setPlayerTag(playerTag);
             }
         }
+
+        return true;
     }
 
     @Override
-    public void deleteObject(Integer id) {
+    public boolean deleteObject(Integer id) {
         AsyncMySQL mySQL = dbManager.getMySQL();
         mySQL.update("DELETE FROM lc_tags WHERE tag_id = " + id + ";");
         mySQL.update("DELETE FROM lc_player_tags WHERE tag_id = " + id + ";");
@@ -86,6 +89,8 @@ public class TagManager implements SavableManager<PlayerTag, Integer> {
                 abstractPlayer.setPlayerTag(new PlayerTag());
             }
         }
+
+        return true;
     }
 
     @Override

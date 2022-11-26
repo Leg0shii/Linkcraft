@@ -2,11 +2,11 @@ package de.legoshi.linkcraft.database;
 
 public interface SavableManager<T, U> {
 
-    void initObject(T t);
+    boolean initObject(T t);
 
-    void updateObject(T t);
+    boolean updateObject(T t);
 
-    void deleteObject(U id);
+    boolean deleteObject(U id);
 
     T requestObjectById(U id);
 

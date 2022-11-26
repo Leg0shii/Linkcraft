@@ -28,7 +28,7 @@ public class MapMenu extends GUIPane {
             "         ",
             " a b c d ",
             "         ",
-            "         "
+            "        f"
     };
 
     @Override
@@ -68,7 +68,13 @@ public class MapMenu extends GUIPane {
             return true;
         }, "&5&lSegmented");
 
-        current.addElements(rankUpElement, bonusElement, mazeElement, rankUpStyleElement, segmentedElement);
+        StaticGuiElement noneElement = new StaticGuiElement('f', new ItemStack(Material.BARRIER), click -> {
+            mapHolder.openGui(this.holder, this.current, MapType.NONE, 1);
+            return true;
+        }, "&c&lBroken");
+
+        // permissions to check if player is staff (for noneElement maps)
+        current.addElements(rankUpElement, bonusElement, mazeElement, rankUpStyleElement, segmentedElement, noneElement);
     }
 
 }

@@ -4,6 +4,9 @@ import de.legoshi.linkcraft.manager.LocationManager;
 import de.legoshi.linkcraft.manager.MapManager;
 import de.legoshi.linkcraft.map.MapLength;
 import de.legoshi.linkcraft.map.StandardMap;
+import de.legoshi.linkcraft.tag.TagRarity;
+import de.legoshi.linkcraft.util.message.MessageUtils;
+import de.legoshi.linkcraft.util.message.Messages;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.Named;
@@ -29,7 +32,7 @@ public class MapsAddCommand implements CommandClass {
                        @Named("builders") String builders
     ) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("You are not a player..");
+            sender.sendMessage(MessageUtils.composeMessage(Messages.NOT_A_PLAYER.getMessage(), true));
             return false;
         }
         Location spawn = player.getLocation();
@@ -38,8 +41,7 @@ public class MapsAddCommand implements CommandClass {
 
         StandardMap standardMap = new StandardMap(name, type, length, difficulty, builders, mapId);
         mapManager.initObject(standardMap);
-        sender.sendMessage("Successfully added new map " + name + " with type " + standardMap.getMapType().name()
-                + " and length " + MapLength.values()[length].name() + " and difficulty " + difficulty + " and the builders " + builders);
+        sender.sendMessage(MessageUtils.composeMessage(Messages.MAPS_ADD_MAP, true, name, difficulty));
         return true;
     }
 }

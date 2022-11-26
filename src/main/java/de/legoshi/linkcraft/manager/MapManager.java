@@ -8,79 +8,150 @@ import de.legoshi.linkcraft.map.MapType;
 import de.legoshi.linkcraft.map.StandardMap;
 
 import javax.inject.Inject;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 public class MapManager implements SavableManager<StandardMap, String> {
 
     @Inject private DBManager dbManager;
 
     @Override
-    public void initObject(StandardMap standardMap) {
+    public boolean initObject(StandardMap standardMap) {
         AsyncMySQL mySQL = dbManager.getMySQL();
+        String sql = "INSERT INTO lc_maps (name, type, difficulty, length, builder_names, spawn_location_id) VALUES (?,?,?,?,?,?);";
+
         String name = standardMap.getMapName();
         int mapType = MapType.getMapPosition(standardMap.getMapType());
         int lengthType = MapLength.getMapLengthPosition(standardMap.getMapLength());
         double difficulty = standardMap.getDifficulty();
         int spawnLocId = standardMap.getLocationId();
         String builders = standardMap.getBuilderNames();
-        mySQL.update("INSERT INTO lc_maps (name, type, difficulty, length, builder_names, spawn_location_id) VALUES " +
-                "('" + name + "', '" + mapType + "', '" + difficulty + "', '" + lengthType + "', '" + builders + "', '" + spawnLocId + "');");
+
+        try(PreparedStatement stmt = mySQL.prepare(sql)) {
+            stmt.setString(1, name);
+            stmt.setInt(2, mapType);
+            stmt.setDouble(3, difficulty);
+            stmt.setInt(4, lengthType);
+            stmt.setString(5, builders);
+            stmt.setInt(6, spawnLocId);
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        return true;
     }
 
     @Override
-    public void updateObject(StandardMap standardMap) {
+    public boolean updateObject(StandardMap standardMap) {
         AsyncMySQL mySQL = dbManager.getMySQL();
+        String sql = "UPDATE lc_maps SET name=?, type=?, difficulty=?, length=?, builder_names=?, spawn_location_id=? WHERE id=?;";
         int mapId = standardMap.getId();
         String name = standardMap.getMapName();
+        // String releaseDate = standardMap.getReleaseDate(); , release_date='"+releaseDate+"'
         int mapType = MapType.getMapPosition(standardMap.getMapType());
         int lengthType = MapLength.getMapLengthPosition(standardMap.getMapLength());
         int spawnLocId = standardMap.getLocationId();
         double difficulty = standardMap.getDifficulty();
         String builders = standardMap.getBuilderNames();
-        mySQL.update("INSERT INTO lc_maps (name, type, difficulty, length, builder_names, spawn_location_id) VALUES " +
-                "('" + name + "', '" + mapType + "', '" + difficulty + "', '" + lengthType + "', '" + builders + "', '" + spawnLocId +
-                "' WHERE id = " + mapId + ");");
+
+        try(PreparedStatement stmt = mySQL.prepare(sql)) {
+            stmt.setString(1, name);
+            stmt.setInt(2, mapType);
+            stmt.setDouble(3, difficulty);
+            stmt.setInt(4, lengthType);
+            stmt.setString(5, builders);
+            stmt.setInt(6, spawnLocId);
+            stmt.setInt(7, mapId);
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     @Override
-    public void deleteObject(String id) {
+    public boolean deleteObject(String id) {
         AsyncMySQL mySQL = dbManager.getMySQL();
-        mySQL.update("DELETE FROM lc_maps WHERE id = " + id + ");");
-        mySQL.update("DELETE FROM lc_map_completions WHERE map_id = " + id + ");");
+        String delMapsSQL = "DELETE FROM lc_maps WHERE id=?;";
+        String delCompsSQL = "DELETE FROM lc_map_completions WHERE id=?;";
+
+        try(PreparedStatement stmt = mySQL.prepare(delMapsSQL)) {
+            stmt.setString(1, id);
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        try(PreparedStatement stmt = mySQL.prepare(delCompsSQL)) {
+            stmt.setString(1, id);
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 
     @Override
     public StandardMap requestObjectById(String id) {
-        AsyncMySQL mySQL = dbManager.getMySQL();
-        ResultSet resultSet = mySQL.query("SELECT FROM lc_maps WHERE id = " + id + ";");
-        try {
+        try(PreparedStatement stmt = dbManager.getMySQL().prepare("SELECT * FROM lc_maps WHERE id=?;")) {
+            stmt.setString(1, id);
+            ResultSet resultSet = stmt.executeQuery();
             if (resultSet.next()) {
-                int mapId = Integer.getInteger(id);
-                String name = resultSet.getString("name");
-                int mapType = resultSet.getInt("type");
-                int mapLength = resultSet.getInt("length");
-                double difficulty = resultSet.getInt("difficulty");
-                String builders = resultSet.getString("builder_names");
-                String releaseDate = resultSet.getString("release_date");
-                return new StandardMap(name, mapType, mapLength, difficulty, builders, releaseDate);
+                StandardMap standardMap = new StandardMap();
+                standardMap.setMapName(resultSet.getString("name"));
+                standardMap.setMapType(resultSet.getString("type"));
+                standardMap.setMapLength(resultSet.getString("length"));
+                standardMap.setDifficulty(resultSet.getString("difficulty"));
+                standardMap.setBuilderNames(resultSet.getString("builder_names"));
+                standardMap.setReleaseDate(resultSet.getString("release_date"));
+                standardMap.setLocationId(resultSet.getString("spawn_location_id"));
+                standardMap.setId(Integer.parseInt(id));
+                return standardMap;
             } else {
                 // map doesnt exist
             }
-        } catch (Exception e) {
+        } catch(SQLException e) {
             e.printStackTrace();
         }
 
         return new StandardMap();
     }
 
-    public void addVictor(int id, String uuid) {
+    public boolean addVictor(int id, String uuid) {
         AsyncMySQL mySQL = dbManager.getMySQL();
-        mySQL.query("INSERT INTO lc_map_completions SET map_id = " + id +", user_id = '" + uuid + "', map_completion = true;");
+        String sql = "INSERT INTO lc_map_completions SET map_id=?, user_id=?, completion=true;";
+        return executeSQL(id, uuid, mySQL, sql);
     }
 
-    public void removeVictor(int id, String uuid) {
+    public boolean removeVictor(int id, String uuid) {
         AsyncMySQL mySQL = dbManager.getMySQL();
-        mySQL.query("DELETE FROM lc_map_completions WHERE map_id = " + id + " AND user_id = '" + uuid + "' AND map_completion = true;");
+        String sql = "DELETE FROM lc_map_completions WHERE map_id=? AND user_id=? AND completion=true;";
+        return executeSQL(id, uuid, mySQL, sql);
+    }
+
+    public boolean updateStartLocation(int mapId, int locationId) {
+        AsyncMySQL mySQL = dbManager.getMySQL();
+        String sql = "UPDATE lc_maps SET spawn_location_id=? WHERE id=?;";
+        return executeSQL(mapId, ""+locationId, mySQL, sql);
+    }
+
+    private boolean executeSQL(int id, String uuid, AsyncMySQL mySQL, String sql) {
+        try(PreparedStatement stmt = mySQL.prepare(sql)) {
+            stmt.setInt(1, id);
+            stmt.setString(2, uuid);
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
 }

@@ -46,6 +46,14 @@ public enum Messages {
     TAGS_UNSET_TAG_OTHER("§a{0}'s tag has been unset", "info"),
     TAGS_UNSET_NONE("§cYou have no tag equipped!", "error"),
 
+    MAPS_ADD_MAP("§aSuccessfully added new map §r{0} with difficulty §r{1}.", "info"),
+    MAPS_EDIT_MAP("§aSuccessfully edited map §r{0}§'s value §r{1} §ato §r{2}§a.", "info"),
+    MAPS_SET_START_MAP("§aSuccessfully set a new start for map §r{0}§a.", "info"),
+    MAPS_REMOVE_MAP("§aSuccessfully removed map §r{0}§a.", "info"),
+    MAPS_SET_VICTOR_MAP("§aSuccessfully added §r{0}§a as a victor to map §r{1}§a.", "info"),
+
+    MAPS_ID_NOT_EXIST("§cId §r{0}§c doesn't exist.", "error"),
+
     GG_DESC("§Sends §6§lG§e§lG§f in chat.", "description"),
     GL_DESC("§Sends §2§lG§a§lL ☺§f in chat.", "description"),
     RIP_DESC("§Sends §0§lR§8§lI§f§lP ☹§f in chat.", "description"),
@@ -64,6 +72,8 @@ public enum Messages {
     COMMAND_LIST_PAGE_HEADER("§0§m---------§r§2[§3Category {0}§2]§0§m---------", "help"),
     COMMAND_LIST_PAGE_FOOTER("§0§m--------------------------------", "help"),
 
+    PLAYER_NOT_EXIST("§cPlayer does not exist.", "error"),
+    NOT_A_PLAYER("§cYou have to be a player to execute this command", "error"),
     PLAYER_NO_PERMISSION("§cYou don't have permission to run that command!", "error"),
     EFFECT_BLOCK_NO_PERMISSION("§cYou do not have permissions to click this!", "error"),
     INVALID_ARG_LENGTH("INVALID_ARG_LENGTH", "error"),
