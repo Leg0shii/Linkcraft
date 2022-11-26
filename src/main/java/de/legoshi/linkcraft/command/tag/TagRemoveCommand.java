@@ -15,10 +15,8 @@ import javax.inject.Named;
 
 @Command(names = "remove", desc = "%translatable:tags.remove.desc%")
 public class TagRemoveCommand implements CommandClass {
-    @Inject
-    private TagManager tagManager;
-    @Inject
-    private PlayerManager playerManager;
+    @Inject private TagManager tagManager;
+    @Inject private PlayerManager playerManager;
 
     @Command(names = "")
     public boolean removeTag(CommandSender sender, @Named("player") String player, @Named("tag") String tagId) {
@@ -45,10 +43,10 @@ public class TagRemoveCommand implements CommandClass {
             sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_HASNT_UNLOCKED, true, player, id));
         } else {
             PlayerTag tag = tagManager.requestObjectById(id);
-            tagManager.removeTag(player, id);
-            sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_REMOVE_TAG, true, player, tag.getDisplayName()));
+            boolean success = tagManager.removeTag(player, id);
+            if(success) sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_REMOVE_TAG, true, player, tag.getDisplayName()));
+            else sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_REMOVE_TAG_ERROR, true, player, tag.getDisplayName()));
         }
-
         return true;
     }
 }

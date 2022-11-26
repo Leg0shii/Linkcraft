@@ -16,13 +16,9 @@ public class TagDeleteCommand implements CommandClass {
 
     @Command(names = "")
     public boolean deleteTag(CommandSender sender, @Named("tag") int tagId) {
-        if(tagManager.tagExists(tagId)) {
-            tagManager.deleteObject(tagId);
-            sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_DELETE_TAG, true, tagId));
-        } else {
-            sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_NO_TAG, true, tagId));
-        }
-
+        boolean success = tagManager.deleteObject(tagId);
+        if (success) sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_DELETE_TAG, true, tagId));
+        else sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_REMOVE_ERROR, true, tagId));
         return true;
     }
 }

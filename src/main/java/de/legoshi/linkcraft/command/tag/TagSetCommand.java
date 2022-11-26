@@ -14,10 +14,8 @@ import javax.inject.Inject;
 // Is this for admins or players (I assumed admins, so I made it override whether a player has the tag unlocked
 @Command(names = "set", desc = "%translatable:tags.set.desc%")
 public class TagSetCommand implements CommandClass {
-    @Inject
-    private TagManager tagManager;
-    @Inject
-    private PlayerManager playerManager;
+    @Inject private TagManager tagManager;
+    @Inject private PlayerManager playerManager;
 
     @Command(names = "")
     public boolean setTag(CommandSender sender, String player, int tagId) {
@@ -28,8 +26,9 @@ public class TagSetCommand implements CommandClass {
         } else {
             // Not sure who this should message...
             PlayerTag tag = tagManager.requestObjectById(tagId);
-            tagManager.setTag(player, tagId);
-            sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_SELECT_OTHER, true, player, tag.getDisplayName()));
+            boolean success = tagManager.setTag(player, tagId);
+            if (success) sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_SELECT_OTHER, true, player, tag.getDisplayName()));
+            else sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_SELECT_OTHER_ERROR, true, player, tag.getDisplayName()));
         }
         return true;
     }

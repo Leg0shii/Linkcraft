@@ -28,9 +28,11 @@ public class TagGiveCommand implements CommandClass {
         } else if (tagManager.hasTag(player, tagId)) {
             sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_HAS_TAG, true, player, tagId));
         } else {
-            tagManager.giveTag(player, tagId);
-            PlayerTag tag = tagManager.requestObjectById(tagId);
-            sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_GAVE_TAG, true, player, tag.getDisplayName()));
+            boolean success = tagManager.giveTag(player, tagId);
+            if (success) {
+                PlayerTag tag = tagManager.requestObjectById(tagId);
+                sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_GAVE_TAG, true, player, tag.getDisplayName()));
+            } else sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_GAVE_TAG_ERROR, true, player, tagId));
         }
         return true;
     }

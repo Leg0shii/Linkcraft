@@ -17,8 +17,8 @@ import javax.inject.Named;
 
 @Command(names = "edit", desc = "%translatable:tags.edit.desc%")
 public class TagEditCommand implements CommandClass {
-    @Inject
-    private TagManager tagManager;
+
+    @Inject private TagManager tagManager;
 
     @Command(names = "")
     public boolean editTag(CommandSender sender, @Named("tag") int tagId, @Named("field") String field, @Named("value") String value, ArgumentStack desc) {

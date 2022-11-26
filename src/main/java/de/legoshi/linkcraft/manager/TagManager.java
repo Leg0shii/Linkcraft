@@ -80,16 +80,25 @@ public class TagManager implements SavableManager<PlayerTag, Integer> {
 
     @Override
     public boolean deleteObject(Integer id) {
+        if (!tagExists(id)) return false;
+
         AsyncMySQL mySQL = dbManager.getMySQL();
-        mySQL.update("DELETE FROM lc_tags WHERE tag_id = " + id + ";");
-        mySQL.update("DELETE FROM lc_player_tags WHERE tag_id = " + id + ";");
-        mySQL.update("UPDATE lc_players SET tag_id=0 WHERE tag_id=" + id + ";");
+        String sqlTags = "DELETE FROM lc_tags WHERE tag_id=?;";
+        String sqlPTags = "DELETE FROM lc_player_tags WHERE tag_id=?;";
+        String sqlP = "UPDATE lc_players SET tag_id=0 WHERE tag_id=?;";
+
+        // only the first delete matters, as this deletes the tag
+        if (!executeSQL(id, mySQL, sqlTags)) return false;
+        executeSQL(id, mySQL, sqlPTags);
+        executeSQL(id, mySQL, sqlP);
+
+        // issue with offline players
+        // or are we loading tags on join? forgor...
         for (AbstractPlayer abstractPlayer : playerManager.getHashMap().values()) {
             if (abstractPlayer.getPlayerTag().getTagID() == id) {
                 abstractPlayer.setPlayerTag(new PlayerTag());
             }
         }
-
         return true;
     }
 
@@ -97,8 +106,9 @@ public class TagManager implements SavableManager<PlayerTag, Integer> {
     public PlayerTag requestObjectById(Integer id) {
         PlayerTag playerTag = new PlayerTag();
         AsyncMySQL mySQL = dbManager.getMySQL();
-        ResultSet resultSet = mySQL.query("SELECT * FROM lc_tags WHERE tag_id = " + id + ";");
-        try {
+        try(PreparedStatement stmt = mySQL.prepare("SELECT * FROM lc_tags WHERE tag_id=?;")) {
+            stmt.setInt(1, id);
+            ResultSet resultSet = stmt.executeQuery();
             if (resultSet.next()) {
                 playerTag.setTagID(id);
                 playerTag.setDisplayName(resultSet.getString("name"));
@@ -153,7 +163,7 @@ public class TagManager implements SavableManager<PlayerTag, Integer> {
         return result;
     }
 
-    public void giveTag(String player, int tagId) {
+    public boolean giveTag(String player, int tagId) {
         String uuid = playerManager.uuidByName(player);
         PreparedStatement stmt = dbManager.getMySQL().prepare("INSERT INTO lc_player_tags (user_id, tag_id) VALUES (?, ?);");
         try {
@@ -162,12 +172,13 @@ public class TagManager implements SavableManager<PlayerTag, Integer> {
             stmt.execute();
         } catch(SQLException e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
-    public void removeTag(String name, int tagId) {
+    public boolean removeTag(String name, int tagId) {
         String uuid = playerManager.uuidByName(name);
-
 
         Player player = Bukkit.getPlayer(name);
         if(player != null) {
@@ -177,14 +188,15 @@ public class TagManager implements SavableManager<PlayerTag, Integer> {
             }
         }
 
-        PreparedStatement stmt = dbManager.getMySQL().prepare("DELETE FROM lc_player_tags WHERE user_id=? AND tag_id=?;");
-        try {
+        try(PreparedStatement stmt = dbManager.getMySQL().prepare("DELETE FROM lc_player_tags WHERE user_id=? AND tag_id=?;")) {
             stmt.setString(1, uuid);
             stmt.setInt(2, tagId);
             stmt.execute();
         } catch(SQLException e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     public int removeAllTags(String name) {
@@ -202,33 +214,34 @@ public class TagManager implements SavableManager<PlayerTag, Integer> {
         return amount;
     }
 
-    public void setTag(String name, int tagId) {
+    public boolean setTag(String name, int tagId) {
         Player player = Bukkit.getPlayer(name);
-        if(player != null) {
-            setTag(player, tagId);
-        } else {
-            setTagDb(playerManager.uuidByName(name), tagId);
-        }
-
+        boolean success;
+        if(player != null) success = setTag(player, tagId);
+        else success = setTagDb(playerManager.uuidByName(name), tagId);
+        return success;
     }
 
-    public void setTag(Player player, int tagId) {
-        setTagDb(player.getUniqueId().toString(), tagId);
+    public boolean setTag(Player player, int tagId) {
+        boolean success = setTagDb(player.getUniqueId().toString(), tagId);
         playerManager.getPlayer(player).setPlayerTag(requestObjectById(tagId));
+        return success;
     }
 
-    private void setTagDb(String uuid, int tagId) {
+    private boolean setTagDb(String uuid, int tagId) {
         try(PreparedStatement stmt = dbManager.getMySQL().prepare("UPDATE lc_players SET tag_id=? WHERE user_id=?;")) {
             stmt.setInt(1, tagId);
             stmt.setString(2, uuid);
             stmt.execute();
         } catch(SQLException e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
-    public void setDefaultTag(String name) {
-        setTag(name, 0);
+    public boolean setDefaultTag(String name) {
+        return setTag(name, 0);
     }
 
 
@@ -345,6 +358,17 @@ public class TagManager implements SavableManager<PlayerTag, Integer> {
         }
 
         return uncollected;
+    }
+
+    private boolean executeSQL(int id, AsyncMySQL mySQL, String sql) {
+        try(PreparedStatement stmt = mySQL.prepare(sql)) {
+            stmt.setInt(1, id);
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
 

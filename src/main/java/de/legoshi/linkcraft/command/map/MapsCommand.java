@@ -29,6 +29,8 @@ import javax.inject.Inject;
 - have confirmation for deleting maps (showing results on doing that: deleting 5000 saves)
  */
 
+// add more detailed messages for when commands fail
+
 // /maps
 @Command(names = "maps", desc = "%translatable:maps.desc%")
 @SubCommandClasses({
