@@ -20,6 +20,7 @@ public enum Messages {
     MESSAGE_RIP("§0§lR§8§lI§f§lP ☹", "other"),
     MESSAGE_HAM("§d§lha §cm", "other"),
     MESSAGE_EGGS("§6§lE§e§lG§6§lg§e§lS", "other"),
+    MESSAGE_FAIL("§f§lFAIL", "other"),
 
     TAGS_DESC("§fSee your tags! For help type /tags help", "description"),
     TAGS_ADD_DESC("Add a new tag to the servers tag list.", "description"),
@@ -37,6 +38,7 @@ public enum Messages {
     TAGS_HAS_TAG("§c{0} already has the tag with id {1}.", "error"),
     TAGS_NOT_UNLOCKED("§cYou have not unlocked §r{0}", "error"),
     TAGS_GAVE_TAG("§aSuccessfully gave {0} tag: §r{1}", "info"),
+    TAGS_UNLOCKED_TAG("§aUnlocked tag: §r{1}", "info"),
     TAGS_GAVE_TAG_ERROR("§cError with giving tag {0} to §r{1}", "info"),
     TAGS_REMOVE_TAG("§aSuccessfully removed {0}'s tag: §r{1}", "info"),
     TAGS_REMOVE_TAG_ERROR("§cCouldn't remove {0}'s tag: §r{1}", "error"),
@@ -67,6 +69,12 @@ public enum Messages {
     MAPS_EDIT_ERROR("§cCouldn't edit the map.", "error"),
     MAPS_REMOVE_ERROR("§cCouldn't remove the map.", "error"),
     MAPS_SET_START_ERROR("§cCouldn't set a new start for the map.", "error"),
+
+    EFFECT_BLOCK_ADD("§aRight click a block to add the command: {0}", "info"),
+    EFFECT_BLOCK_ADDED("§aSuccessfully added command to block", "info"),
+    EFFECT_BLOCK_REMOVE("§aRight click an effect block to delete", "info"),
+    EFFECT_BLOCK_REMOVED("§aSuccessfully deleted effect block", "info"),
+    EFFECT_BLOCK_REMOVED_ERR("§cThat block isn't an effect block", "info"),
 
     GG_DESC("§Sends §6§lG§e§lG§f in chat.", "description"),
     GL_DESC("§Sends §2§lG§a§lL ☺§f in chat.", "description"),

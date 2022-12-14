@@ -2,7 +2,7 @@ package de.legoshi.linkcraft.manager;
 
 import de.legoshi.linkcraft.database.AsyncMySQL;
 import de.legoshi.linkcraft.database.DBManager;
-import de.legoshi.linkcraft.database.SavableManager;
+import de.legoshi.linkcraft.database.SaveableManager;
 import de.legoshi.linkcraft.player.AbstractPlayer;
 import de.legoshi.linkcraft.tag.PlayerTag;
 import de.legoshi.linkcraft.tag.TagData;
@@ -17,7 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class TagManager implements SavableManager<PlayerTag, Integer> {
+public class TagManager implements SaveableManager<PlayerTag, Integer> {
 
     @Inject private DBManager dbManager;
     @Inject private PlayerManager playerManager;

@@ -108,6 +108,7 @@ public class MapHolder extends GUIScrollable {
         return staticGuiElement;
     }
 
+    // TODO: fix this...
     @Override
     protected boolean getPage() {
         return false;

@@ -40,4 +40,10 @@ public class FunCommand implements CommandClass {
         player.chat(MessageUtils.getMessageTranslated(Messages.MESSAGE_EGGS));
     }
 
+    @Command(names = "fail", desc = "%translatable:fail.desc%")
+    public void fail(@Sender CommandSender sender) {
+        if (!(sender instanceof Player player)) return;
+        player.chat(MessageUtils.getMessageTranslated(Messages.MESSAGE_FAIL));
+    }
+
 }

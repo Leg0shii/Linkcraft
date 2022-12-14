@@ -2,7 +2,7 @@ package de.legoshi.linkcraft.manager;
 
 import de.legoshi.linkcraft.database.AsyncMySQL;
 import de.legoshi.linkcraft.database.DBManager;
-import de.legoshi.linkcraft.database.SavableManager;
+import de.legoshi.linkcraft.database.SaveableManager;
 import de.legoshi.linkcraft.map.MapLength;
 import de.legoshi.linkcraft.map.MapType;
 import de.legoshi.linkcraft.map.StandardMap;
@@ -11,9 +11,8 @@ import javax.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 
-public class MapManager implements SavableManager<StandardMap, String> {
+public class MapManager implements SaveableManager<StandardMap, String> {
 
     @Inject private DBManager dbManager;
 

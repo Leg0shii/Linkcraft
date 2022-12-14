@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS `lc_maps`
 // add jump count
 // add playtime
 // add last time played
+-- ^ could possibly just have map attempts separate and have a foreign key to the attempt on the completion (not sure if this is a good idea)
 CREATE TABLE IF NOT EXISTS `lc_map_completions`
 (
     `id`              INT AUTO_INCREMENT NOT NULL,
@@ -79,47 +80,30 @@ CREATE TABLE IF NOT EXISTS `lc_command_cooldowns`
     PRIMARY KEY (`command`)
 );
 
-CREATE TABLE IF NOT EXISTS `lc_effect_sets`
-(
-    `id` VARCHAR(36) NOT NULL,
-    PRIMARY KEY (`id`)
-);
-
-
-
 -- Chose MEDIUMINT because I doubt we will ever go over 8 million signs lol (feel free to change if you would like)
 -- This table will store signs/heads with right click events (rankup signs/teleport heads/segmented cps)
 -- Will likely have a foreign key to an effects table
 CREATE TABLE IF NOT EXISTS `lc_effect_blocks`
 (
     `id`     MEDIUMINT AUTO_INCREMENT NOT NULL,
-    `set_id` VARCHAR(36)              NOT NULL,
     `world`  VARCHAR(36)              NOT NULL,
     `x`      INT                      NOT NULL,
     `y`      INT                      NOT NULL,
     `z`      INT                      NOT NULL,
-    PRIMARY KEY (`id`),
-    FOREIGN KEY (`set_id`) REFERENCES `lc_effect_sets` (`id`)
+    PRIMARY KEY (`id`)
 );
 
+-- Executor would either be the player the clicked the sign or the server (default server?)
+-- I don't see a single command being more than 200 characters.... but I could be wrong
 CREATE TABLE IF NOT EXISTS `lc_effects`
 (
-    `id`     MEDIUMINT AUTO_INCREMENT NOT NULL,
-    `set_id` VARCHAR(36)              NOT NULL,
-    `type`   VARCHAR(100)             NOT NULL,
+    `id`       MEDIUMINT AUTO_INCREMENT NOT NULL,
+    `block_id` MEDIUMINT                NOT NULL,
+    `command`  VARCHAR(200)             NOT NULL,
+    `executor` TINYINT                  NOT NULL DEFAULT (0),
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`set_id`) REFERENCES `lc_effect_sets` (`id`)
+    FOREIGN KEY (`block_id`) REFERENCES `lc_effect_blocks` (`id`) ON DELETE CASCADE
 );
-
-CREATE TABLE IF NOT EXISTS `lc_checkpoint_effects`
-(
-    `id`          MEDIUMINT AUTO_INCREMENT NOT NULL,
-    `location_id` MEDIUMINT                NOT NULL,
-    PRIMARY KEY (`id`),
-    FOREIGN KEY (`id`) REFERENCES `lc_effects` (`id`),
-    FOREIGN KEY (`location_id`) REFERENCES `lc_locations` (`id`)
-);
-
 
 -- working example for longer cooldown commands
 -- INSERT IGNORE INTO `lc_command_cooldowns` (command, cooldown) VALUES ("gg", 45000);

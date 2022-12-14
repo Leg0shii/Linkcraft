@@ -1,10 +1,11 @@
 package de.legoshi.linkcraft.service;
 
+import de.legoshi.linkcraft.command.effectblock.EffectBlockAddCommand;
+import de.legoshi.linkcraft.command.effectblock.EffectBlockCommand;
 import de.legoshi.linkcraft.command.fun.FunCommand;
 import de.legoshi.linkcraft.command.map.MapsCommand;
 import de.legoshi.linkcraft.command.sign.SignCommand;
 import de.legoshi.linkcraft.command.tag.TagCommand;
-import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.annotated.AnnotatedCommandTreeBuilder;
 import me.fixeddev.commandflow.annotated.AnnotatedCommandTreeBuilderImpl;
@@ -14,13 +15,10 @@ import me.fixeddev.commandflow.annotated.part.PartInjector;
 import me.fixeddev.commandflow.annotated.part.SimplePartInjector;
 import me.fixeddev.commandflow.annotated.part.defaults.DefaultsModule;
 import me.fixeddev.commandflow.bukkit.factory.BukkitModule;
-import me.fixeddev.commandflow.command.Command;
 import org.bukkit.plugin.Plugin;
 import team.unnamed.inject.Injector;
 
 import javax.inject.Inject;
-import java.util.Map;
-import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -35,6 +33,7 @@ public class CommandService implements Service {
     @Inject private FunCommand funCommand;
     @Inject private MapsCommand mapsCommand;
     @Inject private SignCommand signCommand;
+    @Inject private EffectBlockCommand effectBlockCommand;
 
     @Override
     public void start() {
@@ -43,7 +42,8 @@ public class CommandService implements Service {
                 tagCommand,
                 funCommand,
                 mapsCommand,
-                signCommand
+                signCommand,
+                effectBlockCommand
         );
     }
 

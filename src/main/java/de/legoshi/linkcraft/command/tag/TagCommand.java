@@ -37,12 +37,12 @@ public class TagCommand implements CommandClass {
     public boolean tags(@Sender CommandSender sender, CommandContext commandContext) {
         if (commandContext.getArguments().size() > 1) {
             tagHelpCommand.tagsHelp(sender);
-            return false;
+            return true;
         }
 
         if (!(sender instanceof Player player)) {
             sender.sendMessage(MessageUtils.composeMessage(Messages.NOT_A_PLAYER, true));
-            return false;
+            return true;
         }
 
         injector.getInstance(TagMenu.class).openGui(player, null);

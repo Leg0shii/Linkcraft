@@ -13,7 +13,6 @@ public class MapsHelpCommand implements CommandClass {
     @Command(names = "")
     public boolean help(CommandSender sender) {
         String message = MessageUtils.composeMessage(Messages.COMMAND_LIST_PAGE_HEADER, false, "maps");
-        message = message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "maps", "help");
         message = message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "maps", "add", "<name>", "<type>", "<length>", "<difficulty>", "<builders>");
         message =  message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "maps", "setstart <map_id>");
         message =  message + "\n §3>§7 " + MessageUtils.composeMessage(Messages.COMMAND_SYNTAX, false, "maps", "setend <sign:plate>");

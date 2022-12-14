@@ -7,7 +7,9 @@ import de.legoshi.linkcraft.util.message.MessageUtils;
 import de.legoshi.linkcraft.util.message.Messages;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -32,6 +34,9 @@ public class TagGiveCommand implements CommandClass {
             if (success) {
                 PlayerTag tag = tagManager.requestObjectById(tagId);
                 sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_GAVE_TAG, true, player, tag.getDisplayName()));
+
+                Player gaveTo = Bukkit.getPlayer(player);
+                gaveTo.sendMessage(MessageUtils.composeMessage(Messages.TAGS_UNLOCKED_TAG, true, gaveTo.getName(), tag.getDisplayName()));
             } else sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_GAVE_TAG_ERROR, true, player, tagId));
         }
         return true;
