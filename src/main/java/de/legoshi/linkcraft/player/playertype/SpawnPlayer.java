@@ -4,11 +4,9 @@ import de.legoshi.linkcraft.player.AbstractPlayer;
 import de.legoshi.linkcraft.tag.PlayerTag;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
+public class SpawnPlayer extends AbstractPlayer {
 
-public class StandardPlayer extends AbstractPlayer {
-
-    public StandardPlayer(Player player, PlayerTag playerTag) {
+    public SpawnPlayer(Player player, PlayerTag playerTag) {
         super(player, playerTag);
     }
 

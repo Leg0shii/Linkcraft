@@ -3,8 +3,11 @@ package de.legoshi.linkcraft.manager;
 import de.legoshi.linkcraft.database.AsyncMySQL;
 import de.legoshi.linkcraft.database.DBManager;
 import de.legoshi.linkcraft.database.SaveableManager;
+import de.legoshi.linkcraft.map.StandardMap;
 import de.legoshi.linkcraft.player.AbstractPlayer;
-import de.legoshi.linkcraft.player.playertype.StandardPlayer;
+import de.legoshi.linkcraft.player.PlayerFactory;
+import de.legoshi.linkcraft.player.playertype.CoursePlayer;
+import de.legoshi.linkcraft.player.playertype.SpawnPlayer;
 import de.legoshi.linkcraft.tag.PlayerTag;
 import lombok.Getter;
 import org.bukkit.entity.Player;
@@ -18,6 +21,8 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
 
     @Inject private DBManager dbManager;
     @Inject private TagManager tagManager;
+    @Inject private SaveStateManager saveStateManager;
+    @Inject private PlayThroughManager playThroughManager;
     @Getter private final HashMap<Player, AbstractPlayer> hashMap;
 
     public PlayerManager() {
@@ -25,20 +30,40 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
     }
 
     public void playerJoin(Player player) {
-        AbstractPlayer iPlayer;
+        AbstractPlayer abstractPlayer;
         if (!player.hasPlayedBefore() || !isInDatabase(player)) {
-            iPlayer = new StandardPlayer(player, new PlayerTag());
-            initObject(iPlayer);
+            abstractPlayer = new SpawnPlayer(player, new PlayerTag());
+            initObject(abstractPlayer);
         } else {
             AbstractPlayer tempPlayer = requestObjectById(player.getUniqueId().toString());
             // determine state of player (maybe later)
             // currently I want the player to be at spawn on join
             // and create a save whenever he leaves to where he can return back
-            iPlayer = new StandardPlayer(player, tempPlayer.getPlayerTag());
+            abstractPlayer = new SpawnPlayer(player, tempPlayer.getPlayerTag());
         }
+
+        abstractPlayer.setPlayThroughManager(playThroughManager);
+        abstractPlayer.setSaveStateManager(saveStateManager);
         saveName(player);
 
-        hashMap.put(player, iPlayer);
+        hashMap.put(player, abstractPlayer);
+    }
+
+    public void playerJoinMap(Player player, StandardMap map) {
+        AbstractPlayer abstractPlayer = this.getHashMap().get(player);
+        abstractPlayer.playerJoinMap(map);
+        updatePlayer(abstractPlayer); // update so it takes a specific value that determine its type
+    }
+
+    public void playerLeaveMap(Player player) {
+        this.getHashMap().get(player).playerLeaveMap();
+    }
+
+    // add someway of detecting wanted class
+    public void updatePlayer(AbstractPlayer abstractPlayer) {
+        AbstractPlayer newPlayer = PlayerFactory.getPlayerByType(abstractPlayer);
+        this.getHashMap().remove(abstractPlayer.getPlayer());
+        this.getHashMap().put(newPlayer.getPlayer(), newPlayer);
     }
 
     public void saveName(Player player) {
@@ -57,14 +82,14 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
     }
 
     @Override
-    public boolean initObject(AbstractPlayer abstractPlayer) {
+    public int initObject(AbstractPlayer abstractPlayer) {
         AsyncMySQL mySQL = dbManager.getMySQL();
 
         String uniqueID = abstractPlayer.getPlayer().getUniqueId().toString();
         String name = abstractPlayer.getPlayer().getDisplayName();
         mySQL.update("INSERT INTO lc_players (user_id, name) VALUES ('" + uniqueID + "', '" + name + "');");
 
-        return true;
+        return -1;
     }
 
     @Override
@@ -102,8 +127,8 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
         if(tagId != 0) {
             playerTag = tagManager.requestObjectById(tagId);
         }
-        StandardPlayer standardPlayer = new StandardPlayer(null, playerTag);
-        return standardPlayer;
+        SpawnPlayer spawnPlayer = new SpawnPlayer(null, playerTag);
+        return spawnPlayer;
     }
 
     private boolean isInDatabase(Player player) {

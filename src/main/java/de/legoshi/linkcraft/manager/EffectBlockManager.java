@@ -99,7 +99,7 @@ public class EffectBlockManager implements SaveableManager<EffectBlock, Integer>
 
     // Possible race condition due to async sql queries?
     @Override
-    public boolean initObject(EffectBlock blockEffect) {
+    public int initObject(EffectBlock blockEffect) {
         String sql = "INSERT INTO lc_effect_blocks (world, x, y, z) VALUES (?,?,?,?);";
         String world = blockEffect.getWorld();
         int x = blockEffect.getX();
@@ -113,6 +113,7 @@ public class EffectBlockManager implements SaveableManager<EffectBlock, Integer>
             stmt.setInt(3, y);
             stmt.setInt(4, z);
             stmt.execute();
+            // return dbManager.getAutoGenID(stmt);
         } catch(SQLException e) {
             e.printStackTrace();
         }
@@ -124,7 +125,7 @@ public class EffectBlockManager implements SaveableManager<EffectBlock, Integer>
             initEffect(block, effect);
         }
 
-        return true;
+        return -1;
     }
 
     public boolean initEffect(EffectBlock block, Effect effect) {

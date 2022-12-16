@@ -23,7 +23,7 @@ public class MapsEditCommand implements CommandClass {
                         @Named(value = "map_id") int map_id,
                         @Named(value = "type") String type,
                         @Named(value = "value") String value) {
-        StandardMap standardMap = mapManager.requestObjectById("" + map_id);
+        StandardMap standardMap = mapManager.requestObjectById(map_id);
         switch (type) {
             case "name" -> standardMap.setMapName(value);
             case "type" -> standardMap.setMapType(value);

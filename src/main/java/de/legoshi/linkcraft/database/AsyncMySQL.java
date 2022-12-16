@@ -133,6 +133,19 @@ public class AsyncMySQL {
         return null;
     }
 
+    public PreparedStatement prepare(String query, int val) {
+
+        try {
+
+            return sql.getConnection().prepareStatement(query, val);
+
+        } catch (SQLException ignored) {
+            ignored.printStackTrace();
+        }
+
+        return null;
+    }
+
     /**
      * Getter for inner mysql class
      *

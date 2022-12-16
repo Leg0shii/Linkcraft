@@ -5,10 +5,14 @@ import de.legoshi.linkcraft.database.AsyncMySQL;
 import de.legoshi.linkcraft.database.DBManager;
 import de.legoshi.linkcraft.gui.GUIScrollable;
 import de.legoshi.linkcraft.manager.LocationManager;
+import de.legoshi.linkcraft.manager.MapManager;
 import de.legoshi.linkcraft.manager.PlayerManager;
+import de.legoshi.linkcraft.manager.SaveStateManager;
 import de.legoshi.linkcraft.map.MapLength;
 import de.legoshi.linkcraft.map.MapType;
+import de.legoshi.linkcraft.map.StandardMap;
 import de.legoshi.linkcraft.player.AbstractPlayer;
+import de.legoshi.linkcraft.player.playertype.MazePlayer;
 import de.themoep.inventorygui.GuiElementGroup;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
@@ -27,6 +31,7 @@ public class MapHolder extends GUIScrollable {
     @Inject private DBManager dbManager;
     @Inject private PlayerManager playerManager;
     @Inject private LocationManager locationManager;
+    @Inject private MapManager mapManager;
 
     private MapType mapType;
     private String title;
@@ -77,20 +82,19 @@ public class MapHolder extends GUIScrollable {
 
     private StaticGuiElement mapElements(ResultSet resultSet) throws SQLException {
         int mapId = resultSet.getInt("id");
-        String name = resultSet.getString("name");
-        MapType type = MapType.values()[resultSet.getInt("type")];
-        MapLength length = MapLength.values()[resultSet.getInt("length")];
-        double difficulty = resultSet.getDouble("difficulty");
-        String builderNames = resultSet.getString("builder_names");
-        String releaseDate = resultSet.getString("release_date");
-
-        Location mapSpawn = locationManager.requestObjectById(""+resultSet.getInt("spawn_location_id"));
+        StandardMap standardMap = mapManager.requestObjectById(mapId);
+        String name = standardMap.getMapName();
+        MapType type = standardMap.getMapType();
+        MapLength length = standardMap.getMapLength();
+        double difficulty = standardMap.getDifficulty();
+        String builderNames = standardMap.getBuilderNames();
+        String releaseDate = standardMap.getReleaseDate();
+        Location mapSpawn = standardMap.getMapSpawn();
 
         StaticGuiElement staticGuiElement;
         staticGuiElement = new StaticGuiElement('g', new ItemStack(Material.NAME_TAG), click -> {
-            AbstractPlayer abstractPlayer = playerManager.getPlayer((Player) click.getWhoClicked());
-            abstractPlayer.getPlayer().sendMessage("Selected map " + name);
-            abstractPlayer.getPlayer().teleport(mapSpawn);
+            Player player = (Player) click.getWhoClicked();
+            playerManager.playerJoinMap(player, standardMap);
             return true; // returning true will cancel the click event and stop taking the item
         },
                 "§r" + name + ChatColor.WHITE + " (" + mapId + ")",

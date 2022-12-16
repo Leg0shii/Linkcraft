@@ -1,6 +1,5 @@
 package de.legoshi.linkcraft.command.effectblock;
 
-import de.legoshi.linkcraft.command.tag.TagHelpCommand;
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.ArgOrSub;

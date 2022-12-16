@@ -1,10 +1,15 @@
 package de.legoshi.linkcraft.player;
 
+import de.legoshi.linkcraft.manager.PlayThroughManager;
+import de.legoshi.linkcraft.manager.PlayerManager;
+import de.legoshi.linkcraft.manager.SaveStateManager;
+import de.legoshi.linkcraft.map.StandardMap;
 import de.legoshi.linkcraft.tag.PlayerTag;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 @Getter
@@ -13,6 +18,14 @@ public abstract class AbstractPlayer implements IPlayer {
 
     protected Player player;
     @Setter protected PlayerTag playerTag;
+    @Setter protected PlayThroughManager playThroughManager;
+    @Setter protected SaveStateManager saveStateManager;
+    @Setter protected PlayThrough playThrough;
+
+    public AbstractPlayer(Player player, PlayerTag playerTag) {
+        this.player = player;
+        this.playerTag = playerTag;
+    }
 
     public String chat(String message) {
         String result = "";
@@ -69,5 +82,19 @@ public abstract class AbstractPlayer implements IPlayer {
         return true;
     }
 
+    @Override
+    public void playerJoinMap(StandardMap map) {
+        int mapId = map.getId();
+        Location mapSpawn = map.getMapSpawn();
+        // execute creation of new save state
+        this.getPlayer().sendMessage("Selected map " + mapId);
+        this.getPlayer().teleport(mapSpawn);
+        this.playThrough = playThroughManager.createPlayThrough(player, mapId);
+    }
+
+    @Override
+    public void playerLeaveMap() {
+
+    }
 
 }

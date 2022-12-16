@@ -17,7 +17,7 @@ public class MapsRemoveCommand implements CommandClass {
 
     @Command(names = "")
     public boolean remove(CommandSender sender, int id) {
-        boolean success = mapManager.deleteObject(String.valueOf(id));
+        boolean success = mapManager.deleteObject(id);
         if (success) sender.sendMessage(MessageUtils.composeMessage(Messages.MAPS_REMOVE_MAP, true, id));
         else sender.sendMessage(MessageUtils.composeMessage(Messages.MAPS_REMOVE_ERROR, true));
         return true;

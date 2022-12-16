@@ -56,20 +56,42 @@ CREATE TABLE IF NOT EXISTS `lc_maps`
 );
 
 // rename to map_attempts
-// add jump count
-// add playtime
-// add last time played
--- ^ could possibly just have map attempts separate and have a foreign key to the attempt on the completion (not sure if this is a good idea)
-CREATE TABLE IF NOT EXISTS `lc_map_completions`
+/* /prac usages,
+   x practice slime ball usages,
+   x last time played,
+   x time played,
+   x date started,
+   x jumps,
+   x map,
+   x position
+*/
+CREATE TABLE IF NOT EXISTS `lc_play_through`
 (
     `id`              INT AUTO_INCREMENT NOT NULL,
     `map_id`          MEDIUMINT          NOT NULL,
     `user_id`         VARCHAR(36)        NOT NULL,
-    `completion`      BOOL DEFAULT (FALSE),
-    `completion_date` DATE DEFAULT (CURRENT_DATE),
+    `completion`      BOOL   DEFAULT (FALSE),
+    `completion_date` DATE   DEFAULT NULL,
+    `prac_usage`      INT    DEFAULT 0,
+    `join_date`       DATE   DEFAULT (CURRENT_DATE),
+    `time_played`     BIGINT DEFAULT 0,
+    `current_jumps`   INT    DEFAULT 0,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_id`) REFERENCES `lc_players` (`user_id`),
     FOREIGN KEY (`map_id`) REFERENCES `lc_maps` (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `lc_saves`
+(
+    `id`              INT AUTO_INCREMENT NOT NULL,
+    `play_through_id` INT                NOT NULL,
+    `save_name`       VARCHAR(64) DEFAULT ('Save-State'),
+    `block_type_name` VARCHAR(64) DEFAULT ('STONE'),
+    `quit_date`       DATE        NOT NULL,
+    `location_id`     MEDIUMINT   NOT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`location_id`) REFERENCES `lc_locations` (`id`),
+    FOREIGN KEY (`play_through_id`) REFERENCES `lc_play_through` (`id`)
 );
 
 CREATE TABLE IF NOT EXISTS `lc_command_cooldowns`
@@ -85,11 +107,11 @@ CREATE TABLE IF NOT EXISTS `lc_command_cooldowns`
 -- Will likely have a foreign key to an effects table
 CREATE TABLE IF NOT EXISTS `lc_effect_blocks`
 (
-    `id`     MEDIUMINT AUTO_INCREMENT NOT NULL,
-    `world`  VARCHAR(36)              NOT NULL,
-    `x`      INT                      NOT NULL,
-    `y`      INT                      NOT NULL,
-    `z`      INT                      NOT NULL,
+    `id`    MEDIUMINT AUTO_INCREMENT NOT NULL,
+    `world` VARCHAR(36)              NOT NULL,
+    `x`     INT                      NOT NULL,
+    `y`     INT                      NOT NULL,
+    `z`     INT                      NOT NULL,
     PRIMARY KEY (`id`)
 );
 

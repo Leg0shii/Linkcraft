@@ -31,8 +31,8 @@ public class TagAddCommand implements CommandClass {
         }
         else {
             PlayerTag playerTag = new PlayerTag(name, CommonsUtils.joinArguments(desc), rarity, type);
-            boolean success = tagManager.initObject(playerTag);
-            if (success) sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_ADD_SUCCESS, true, name));
+            int id = tagManager.initObject(playerTag);
+            if (id != -1) sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_ADD_SUCCESS, true, name));
             else sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_ADD_ERROR, true));
         }
         return true;

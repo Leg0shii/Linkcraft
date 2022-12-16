@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public class TagManager implements SaveableManager<PlayerTag, Integer> {
@@ -23,7 +24,7 @@ public class TagManager implements SaveableManager<PlayerTag, Integer> {
     @Inject private PlayerManager playerManager;
 
     @Override
-    public boolean initObject(PlayerTag playerTag) {
+    public int initObject(PlayerTag playerTag) {
         String sql = "INSERT INTO lc_tags (name, description, rarity, type) VALUES (?,?,?,?);";
         AsyncMySQL mySQL = dbManager.getMySQL();
         String name = playerTag.getDisplayName();
@@ -31,16 +32,17 @@ public class TagManager implements SaveableManager<PlayerTag, Integer> {
         int rarity = TagRarity.getTagPosition(playerTag.getTagRarity());
         int type = TagType.getTagPosition(playerTag.getTagType());
 
-        try(PreparedStatement stmt = mySQL.prepare(sql)) {
+        try(PreparedStatement stmt = mySQL.prepare(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, name);
             stmt.setString(2, description);
             stmt.setInt(3, rarity);
             stmt.setInt(4, type);
             stmt.execute();
+            return dbManager.getAutoGenID(stmt);
         } catch(SQLException e) {
             e.printStackTrace();
+            return -1;
         }
-        return true;
     }
 
     @Override

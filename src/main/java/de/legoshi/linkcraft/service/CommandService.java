@@ -1,9 +1,9 @@
 package de.legoshi.linkcraft.service;
 
-import de.legoshi.linkcraft.command.effectblock.EffectBlockAddCommand;
 import de.legoshi.linkcraft.command.effectblock.EffectBlockCommand;
 import de.legoshi.linkcraft.command.fun.FunCommand;
 import de.legoshi.linkcraft.command.map.MapsCommand;
+import de.legoshi.linkcraft.command.saves.SavesCommand;
 import de.legoshi.linkcraft.command.sign.SignCommand;
 import de.legoshi.linkcraft.command.tag.TagCommand;
 import me.fixeddev.commandflow.CommandManager;
@@ -34,6 +34,7 @@ public class CommandService implements Service {
     @Inject private MapsCommand mapsCommand;
     @Inject private SignCommand signCommand;
     @Inject private EffectBlockCommand effectBlockCommand;
+    @Inject private SavesCommand savesCommand;
 
     @Override
     public void start() {
@@ -43,7 +44,8 @@ public class CommandService implements Service {
                 funCommand,
                 mapsCommand,
                 signCommand,
-                effectBlockCommand
+                effectBlockCommand,
+                savesCommand
         );
     }
 

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.bukkit.Location;
 
 @Getter
 @Setter
@@ -18,10 +19,10 @@ public class StandardMap {
     private double difficulty = -1;
     private String builderNames = "null";
     private String releaseDate = "null";
-    private int locationId = -1;
+    private Location mapSpawn;
 
-    public StandardMap(String mapName, int mapType, int mapLength, double difficulty, String builderNames, int locId) {
-        this.locationId = locId;
+    public StandardMap(String mapName, int mapType, int mapLength, double difficulty, String builderNames, Location mapSpawn) {
+        this.mapSpawn = mapSpawn;
         this.mapName = mapName;
         setMapType("" + mapType);
         setMapLength("" + mapLength);
@@ -59,14 +60,6 @@ public class StandardMap {
             this.difficulty = Double.parseDouble(value);
         } catch (Exception e) {
             this.difficulty = -1;
-        }
-    }
-
-    public void setLocationId(String value) {
-        try {
-            this.locationId = Integer.parseInt(value);
-        } catch (Exception e) {
-            this.locationId = 1;
         }
     }
 

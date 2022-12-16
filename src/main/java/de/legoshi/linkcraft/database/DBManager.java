@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -89,6 +91,18 @@ public class DBManager {
             e.printStackTrace();
         }
         return statements;
+    }
+
+    public int getAutoGenID(PreparedStatement stmt) {
+        try {
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            return -1;
+        }
+        return -1;
     }
 
     /* public void insertObjectIntoDatabase(Saveable saveable) {

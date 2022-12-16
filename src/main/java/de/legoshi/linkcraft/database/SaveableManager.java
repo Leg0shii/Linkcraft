@@ -2,7 +2,7 @@ package de.legoshi.linkcraft.database;
 
 public interface SaveableManager<T, U> {
 
-    boolean initObject(T t);
+    int initObject(T t);
 
     boolean updateObject(T t);
 

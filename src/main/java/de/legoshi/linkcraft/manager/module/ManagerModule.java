@@ -1,9 +1,6 @@
 package de.legoshi.linkcraft.manager.module;
 
-import de.legoshi.linkcraft.manager.EffectBlockManager;
-import de.legoshi.linkcraft.manager.CooldownManager;
-import de.legoshi.linkcraft.manager.PlayerManager;
-import de.legoshi.linkcraft.manager.TagManager;
+import de.legoshi.linkcraft.manager.*;
 import team.unnamed.inject.AbstractModule;
 
 public class ManagerModule extends AbstractModule {
@@ -14,6 +11,8 @@ public class ManagerModule extends AbstractModule {
         bind(CooldownManager.class).singleton();
         bind(EffectBlockManager.class).singleton();
         bind(TagManager.class).singleton();
+        bind(SaveStateManager.class).singleton();
+        bind(PlayThroughManager.class).singleton();
     }
 
 }
