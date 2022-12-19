@@ -54,6 +54,7 @@ public class LocationManager implements SaveableManager<Location, Integer> {
         return true;
     }
 
+    // rather save id in object (map) as well, makes this better
     public boolean updateLocation(Location oldLocation, Location newLocation) {
         // update x, y, z, yaw, pitch, world based
         return true;
@@ -83,19 +84,6 @@ public class LocationManager implements SaveableManager<Location, Integer> {
         }
         // replace this with spawn
         return new Location(Bukkit.getWorld("world"), 0, 0, 0);
-    }
-
-    public int requestIdByPos(double x, double y, double z) {
-        AsyncMySQL mySQL = dbManager.getMySQL();
-        ResultSet resultSet = mySQL.query("SELECT id FROM lc_locations WHERE x = " + x + " AND y = " + y + " AND z = " + z + ";");
-        try {
-            if (resultSet.next()) {
-                return resultSet.getInt("id");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return -1;
     }
 
 }

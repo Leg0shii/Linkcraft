@@ -20,6 +20,7 @@ public class StandardMap {
     private String builderNames = "null";
     private String releaseDate = "null";
     private Location mapSpawn;
+    private int locationID; // update location
 
     public StandardMap(String mapName, int mapType, int mapLength, double difficulty, String builderNames, Location mapSpawn) {
         this.mapSpawn = mapSpawn;

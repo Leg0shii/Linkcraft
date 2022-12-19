@@ -11,6 +11,7 @@ public class SaveState {
     private int saveID;
     private PlayThrough playThrough;
     private Location saveLocation;
+    private int locationID; // update location
 
     private String saveStateName = "Save-State";
     private String blockTypeName = "STONE";
