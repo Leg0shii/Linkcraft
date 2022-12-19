@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
 @AllArgsConstructor
 public abstract class AbstractPlayer implements IPlayer {
 
-    protected Player player;
+    @Setter protected Player player;
     @Setter protected PlayerTag playerTag;
     @Setter protected PlayThrough playThrough;
 

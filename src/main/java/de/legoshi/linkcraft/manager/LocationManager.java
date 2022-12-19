@@ -68,8 +68,12 @@ public class LocationManager implements SaveableManager<Location, Integer> {
     @Override
     public Location requestObjectById(Integer id) {
         AsyncMySQL mySQL = dbManager.getMySQL();
-        ResultSet resultSet = mySQL.query("SELECT * FROM lc_locations WHERE id = " + id + ";");
-        try {
+        String sql = "SELECT * FROM lc_locations WHERE id = ?;";
+
+        try (PreparedStatement stmt = mySQL.prepare(sql)) {
+            stmt.setInt(1, id);
+
+            ResultSet resultSet = stmt.executeQuery();
             if (resultSet.next()) {
                 double x = resultSet.getDouble("x");
                 double y = resultSet.getDouble("y");
@@ -82,7 +86,7 @@ public class LocationManager implements SaveableManager<Location, Integer> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // replace this with spawn
+        // TODO: replace this with spawn
         return new Location(Bukkit.getWorld("world"), 0, 0, 0);
     }
 

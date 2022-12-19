@@ -125,27 +125,30 @@ public class TagManager implements SaveableManager<PlayerTag, Integer> {
     }
 
     public boolean tagExists(int tagId) {
-        boolean result = false;
-        ResultSet rs = dbManager.getMySQL().query("SELECT * FROM lc_tags WHERE tag_id=" + tagId + ";");
-        try {
-            result = rs.next();
-        } catch(SQLException e) {
+        AsyncMySQL mySQL = dbManager.getMySQL();
+        String sql = "SELECT * FROM lc_tags WHERE tag_id = ?;";
+        try (PreparedStatement stmt = mySQL.prepare(sql)) {
+            stmt.setInt(1, tagId);
+            ResultSet resultSet = stmt.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return result;
+        return false;
     }
 
     public boolean hasTag(String player, int tagId) {
-        boolean result = false;
-        ResultSet rs = dbManager.getMySQL().query("SELECT * FROM lc_player_tags t JOIN lc_players p ON t.user_id=p.user_id WHERE p.name='" + player + "' AND t.tag_id=" + tagId + ";");
-        try {
-            result = rs.next();
-        } catch(SQLException e) {
+        AsyncMySQL mySQL = dbManager.getMySQL();
+        String sql = "SELECT * FROM lc_player_tags t JOIN lc_players p ON t.user_id=p.user_id WHERE p.name=? AND t.tag_id=?;";
+        try (PreparedStatement stmt = mySQL.prepare(sql)) {
+            stmt.setString(1, player);
+            stmt.setInt(2, tagId);
+            ResultSet resultSet = stmt.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return result;
+        return false;
     }
 
     public boolean hasTag(Player player, int tagId) {

@@ -8,11 +8,15 @@ import de.legoshi.linkcraft.player.*;
 import de.legoshi.linkcraft.player.playertype.*;
 import de.legoshi.linkcraft.tag.PlayerTag;
 import lombok.Getter;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 
 public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
@@ -29,15 +33,15 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
 
     public void playerJoin(Player player) {
         AbstractPlayer abstractPlayer;
-        if (!player.hasPlayedBefore() || !isInDatabase(player)) {
+        if (!player.hasPlayedBefore() || !playerExists(player.getName())) {
             abstractPlayer = new SpawnPlayer(player, new PlayerTag());
             initObject(abstractPlayer);
         } else {
-            AbstractPlayer tempPlayer = requestObjectById(player.getUniqueId().toString());
+            String uuid = player.getUniqueId().toString();
+            abstractPlayer = requestObjectById(uuid, player);
             // determine state of player (maybe later)
             // currently I want the player to be at spawn on join
             // and create a save whenever he leaves to where he can return back
-            abstractPlayer = new SpawnPlayer(player, tempPlayer.getPlayerTag());
         }
 
         abstractPlayer.setPlayThroughManager(playThroughManager);
@@ -114,8 +118,16 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
 
         String uniqueID = abstractPlayer.getPlayer().getUniqueId().toString();
         String name = abstractPlayer.getPlayer().getDisplayName();
-        mySQL.update("INSERT INTO lc_players (user_id, name) VALUES ('" + uniqueID + "', '" + name + "');");
 
+        String sql = "INSERT INTO lc_players (user_id, name) VALUES (?,?);";
+        try (PreparedStatement stmt = mySQL.prepare(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, uniqueID);
+            stmt.setString(2, name);
+            stmt.execute();
+            return dbManager.getAutoGenID(stmt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return -1;
     }
 
@@ -124,7 +136,15 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
         AsyncMySQL mySQL = dbManager.getMySQL();
         String uniqueId = abstractPlayer.getPlayer().getUniqueId().toString();
         int tagId = abstractPlayer.getPlayerTag().getTagID();
-        mySQL.update("UPDATE lc_players SET tag_id = " + tagId + " WHERE user_id = '" + uniqueId + "';");
+
+        String sql = "UPDATE lc_players SET tag_id = ? WHERE user_id = ?;";
+        try (PreparedStatement stmt = mySQL.prepare(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setInt(1, tagId);
+            stmt.setString(2, uniqueId);
+            stmt.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
@@ -133,66 +153,60 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
         // delete everything player related in here
         // player_tags db
         // player saves
+        // play_through
         // player permissions
         return true;
     }
 
-    // this is implemented bad
+    @Deprecated
     @Override
     public AbstractPlayer requestObjectById(String id) {
         AsyncMySQL mySQL = dbManager.getMySQL();
-        ResultSet resultSet = mySQL.query("SELECT tag_id FROM lc_players WHERE user_id ='" + id + "';");
-        int tagId = 0;
-        try {
+
+        String sql = "SELECT tag_id FROM lc_players WHERE user_id =?;";
+        try (PreparedStatement stmt = mySQL.prepare(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, id);
+            ResultSet resultSet = stmt.executeQuery();
+            PlayerTag playerTag = new PlayerTag();
             if (resultSet.next()) {
-                tagId = resultSet.getInt("tag_id");
+                int tagId = resultSet.getInt("tag_id");
+                playerTag = tagManager.requestObjectById(tagId);
             }
+            return new SpawnPlayer(null, playerTag);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        PlayerTag playerTag = new PlayerTag();
-        if(tagId != 0) {
-            playerTag = tagManager.requestObjectById(tagId);
-        }
-        SpawnPlayer spawnPlayer = new SpawnPlayer(null, playerTag);
-        return spawnPlayer;
+        return null;
     }
 
-    private boolean isInDatabase(Player player) {
+    public AbstractPlayer requestObjectById(String id, Player player) {
+        AbstractPlayer abstractPlayer = requestObjectById(id);
+        abstractPlayer.setPlayer(player);
+        return abstractPlayer;
+    }
+
+    public boolean playerExists(String player) {
         AsyncMySQL mySQL = dbManager.getMySQL();
-        ResultSet resultSet = mySQL.query("SELECT user_id FROM lc_players WHERE user_id ='" + player.getUniqueId().toString() + "';");
-        try {
-            return resultSet.next();
-        } catch (Exception e) {
+
+        String sql = "SELECT * FROM lc_players WHERE user_id = ?;";
+        String uuid = uuidByName(player);
+
+        try (PreparedStatement stmt = mySQL.prepare(sql)) {
+            stmt.setString(1, uuid);
+            ResultSet result = stmt.executeQuery();
+            return result.next();
+        } catch(SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
 
-    public boolean playerExists(String player) {
-        boolean result = false;
-        ResultSet rs = dbManager.getMySQL().query("SELECT * FROM lc_players WHERE name='" + player + "';");
-        try {
-            result = rs.next();
-        } catch(SQLException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
-
     public String uuidByName(String name) {
-        String uuid = "";
-        ResultSet rs = dbManager.getMySQL().query("SELECT user_id FROM lc_players WHERE name='" + name + "';");
-
-        try {
-            if(rs.next()) {
-                uuid = rs.getString("user_id");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(name);
+        if (offlinePlayer != null) { // is only null if player didn't play before
+            return offlinePlayer.getUniqueId().toString();
         }
-        return uuid;
+        return "";
     }
 
     public int playerCount() {
