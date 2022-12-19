@@ -67,15 +67,16 @@ CREATE TABLE IF NOT EXISTS `lc_maps`
 */
 CREATE TABLE IF NOT EXISTS `lc_play_through`
 (
-    `id`              INT AUTO_INCREMENT NOT NULL,
-    `map_id`          MEDIUMINT          NOT NULL,
-    `user_id`         VARCHAR(36)        NOT NULL,
-    `completion`      BOOL   DEFAULT (FALSE),
-    `completion_date` DATE   DEFAULT NULL,
-    `prac_usage`      INT    DEFAULT 0,
-    `join_date`       DATE   DEFAULT (CURRENT_DATE),
-    `time_played`     BIGINT DEFAULT 0,
-    `current_jumps`   INT    DEFAULT 0,
+    `id`                 INT AUTO_INCREMENT NOT NULL,
+    `map_id`             MEDIUMINT          NOT NULL,
+    `user_id`            VARCHAR(36)        NOT NULL,
+    `completion`         BOOL   DEFAULT (FALSE),
+    `completion_date`    DATE   DEFAULT NULL,
+    `prac_usage`         INT    DEFAULT 0,
+    `join_date`          DATE   DEFAULT (CURRENT_DATE),
+    `time_played_normal` BIGINT DEFAULT 0,
+    `time_played_prac`   BIGINT DEFAULT 0,
+    `current_jumps`      INT    DEFAULT 0,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_id`) REFERENCES `lc_players` (`user_id`),
     FOREIGN KEY (`map_id`) REFERENCES `lc_maps` (`id`)
@@ -87,8 +88,8 @@ CREATE TABLE IF NOT EXISTS `lc_saves`
     `play_through_id` INT                NOT NULL,
     `save_name`       VARCHAR(64) DEFAULT ('Save-State'),
     `block_type_name` VARCHAR(64) DEFAULT ('STONE'),
-    `quit_date`       DATE        NOT NULL,
-    `location_id`     MEDIUMINT   NOT NULL,
+    `quit_date`       DATE               NOT NULL,
+    `location_id`     MEDIUMINT          NOT NULL,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`location_id`) REFERENCES `lc_locations` (`id`),
     FOREIGN KEY (`play_through_id`) REFERENCES `lc_play_through` (`id`)

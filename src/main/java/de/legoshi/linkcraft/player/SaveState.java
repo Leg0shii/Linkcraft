@@ -8,6 +8,7 @@ import java.sql.Date;
 @Data
 public class SaveState {
 
+    private int saveID;
     private PlayThrough playThrough;
     private Location saveLocation;
 

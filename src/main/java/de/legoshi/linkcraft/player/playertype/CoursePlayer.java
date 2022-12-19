@@ -14,16 +14,8 @@ public abstract class CoursePlayer extends AbstractPlayer {
     }
 
     @Override
-    public void playerJoinMap(StandardMap map) {
-        playerLeaveMap();
-        super.playerJoinMap(map);
-    }
-
-    @Override
-    public void playerLeaveMap() {
-        saveStateManager.createSaveState(this);
-        // write all collected stats to the database (play_through)
-        // create a new save linked to the play_through
+    public boolean isPlayingCourse() {
+        return true;
     }
 
 }

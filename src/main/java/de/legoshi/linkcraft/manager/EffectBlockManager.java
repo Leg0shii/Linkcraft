@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -107,7 +108,7 @@ public class EffectBlockManager implements SaveableManager<EffectBlock, Integer>
         int z = blockEffect.getZ();
         ArrayList<Effect> effects = blockEffect.getCommands();
 
-        try(PreparedStatement stmt = dbManager.getMySQL().prepare(sql)) {
+        try(PreparedStatement stmt = dbManager.getMySQL().prepare(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, world);
             stmt.setInt(2, x);
             stmt.setInt(3, y);

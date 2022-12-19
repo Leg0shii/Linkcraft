@@ -18,9 +18,10 @@ public abstract class AbstractPlayer implements IPlayer {
 
     protected Player player;
     @Setter protected PlayerTag playerTag;
+    @Setter protected PlayThrough playThrough;
+
     @Setter protected PlayThroughManager playThroughManager;
     @Setter protected SaveStateManager saveStateManager;
-    @Setter protected PlayThrough playThrough;
 
     public AbstractPlayer(Player player, PlayerTag playerTag) {
         this.player = player;
@@ -83,18 +84,8 @@ public abstract class AbstractPlayer implements IPlayer {
     }
 
     @Override
-    public void playerJoinMap(StandardMap map) {
-        int mapId = map.getId();
-        Location mapSpawn = map.getMapSpawn();
-        // execute creation of new save state
-        this.getPlayer().sendMessage("Selected map " + mapId);
-        this.getPlayer().teleport(mapSpawn);
-        this.playThrough = playThroughManager.createPlayThrough(player, mapId);
-    }
-
-    @Override
-    public void playerLeaveMap() {
-
+    public boolean isPlayingCourse() {
+        return false;
     }
 
 }

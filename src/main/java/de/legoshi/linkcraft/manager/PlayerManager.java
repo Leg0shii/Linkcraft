@@ -4,10 +4,8 @@ import de.legoshi.linkcraft.database.AsyncMySQL;
 import de.legoshi.linkcraft.database.DBManager;
 import de.legoshi.linkcraft.database.SaveableManager;
 import de.legoshi.linkcraft.map.StandardMap;
-import de.legoshi.linkcraft.player.AbstractPlayer;
-import de.legoshi.linkcraft.player.PlayerFactory;
-import de.legoshi.linkcraft.player.playertype.CoursePlayer;
-import de.legoshi.linkcraft.player.playertype.SpawnPlayer;
+import de.legoshi.linkcraft.player.*;
+import de.legoshi.linkcraft.player.playertype.*;
 import de.legoshi.linkcraft.tag.PlayerTag;
 import lombok.Getter;
 import org.bukkit.entity.Player;
@@ -50,20 +48,48 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
     }
 
     public void playerJoinMap(Player player, StandardMap map) {
-        AbstractPlayer abstractPlayer = this.getHashMap().get(player);
-        abstractPlayer.playerJoinMap(map);
-        updatePlayer(abstractPlayer); // update so it takes a specific value that determine its type
+        AbstractPlayer abstractPlayer = hashMap.get(player);
+        if(abstractPlayer.isPlayingCourse()) {
+            playerLeaveMap(player);
+        }
+
+        PlayThrough playThrough = playThroughManager.createPlayThrough(player, map.getId());
+        abstractPlayer.setPlayThrough(playThrough);
+        player.teleport(map.getMapSpawn());
+
+        switch (map.getMapType()) {
+            case MAZE -> updatePlayerState(abstractPlayer, MazePlayer.class);
+            case SEGMENTED -> updatePlayerState(abstractPlayer, SegmentedPlayer.class);
+            case RANK_UP -> updatePlayerState(abstractPlayer, RankUpPlayer.class);
+        }
+    }
+
+    public void playerJoinSaveState(Player player, SaveState saveState) {
+        AbstractPlayer abstractPlayer = hashMap.get(player);
+        if(abstractPlayer.isPlayingCourse()) {
+            playerLeaveMap(player);
+        }
+
+        abstractPlayer.setPlayThrough(saveState.getPlayThrough());
+        player.teleport(saveState.getSaveLocation());
+
+        switch (saveState.getPlayThrough().getMap().getMapType()) {
+            case MAZE -> updatePlayerState(abstractPlayer, MazePlayer.class);
+            case SEGMENTED -> updatePlayerState(abstractPlayer, SegmentedPlayer.class);
+            case RANK_UP -> updatePlayerState(abstractPlayer, RankUpPlayer.class);
+        }
     }
 
     public void playerLeaveMap(Player player) {
-        this.getHashMap().get(player).playerLeaveMap();
+        AbstractPlayer abstractPlayer = hashMap.get(player);
+        saveStateManager.saveSaveState(abstractPlayer);
+        updatePlayerState(abstractPlayer, SpawnPlayer.class);
     }
 
-    // add someway of detecting wanted class
-    public void updatePlayer(AbstractPlayer abstractPlayer) {
-        AbstractPlayer newPlayer = PlayerFactory.getPlayerByType(abstractPlayer);
-        this.getHashMap().remove(abstractPlayer.getPlayer());
-        this.getHashMap().put(newPlayer.getPlayer(), newPlayer);
+    public void updatePlayerState(AbstractPlayer abstractPlayer, Class<?> clazz) {
+        AbstractPlayer newPlayer = PlayerFactory.getPlayerByType(abstractPlayer, clazz);
+        hashMap.remove(abstractPlayer.getPlayer());
+        hashMap.put(newPlayer.getPlayer(), newPlayer);
     }
 
     public void saveName(Player player) {

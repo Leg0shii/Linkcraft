@@ -16,8 +16,6 @@ public interface IPlayer {
 
     boolean canUseEffectBlocks();
 
-    void playerJoinMap(StandardMap map);
-
-    void playerLeaveMap();
+    boolean isPlayingCourse();
 
 }
