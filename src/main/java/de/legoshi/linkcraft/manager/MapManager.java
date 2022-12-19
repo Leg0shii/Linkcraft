@@ -115,6 +115,7 @@ public class MapManager implements SaveableManager<StandardMap, Integer> {
                 standardMap.setBuilderNames(resultSet.getString("builder_names"));
                 standardMap.setReleaseDate(resultSet.getString("release_date"));
                 int spawnLocationID = resultSet.getInt("spawn_location_id");
+                standardMap.setLocationID(spawnLocationID);
                 Location spawnLocation = locationManager.requestObjectById(spawnLocationID);
                 standardMap.setMapSpawn(spawnLocation);
                 standardMap.setId(id);

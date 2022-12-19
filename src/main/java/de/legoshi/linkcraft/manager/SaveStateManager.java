@@ -18,6 +18,11 @@ public class SaveStateManager implements SaveableManager<SaveState, Integer> {
     @Inject private LocationManager locationManager;
     @Inject private PlayThroughManager playThroughManager;
 
+    /* TODO:
+        - save stats every x amount of time because of crash
+        - dont save location, this will be memorized by server (if we save it as well, reset for players is very annoying)
+     */
+
     public void saveSaveState(AbstractPlayer abstractPlayer) {
         Location saveLocation = getSaveStateLocation(abstractPlayer);
         long quitTime = System.currentTimeMillis();
@@ -28,26 +33,25 @@ public class SaveStateManager implements SaveableManager<SaveState, Integer> {
         SaveState saveState = new SaveState(playThrough, saveLocation, quitDate);
         AsyncMySQL mySQL = dbManager.getMySQL();
 
-        String sql = "SELECT id FROM lc_saves WHERE play_through_id = ?;";
+        String sql = "SELECT id, location_id FROM lc_saves WHERE play_through_id = ?;";
         try (PreparedStatement stmt = mySQL.prepare(sql)) {
             stmt.setInt(1, playThrough.getPtID());
             ResultSet resultSet = stmt.executeQuery();
-            if(resultSet.next()) updateSaveState(abstractPlayer, saveState);
+            if(resultSet.next()) {
+                int id = resultSet.getInt("id");
+                int locID = resultSet.getInt("location_id");
+                saveState.setSaveID(id);
+                saveState.setLocationID(locID);
+                updateSaveState(saveState);
+            }
             else initObject(saveState);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void updateSaveState(AbstractPlayer abstractPlayer, SaveState saveState) {
-        Location saveLocation = getSaveStateLocation(abstractPlayer);
-        Date quitDate = new Date(System.currentTimeMillis());
-        PlayThrough playThrough = abstractPlayer.getPlayThrough();
-
-        saveState.setSaveLocation(saveLocation);
-        saveState.setPlayThrough(playThrough);
-        saveState.setQuitDate(quitDate);
-
+    public void updateSaveState(SaveState saveState) {
+        PlayThrough playThrough = saveState.getPlayThrough();
         playThroughManager.updateObject(playThrough);
         updateObject(saveState);
     }
@@ -82,8 +86,19 @@ public class SaveStateManager implements SaveableManager<SaveState, Integer> {
     }
 
     @Override
-    public boolean updateObject(SaveState location) {
-        return false;
+    public boolean updateObject(SaveState saveState) {
+        AsyncMySQL mySQL = dbManager.getMySQL();
+        String sql = "UPDATE lc_saves SET quit_date=? WHERE id=?;";
+        locationManager.updateLocation(saveState.getLocationID(), saveState.getSaveLocation());
+        try(PreparedStatement stmt = mySQL.prepare(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setDate(1, saveState.getQuitDate());
+            stmt.setInt(2, saveState.getSaveID());
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -111,6 +126,7 @@ public class SaveStateManager implements SaveableManager<SaveState, Integer> {
 
                 SaveState saveState = new SaveState(playThrough, saveLocation, quitDate);
                 saveState.setSaveID(id);
+                saveState.setLocationID(lID);
                 saveState.setSaveStateName(resultSet.getString("save_name"));
                 saveState.setBlockTypeName(resultSet.getString("block_type_name"));
 

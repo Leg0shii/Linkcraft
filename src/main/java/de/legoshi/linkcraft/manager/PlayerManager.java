@@ -64,7 +64,7 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
         switch (map.getMapType()) {
             case MAZE -> updatePlayerState(abstractPlayer, MazePlayer.class);
             case SEGMENTED -> updatePlayerState(abstractPlayer, SegmentedPlayer.class);
-            case RANK_UP -> updatePlayerState(abstractPlayer, RankUpPlayer.class);
+            case RANK_UP, BONUS -> updatePlayerState(abstractPlayer, RankUpPlayer.class);
         }
     }
 

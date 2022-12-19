@@ -54,12 +54,33 @@ public class LocationManager implements SaveableManager<Location, Integer> {
         return true;
     }
 
-    // rather save id in object (map) as well, makes this better
-    public boolean updateLocation(Location oldLocation, Location newLocation) {
-        // update x, y, z, yaw, pitch, world based
+    public boolean updateLocation(int locID, Location newLocation) {
+        AsyncMySQL mySQL = dbManager.getMySQL();
+        String sql = "UPDATE lc_locations SET world=?, x=?, y=?, z=?, yaw=?, pitch=? WHERE id=?;";
+
+        String world = newLocation.getWorld().getName();
+        double x = newLocation.getX();
+        double y = newLocation.getY();
+        double z = newLocation.getZ();
+        float yaw = newLocation.getYaw();
+        float pitch = newLocation.getPitch();
+
+        try(PreparedStatement stmt = mySQL.prepare(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, world);
+            stmt.setDouble(2, x);
+            stmt.setDouble(3, y);
+            stmt.setDouble(4, z);
+            stmt.setFloat(5, yaw);
+            stmt.setFloat(6, pitch);
+            stmt.setInt(7, locID);
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
+    // uuuuuuuuuuuuhm is this a good
     @Override
     public boolean deleteObject(Integer id) {
         return true;

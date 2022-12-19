@@ -1,6 +1,7 @@
 package de.legoshi.linkcraft.listener;
 
 import de.legoshi.linkcraft.manager.PlayerManager;
+import de.legoshi.linkcraft.player.AbstractPlayer;
 import de.legoshi.linkcraft.util.message.MessageUtils;
 import de.legoshi.linkcraft.util.message.Messages;
 import de.legoshi.linkcraft.util.message.Prefix;
@@ -19,8 +20,9 @@ public class QuitListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+        AbstractPlayer abstractPlayer = playerManager.getPlayer(player);
+        if (abstractPlayer.isPlayingCourse()) playerManager.playerLeaveMap(player);
         playerManager.playerQuit(player);
-
         MessageUtils.broadcast(Messages.PLAYER_LEAVE, true, player.getName());
     }
 }

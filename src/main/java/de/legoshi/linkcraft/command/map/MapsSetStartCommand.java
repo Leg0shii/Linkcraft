@@ -31,9 +31,8 @@ public class MapsSetStartCommand implements CommandClass {
 
         Location currentLocation = player.getLocation();
         StandardMap standardMap = mapManager.requestObjectById(mapId);
-        Location oldLocation = standardMap.getMapSpawn();
 
-        locationManager.updateLocation(oldLocation, currentLocation);
+        locationManager.updateLocation(standardMap.getLocationID(), currentLocation);
         standardMap.setMapSpawn(currentLocation);
         return true;
     }

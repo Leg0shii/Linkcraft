@@ -18,8 +18,8 @@ public class SpawnCommand implements CommandClass {
     @Command(names = "")
     public boolean maps(@Sender CommandSender sender) {
         Player player = (Player) sender;
-        player.performCommand("warp spawn");
         playerManager.playerLeaveMap(player);
+        player.performCommand("warp spawn");
         return true;
     }
 
