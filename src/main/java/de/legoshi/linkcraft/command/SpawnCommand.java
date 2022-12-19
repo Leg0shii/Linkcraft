@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
 
-@Command(names = "maps")
+@Command(names = "spawn")
 public class SpawnCommand implements CommandClass {
 
     @Inject private PlayerManager playerManager;
@@ -18,7 +18,7 @@ public class SpawnCommand implements CommandClass {
     @Command(names = "")
     public boolean maps(@Sender CommandSender sender) {
         Player player = (Player) sender;
-        player.sendMessage("Teleported to spawn");
+        player.performCommand("warp spawn");
         playerManager.playerLeaveMap(player);
         return true;
     }

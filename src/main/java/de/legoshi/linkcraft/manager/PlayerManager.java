@@ -82,6 +82,7 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
 
     public void playerLeaveMap(Player player) {
         AbstractPlayer abstractPlayer = hashMap.get(player);
+        if (abstractPlayer.getPlayThrough() == null) return;
         saveStateManager.saveSaveState(abstractPlayer);
         updatePlayerState(abstractPlayer, SpawnPlayer.class);
     }

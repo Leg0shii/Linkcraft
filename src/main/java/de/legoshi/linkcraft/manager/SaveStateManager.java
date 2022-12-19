@@ -6,7 +6,6 @@ import de.legoshi.linkcraft.database.SaveableManager;
 import de.legoshi.linkcraft.player.AbstractPlayer;
 import de.legoshi.linkcraft.player.PlayThrough;
 import de.legoshi.linkcraft.player.SaveState;
-import de.legoshi.linkcraft.player.playertype.CoursePlayer;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -92,6 +91,7 @@ public class SaveStateManager implements SaveableManager<SaveState, Integer> {
         return false;
     }
 
+    @Deprecated
     @Override
     public SaveState requestObjectById(Integer id) {
         AsyncMySQL mySQL = dbManager.getMySQL();
