@@ -53,12 +53,12 @@ public class MapsCommand implements CommandClass {
     public boolean maps(@Sender CommandSender sender, CommandContext commandContext) {
         if (commandContext.getArguments().size() > 1) {
             mapsHelpCommand.help(sender);
-            return false;
+            return true;
         }
 
         if (!(sender instanceof Player player)) {
             sender.sendMessage(MessageUtils.composeMessage(Messages.NOT_A_PLAYER.getMessage(), true));
-            return false;
+            return true;
         }
 
         injector.getInstance(MapMenu.class).openGui(player, null);
