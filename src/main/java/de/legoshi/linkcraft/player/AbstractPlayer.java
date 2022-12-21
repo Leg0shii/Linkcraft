@@ -30,7 +30,7 @@ public abstract class AbstractPlayer implements IPlayer {
 
     public String chat(String message) {
         String result = "";
-        if(!playerTag.getDisplayName().isBlank()) {
+        if(!playerTag.getDisplayName().isEmpty()) {
             result += playerTag.getDisplayName() + " §r";
         }
         // TODO: Add bonus rank

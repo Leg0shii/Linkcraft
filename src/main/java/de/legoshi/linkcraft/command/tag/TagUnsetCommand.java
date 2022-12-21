@@ -19,7 +19,7 @@ public class TagUnsetCommand implements CommandClass {
 
     @Command(names = "")
     public boolean unsetTag(CommandSender sender, @OptArg("") String player) {
-        if(player != null && !player.isBlank()) {
+        if(player != null && !player.isEmpty()) {
             if(playerManager.playerExists(player)) {
                 tagManager.setDefaultTag(player);
                 sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_UNSET_TAG_OTHER, true, player));
