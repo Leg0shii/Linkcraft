@@ -11,13 +11,26 @@ public enum TagRarity {
     LEGENDARY;
 
     public static ChatColor toColor(TagRarity tagRarity) {
-        return switch (tagRarity) {
-            case COMMON -> ChatColor.GRAY;
-            case RARE -> ChatColor.DARK_AQUA;
-            case EPIC -> ChatColor.DARK_PURPLE;
-            case LEGENDARY -> ChatColor.GOLD;
-            default -> ChatColor.WHITE;
-        };
+        ChatColor result;
+
+        switch(tagRarity) {
+            case COMMON:
+                result = ChatColor.GRAY;
+                break;
+            case RARE:
+                result = ChatColor.DARK_AQUA;
+                break;
+            case EPIC:
+                result = ChatColor.DARK_PURPLE;
+                break;
+            case LEGENDARY:
+                result = ChatColor.GOLD;
+                break;
+            default:
+                result = ChatColor.WHITE;
+        }
+
+        return result;
     }
 
     public static int getTagPosition(TagRarity rarity) {

@@ -20,10 +20,12 @@ public class SavesCheckCommand implements CommandClass {
 
     @Command(names = "")
     public boolean check(CommandSender sender, String playerName) {
-        if (!(sender instanceof Player player)) {
+        if (!(sender instanceof Player)) {
             sender.sendMessage(MessageUtils.composeMessage(Messages.NOT_A_PLAYER.getMessage(), true));
             return true;
         }
+
+        Player player = (Player)sender;
 
         // check if playerName correlates to a player
 

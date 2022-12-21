@@ -25,8 +25,10 @@ public class TagEditCommand implements CommandClass {
         PlayerTag tag = tagManager.requestObjectById(tagId);
         boolean valid = true;
         switch(field.toLowerCase()) {
-            case "name" -> tag.setDisplayName(value);
-            case "rarity" -> {
+            case "name":
+                tag.setDisplayName(value);
+                break;
+            case "rarity":
                 if(!CommonsUtils.isNumeric(value)) {
                     sender.sendMessage(MessageUtils.composeMessage(Messages.REQUIRE_INTEGER, true, "Rarity"));
                     valid = false;
@@ -37,8 +39,8 @@ public class TagEditCommand implements CommandClass {
                     // Scuffed but I don't see why not (parse as float, cast to int to stop non integer errors)
                     tag.setTagRarity(TagRarity.values()[(int)Float.parseFloat(value)]);
                 }
-            }
-            case "type" -> {
+                break;
+            case "type":
                 if(!CommonsUtils.isNumeric(value)) {
                     sender.sendMessage(MessageUtils.composeMessage(Messages.REQUIRE_INTEGER, true, "Type"));
                     valid = false;
@@ -48,15 +50,14 @@ public class TagEditCommand implements CommandClass {
                 } else {
                     tag.setTagType(TagType.values()[(int)Float.parseFloat(value)]);
                 }
-            }
-            case "desc" -> {
+                break;
+            case "desc":
                 String description = value + " " + CommonsUtils.joinArguments(desc);
                 tag.setDescription(description);
-            }
-            default -> {
+                break;
+            default:
                 sender.sendMessage(MessageUtils.composeMessage(Messages.INVALID_ARG, true, field));
                 valid = false;
-            }
         }
         if(valid) {
             tagManager.updateObject(tag);

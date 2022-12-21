@@ -24,10 +24,12 @@ public class MapsSetStartCommand implements CommandClass {
 
     @Command(names = "")
     public boolean setStart(CommandSender sender, int mapId) {
-        if (!(sender instanceof Player player)) {
+        if (!(sender instanceof Player)) {
             sender.sendMessage(MessageUtils.composeMessage(Messages.NOT_A_PLAYER, true));
             return true;
         }
+
+        Player player = (Player)sender;
 
         Location currentLocation = player.getLocation();
         StandardMap standardMap = mapManager.requestObjectById(mapId);

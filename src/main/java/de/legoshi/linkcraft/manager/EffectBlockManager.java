@@ -168,11 +168,9 @@ public class EffectBlockManager implements SaveableManager<EffectBlock, Integer>
 
     public EffectBlock requestObjectByLoc(String world, int x, int y, int z) {
         EffectBlock effectBlock = new EffectBlock();
-        String sql = """
-            SELECT id, world, x, y, z
-            FROM lc_effect_blocks
-            WHERE world=? AND x=? AND y=? AND z=?;
-        """;
+        String sql = "SELECT id, world, x, y, z " +
+                     "FROM lc_effect_blocks " +
+                     "WHERE world=? AND x=? AND y=? AND z=?;";
 
         try(PreparedStatement stmt = dbManager.getMySQL().prepare(sql)) {
             stmt.setString(1, world);
@@ -201,11 +199,9 @@ public class EffectBlockManager implements SaveableManager<EffectBlock, Integer>
     @Override
     public EffectBlock requestObjectById(Integer id) {
         EffectBlock effectBlock = new EffectBlock();
-        String sql = """
-            SELECT world, x, y, z
-            FROM lc_effect_blocks
-            WHERE id=?;
-        """;
+        String sql = "SELECT world, x, y, z " +
+                "FROM lc_effect_blocks " +
+                "WHERE id=?;";
 
         try(PreparedStatement stmt = dbManager.getMySQL().prepare(sql)) {
             stmt.setInt(1, id);
@@ -228,11 +224,9 @@ public class EffectBlockManager implements SaveableManager<EffectBlock, Integer>
 
     public ArrayList<Effect> requestEffectsByBlockId(int id) {
         ArrayList<Effect> commands = new ArrayList<>();
-        String sql = """
-            SELECT id, command, executor
-            FROM lc_effects
-            WHERE block_id=?;
-        """;
+        String sql = "SELECT id, command, executor " +
+                     "FROM lc_effects " +
+                     "WHERE block_id=?;";
 
         try(PreparedStatement stmt = dbManager.getMySQL().prepare(sql)) {
             stmt.setInt(1, id);
@@ -256,11 +250,9 @@ public class EffectBlockManager implements SaveableManager<EffectBlock, Integer>
      */
     public int isEffectBlock(String world, int x, int y, int z) {
         int result = -1;
-        String sql = """
-            SELECT id
-            FROM lc_effect_blocks
-            WHERE world=? AND x=? AND y=? AND z=?;
-        """;
+        String sql = "SELECT id " +
+                     "FROM lc_effect_blocks " +
+                     "WHERE world=? AND x=? AND y=? AND z=?;";
 
         try(PreparedStatement stmt = dbManager.getMySQL().prepare(sql)) {
             stmt.setString(1, world);
@@ -301,8 +293,12 @@ public class EffectBlockManager implements SaveableManager<EffectBlock, Integer>
         String formatted = MessageUtils.composeMessage(command, false, player.getName());
 
         switch (effect.getExecutor()) {
-            case PLAYER -> Bukkit.dispatchCommand(player, formatted);
-            case CONSOLE -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), formatted);
+            case PLAYER:
+                Bukkit.dispatchCommand(player, formatted);
+                break;
+            case CONSOLE:
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), formatted);
+                break;
         }
     }
 }

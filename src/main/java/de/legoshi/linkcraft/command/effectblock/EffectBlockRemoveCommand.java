@@ -17,7 +17,8 @@ public class EffectBlockRemoveCommand implements CommandClass {
 
     @Command(names = "")
     public boolean removeEffectBlock(CommandSender sender) {
-        if(sender instanceof Player player) {
+        if(sender instanceof Player) {
+            Player player = (Player)sender;
             effectBlockManager.storeRemoving(player);
             sender.sendMessage(MessageUtils.composeMessage(Messages.EFFECT_BLOCK_REMOVE, true));
         }

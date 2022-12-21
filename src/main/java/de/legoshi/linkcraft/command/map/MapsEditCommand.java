@@ -25,12 +25,24 @@ public class MapsEditCommand implements CommandClass {
                         @Named(value = "value") String value) {
         StandardMap standardMap = mapManager.requestObjectById(map_id);
         switch (type) {
-            case "name" -> standardMap.setMapName(value);
-            case "type" -> standardMap.setMapType(value);
-            case "difficulty" -> standardMap.setDifficulty(value);
-            case "builders" -> standardMap.setBuilderNames(value);
-            case "release" -> standardMap.setReleaseDate(value);
-            case "length" -> standardMap.setMapLength(value);
+            case "name":
+                standardMap.setMapName(value);
+                break;
+            case "type":
+                standardMap.setMapType(value);
+                break;
+            case "difficulty":
+                standardMap.setDifficulty(value);
+                break;
+            case "builders":
+                standardMap.setBuilderNames(value);
+                break;
+            case "release":
+                standardMap.setReleaseDate(value);
+                break;
+            case "length":
+                standardMap.setMapLength(value);
+                break;
         }
 
         boolean success = mapManager.updateObject(standardMap);

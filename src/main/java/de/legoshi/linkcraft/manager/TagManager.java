@@ -47,11 +47,10 @@ public class TagManager implements SaveableManager<PlayerTag, Integer> {
 
     @Override
     public boolean updateObject(PlayerTag playerTag) {
-        String sql = """
-        UPDATE lc_tags
-        SET name=?,description=?,rarity=?,type=?
-        WHERE tag_id=?;
-        """;
+        String sql = "UPDATE lc_tags " +
+                     "SET name=?,description=?,rarity=?,type=? " +
+                     "WHERE tag_id=?;";
+
         AsyncMySQL mySQL = dbManager.getMySQL();
         int tagId = playerTag.getTagID();
         String name = playerTag.getDisplayName();
@@ -251,29 +250,28 @@ public class TagManager implements SaveableManager<PlayerTag, Integer> {
 
 
     public ArrayList<TagData> getTags(int rarity, Player player, int page, int pageVolume) {
-        String sql = """
-            SELECT collected.*
-            FROM (
-                SELECT t.tag_id, t.name, t.rarity, t.type, t.description, l.date, COUNT(lt.tag_id) AS 'owned_by'
-                FROM lc_tags t JOIN lc_player_tags l ON t.tag_id=l.tag_id JOIN lc_player_tags lt on t.tag_id=lt.tag_id
-                WHERE rarity=? AND l.user_id=?
-                GROUP BY t.tag_id
-                ORDER BY t.type, t.tag_id
-            ) collected
-            UNION
-            SELECT uncollected.*
-            FROM (
-                SELECT t.tag_id, t.name, t.rarity, t.type, t.description, null as date, COUNT(l.tag_id) AS 'owned_by'
-                FROM lc_tags t LEFT JOIN lc_player_tags l ON t.tag_id=l.tag_id
-                WHERE t.rarity=? AND t.tag_id NOT IN (
-                    SELECT tag_id FROM lc_player_tags
-                    WHERE user_id=?
-                )
-                GROUP BY t.tag_id
-                ORDER BY t.type, t.tag_id
-            ) uncollected
-            LIMIT ?, ?;
-        """;
+        String sql = "SELECT collected.* " +
+                "FROM (" +
+                    "SELECT t.tag_id, t.name, t.rarity, t.type, t.description, l.date, COUNT(lt.tag_id) AS 'owned_by' " +
+                    "FROM lc_tags t JOIN lc_player_tags l ON t.tag_id=l.tag_id JOIN lc_player_tags lt on t.tag_id=lt.tag_id " +
+                    "WHERE rarity=? AND l.user_id=? " +
+                    "GROUP BY t.tag_id " +
+                    "ORDER BY t.type, t.tag_id " +
+                    ") collected " +
+                "UNION " +
+                "SELECT uncollected.* " +
+                "FROM (" +
+                    "SELECT t.tag_id, t.name, t.rarity, t.type, t.description, null as date, COUNT(l.tag_id) AS 'owned_by' " +
+                    "FROM lc_tags t LEFT JOIN lc_player_tags l ON t.tag_id=l.tag_id " +
+                    "WHERE t.rarity=? AND t.tag_id NOT IN (" +
+                        "SELECT tag_id FROM lc_player_tags " +
+                        "WHERE user_id=?" +
+                        ")" +
+                "GROUP BY t.tag_id " +
+                "ORDER BY t.type, t.tag_id " +
+                ") uncollected " +
+                "LIMIT ?, ?;";
+
         int startPos = page * pageVolume;
         String uuid = player.getUniqueId().toString();
         ArrayList<TagData> tags = new ArrayList<>();
@@ -303,13 +301,12 @@ public class TagManager implements SaveableManager<PlayerTag, Integer> {
     }
 
     public ArrayList<TagData> getCollected(int rarity, Player player) {
-        String sql = """
-                    SELECT t.tag_id, t.name, t.rarity, t.type, t.description, l.date, COUNT(lt.tag_id) AS 'owned_by'
-                    FROM lc_tags t JOIN lc_player_tags l ON t.tag_id=l.tag_id JOIN lc_player_tags lt ON t.tag_id=lt.tag_id
-                    WHERE t.rarity=? AND l.user_id=?
-                    GROUP BY t.tag_id
-                    ORDER BY t.type, t.tag_id;
-                """;
+        String sql = "SELECT t.tag_id, t.name, t.rarity, t.type, t.description, l.date, COUNT(lt.tag_id) AS 'owned_by' " +
+                     "FROM lc_tags t JOIN lc_player_tags l ON t.tag_id=l.tag_id JOIN lc_player_tags lt ON t.tag_id=lt.tag_id " +
+                     "WHERE t.rarity=? AND l.user_id=? " +
+                     "GROUP BY t.tag_id " +
+                     "ORDER BY t.type, t.tag_id;";
+
         ArrayList<TagData> collected = new ArrayList<>();
 
         try(PreparedStatement stmt = dbManager.getMySQL().prepare(sql)) {
@@ -334,16 +331,14 @@ public class TagManager implements SaveableManager<PlayerTag, Integer> {
 
     public ArrayList<TagData> getUncollected(int rarity, Player player) {
         ArrayList<TagData> uncollected = new ArrayList<>();
-        String sql = """
-                    SELECT t.tag_id, t.name, t.rarity, t.type, t.description, COUNT(l.tag_id) AS 'owned_by'
-                    FROM lc_tags t LEFT JOIN lc_player_tags l ON t.tag_id=l.tag_id
-                    WHERE t.rarity=? AND t.tag_id NOT IN (
-                    	SELECT tag_id FROM lc_player_tags
-                        WHERE user_id=?
-                    )
-                    GROUP BY t.tag_id
-                    ORDER BY t.type, t.tag_id;
-                """;
+        String sql = "SELECT t.tag_id, t.name, t.rarity, t.type, t.description, COUNT(l.tag_id) AS 'owned_by' " +
+                     "FROM lc_tags t LEFT JOIN lc_player_tags l ON t.tag_id=l.tag_id " +
+                     "WHERE t.rarity=? AND t.tag_id NOT IN (" +
+                        "SELECT tag_id FROM lc_player_tags " +
+                        "WHERE user_id=?" +
+                        ") " +
+                     "GROUP BY t.tag_id " +
+                     "ORDER BY t.type, t.tag_id;";
 
         try(PreparedStatement stmt = dbManager.getMySQL().prepare(sql)) {
             stmt.setInt(1, rarity);

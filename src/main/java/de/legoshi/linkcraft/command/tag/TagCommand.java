@@ -40,10 +40,12 @@ public class TagCommand implements CommandClass {
             return true;
         }
 
-        if (!(sender instanceof Player player)) {
+        if (!(sender instanceof Player)) {
             sender.sendMessage(MessageUtils.composeMessage(Messages.NOT_A_PLAYER, true));
             return true;
         }
+
+        Player player = (Player)sender;
 
         injector.getInstance(TagMenu.class).openGui(player, null);
         return true;

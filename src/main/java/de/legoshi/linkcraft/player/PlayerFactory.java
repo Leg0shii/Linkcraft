@@ -7,13 +7,26 @@ public class PlayerFactory {
     public static AbstractPlayer getPlayerByType(AbstractPlayer abstractPlayer, Class<?> clazz) {
         String[] stringClazzes = clazz.toString().split("\\.");
         String stringClazz = stringClazzes[stringClazzes.length-1];
-        AbstractPlayer aPlayer = switch (stringClazz) {
-            case "MazePlayer" -> constructMazePlayer(abstractPlayer);
-            case "RankUpPlayer" -> constructRankUpPlayer(abstractPlayer);
-            case "SegmentedPlayer" -> constructSegmentedPlayer(abstractPlayer);
-            case "PracticePlayer" -> constructPracticePlayer(abstractPlayer);
-            case "StaffPlayer" -> constructStaffPlayer(abstractPlayer);
-            default -> constructSpawnPlayer(abstractPlayer);
+        AbstractPlayer aPlayer;
+        
+        switch (stringClazz) {
+            case "MazePlayer":
+                aPlayer = constructMazePlayer(abstractPlayer);
+                break;
+            case "RankUpPlayer":
+                aPlayer = constructRankUpPlayer(abstractPlayer);
+                break;
+            case "SegmentedPlayer":
+                aPlayer = constructSegmentedPlayer(abstractPlayer);
+                break;
+            case "PracticePlayer":
+                aPlayer = constructPracticePlayer(abstractPlayer);
+                break;
+            case "StaffPlayer":
+                aPlayer = constructStaffPlayer(abstractPlayer);
+                break;
+            default:
+                aPlayer = constructSpawnPlayer(abstractPlayer);
         };
 
         aPlayer.setPlayThrough(abstractPlayer.getPlayThrough());

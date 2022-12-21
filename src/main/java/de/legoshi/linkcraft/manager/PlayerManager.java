@@ -62,9 +62,15 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
         player.teleport(map.getMapSpawn());
 
         switch (map.getMapType()) {
-            case MAZE -> updatePlayerState(abstractPlayer, MazePlayer.class);
-            case SEGMENTED -> updatePlayerState(abstractPlayer, SegmentedPlayer.class);
-            case RANK_UP, BONUS -> updatePlayerState(abstractPlayer, RankUpPlayer.class);
+            case MAZE:
+                updatePlayerState(abstractPlayer, MazePlayer.class);
+                break;
+            case SEGMENTED:
+                updatePlayerState(abstractPlayer, SegmentedPlayer.class);
+                break;
+            case RANK_UP: case BONUS:
+                updatePlayerState(abstractPlayer, RankUpPlayer.class);
+                break;
         }
     }
 
@@ -78,9 +84,15 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
         player.teleport(saveState.getSaveLocation());
 
         switch (saveState.getPlayThrough().getMap().getMapType()) {
-            case MAZE -> updatePlayerState(abstractPlayer, MazePlayer.class);
-            case SEGMENTED -> updatePlayerState(abstractPlayer, SegmentedPlayer.class);
-            case RANK_UP -> updatePlayerState(abstractPlayer, RankUpPlayer.class);
+            case MAZE:
+                updatePlayerState(abstractPlayer, MazePlayer.class);
+                break;
+            case SEGMENTED:
+                updatePlayerState(abstractPlayer, SegmentedPlayer.class);
+                break;
+            case RANK_UP:
+                updatePlayerState(abstractPlayer, RankUpPlayer.class);
+                break;
         }
     }
 

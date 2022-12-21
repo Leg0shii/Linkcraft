@@ -12,6 +12,7 @@ import me.fixeddev.commandflow.usage.UsageBuilder;
 import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -37,7 +38,8 @@ public class LinkcraftUsageBuilder implements UsageBuilder {
         }
 
         TextComponent component = TextComponent.builder(label).build();
-        return MessageUtils.composeComponent(labelComponent, List.of(component), false);
+        List<Component> temp = Arrays.asList(new TextComponent[]{component});
+        return MessageUtils.composeComponent(labelComponent, temp, false);
     }
 
     private Component formatPart(Component component) {

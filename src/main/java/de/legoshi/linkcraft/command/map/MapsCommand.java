@@ -56,10 +56,12 @@ public class MapsCommand implements CommandClass {
             return true;
         }
 
-        if (!(sender instanceof Player player)) {
+        if (!(sender instanceof Player)) {
             sender.sendMessage(MessageUtils.composeMessage(Messages.NOT_A_PLAYER.getMessage(), true));
             return true;
         }
+
+        Player player = (Player)sender;
 
         injector.getInstance(MapMenu.class).openGui(player, null);
         return true;

@@ -21,7 +21,8 @@ public class EffectBlockAddCommand implements CommandClass {
 
     @Command(names = "")
     public boolean addEffectBlock(CommandSender sender, @Named("command") String command, ArgumentStack args) {
-        if(sender instanceof Player player) {
+        if(sender instanceof Player) {
+            Player player = (Player)sender;
             String combined = command + " " + CommonsUtils.joinArguments(args);
             Effect effect = new Effect(combined, ExecutorType.CONSOLE);
 

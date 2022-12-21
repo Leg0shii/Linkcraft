@@ -31,10 +31,12 @@ public class MapsAddCommand implements CommandClass {
                        @Named("difficulty") double difficulty,
                        @Named("builders") String builders
     ) {
-        if (!(sender instanceof Player player)) {
+        if (!(sender instanceof Player)) {
             sender.sendMessage(MessageUtils.composeMessage(Messages.NOT_A_PLAYER.getMessage(), true));
             return false;
         }
+
+        Player player = (Player)sender;
 
         Location spawn = player.getLocation();
         StandardMap standardMap = new StandardMap(name, type, length, difficulty, builders, spawn);

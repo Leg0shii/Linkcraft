@@ -28,7 +28,8 @@ public class TagUnsetCommand implements CommandClass {
             }
         // this command is for admins
         // why does it change the tag of the admin?
-        } else if(sender instanceof Player p) {
+        } else if(sender instanceof Player) {
+            Player p = (Player)sender;
             boolean success = tagManager.setDefaultTag(p.getDisplayName());
             if (success) sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_UNSET_TAG, true));
             else sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_UNSET_TAG, true));

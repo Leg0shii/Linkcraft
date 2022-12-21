@@ -10,13 +10,24 @@ public enum TagType {
     CUSTOM;
 
     public static ChatColor toColor(TagType tagType) {
-        return switch (tagType) {
-            case HIDDEN -> ChatColor.LIGHT_PURPLE;
-            case VICTOR -> ChatColor.GOLD;
-            case EVENT -> ChatColor.RED;
-            case CUSTOM -> ChatColor.DARK_AQUA;
-            default -> ChatColor.WHITE;
-        };
+        ChatColor result;
+        switch (tagType) {
+            case HIDDEN:
+                result = ChatColor.LIGHT_PURPLE;
+                break;
+            case VICTOR:
+                result = ChatColor.GOLD;
+                break;
+            case EVENT:
+                result = ChatColor.RED;
+                break;
+            case CUSTOM:
+                result = ChatColor.DARK_AQUA;
+                break;
+            default:
+                result =ChatColor.WHITE;
+        }
+        return result;
     }
 
     public static int getTagPosition(TagType type) {
