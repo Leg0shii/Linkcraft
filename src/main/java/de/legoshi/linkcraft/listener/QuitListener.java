@@ -21,7 +21,7 @@ public class QuitListener implements Listener {
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         AbstractPlayer abstractPlayer = playerManager.getPlayer(player);
-        if (abstractPlayer.isPlayingCourse()) playerManager.playerLeaveMap(player);
+        if (abstractPlayer.isPlayingCourse()) playerManager.saveSaveState(player);
         playerManager.playerQuit(player);
         MessageUtils.broadcast(Messages.PLAYER_LEAVE, true, player.getName());
     }

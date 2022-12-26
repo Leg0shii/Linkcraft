@@ -15,6 +15,7 @@ import de.themoep.inventorygui.GuiElementGroup;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -58,7 +59,7 @@ public class SavesHolder extends GUIScrollable {
         AsyncMySQL mySQL = dbManager.getMySQL();
         String playerUUID = holder.getPlayer().getUniqueId().toString();
         int currentPage = pageVolume * (page - 1);
-        String sql = "SELECT s.id FROM lc_saves as s, lc_play_through as p " +
+        String sql = "SELECT s.id, s.loaded FROM lc_saves as s, lc_play_through as p " +
                 "WHERE s.play_through_id = p.id and p.user_id = ? AND p.completion = false;";
                 // "LIMIT ?, 40;";
 
@@ -92,8 +93,16 @@ public class SavesHolder extends GUIScrollable {
         PlayThrough playThrough = saveState.getPlayThrough();
         StandardMap map = mapManager.requestObjectById(playThrough.getMap().getId());
 
+        boolean loaded = resultSet.getBoolean("s.loaded");
+        ItemStack itemStack = new ItemStack(Material.STONE);
+        if (loaded) itemStack.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+
         StaticGuiElement staticGuiElement;
-        staticGuiElement = new StaticGuiElement('g', new ItemStack(Material.STONE), click -> {
+        staticGuiElement = new StaticGuiElement('g', itemStack, click -> {
+            if (loaded) {
+                holder.sendMessage("You are already in this save state.");
+                return true;
+            }
             playerManager.playerJoinSaveState(holder, saveState);
             holder.teleport(saveState.getSaveLocation());
             holder.sendMessage("Joined save state.");

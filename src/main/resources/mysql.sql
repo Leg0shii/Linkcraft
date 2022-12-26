@@ -90,6 +90,7 @@ CREATE TABLE IF NOT EXISTS `lc_saves`
     `block_type_name` VARCHAR(64) DEFAULT ('STONE'),
     `quit_date`       DATE               NOT NULL,
     `location_id`     MEDIUMINT          NOT NULL,
+    `loaded`          BOOLEAN     DEFAULT FALSE,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`location_id`) REFERENCES `lc_locations` (`id`),
     FOREIGN KEY (`play_through_id`) REFERENCES `lc_play_through` (`id`)

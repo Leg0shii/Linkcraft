@@ -24,6 +24,7 @@ public class SaveStateManager implements SaveableManager<SaveState, Integer> {
      */
 
     public void saveSaveState(AbstractPlayer abstractPlayer) {
+        System.out.println("SAVE SAVE-STATE RAN");
         Location saveLocation = getSaveStateLocation(abstractPlayer);
         long quitTime = System.currentTimeMillis();
         Date quitDate = new Date(quitTime);
@@ -54,6 +55,52 @@ public class SaveStateManager implements SaveableManager<SaveState, Integer> {
         PlayThrough playThrough = saveState.getPlayThrough();
         playThroughManager.updateObject(playThrough);
         updateObject(saveState);
+    }
+
+    public void setLoaded(int ptID, boolean value) {
+        AsyncMySQL mySQL = dbManager.getMySQL();
+        String sql = "UPDATE lc_saves SET loaded=? WHERE play_through_id=?;";
+
+        try (PreparedStatement stmt = mySQL.prepare(sql)) {
+            stmt.setBoolean(1, value);
+            stmt.setInt(2, ptID);
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*public void setLoadedAllFalse(Player player) {
+        AsyncMySQL mySQL = dbManager.getMySQL();
+        String sql = "UPDATE lc_saves as s, lc_play_through as p SET s.loaded=false WHERE s.play_through_id=p.id AND p.user_id=?;";
+        String playerID = player.getUniqueId().toString();
+
+        try (PreparedStatement stmt = mySQL.prepare(sql)) {
+            stmt.setString(1, playerID);
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }*/
+
+    public SaveState getLoadedSaveStates(AbstractPlayer abstractPlayer) {
+        AsyncMySQL mySQL = dbManager.getMySQL();
+        String sql = "SELECT s.id FROM lc_saves as s, lc_play_through as p WHERE s.play_through_id=p.id AND s.loaded=1 AND p.user_id=?;";
+        String userID = abstractPlayer.getPlayer().getUniqueId().toString();
+
+        try (PreparedStatement stmt = mySQL.prepare(sql)) {
+            stmt.setString(1, userID);
+            ResultSet resultSet = stmt.executeQuery();
+            if (resultSet.next()) {
+                int sID = resultSet.getInt("s.id");
+                return requestObjectById(sID, abstractPlayer.getPlayer());
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private Location getSaveStateLocation(AbstractPlayer aPlayer) {

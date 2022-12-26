@@ -25,6 +25,7 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
     @Inject private TagManager tagManager;
     @Inject private SaveStateManager saveStateManager;
     @Inject private PlayThroughManager playThroughManager;
+    @Inject private PTThreadManager ptThreadManager;
     @Getter private final HashMap<Player, AbstractPlayer> hashMap;
 
     public PlayerManager() {
@@ -39,9 +40,6 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
         } else {
             String uuid = player.getUniqueId().toString();
             abstractPlayer = requestObjectById(uuid, player);
-            // determine state of player (maybe later)
-            // currently I want the player to be at spawn on join
-            // and create a save whenever he leaves to where he can return back
         }
 
         abstractPlayer.setPlayThroughManager(playThroughManager);
@@ -49,6 +47,15 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
         saveName(player);
 
         hashMap.put(player, abstractPlayer);
+
+        SaveState saveState = saveStateManager.getLoadedSaveStates(abstractPlayer);
+        if (saveState != null) {
+            abstractPlayer.setPlayThrough(saveState.getPlayThrough());
+            PlayThrough playThrough = saveState.getPlayThrough();
+            int ptID = playThrough.getPtID();
+            StandardMap standardMap = playThrough.getMap();
+            initPlay(abstractPlayer, ptID, standardMap);
+        }
     }
 
     public void playerJoinMap(Player player, StandardMap map) {
@@ -61,17 +68,11 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
         abstractPlayer.setPlayThrough(playThrough);
         player.teleport(map.getMapSpawn());
 
-        switch (map.getMapType()) {
-            case MAZE:
-                updatePlayerState(abstractPlayer, MazePlayer.class);
-                break;
-            case SEGMENTED:
-                updatePlayerState(abstractPlayer, SegmentedPlayer.class);
-                break;
-            case RANK_UP: case BONUS:
-                updatePlayerState(abstractPlayer, RankUpPlayer.class);
-                break;
-        }
+        saveStateManager.saveSaveState(abstractPlayer);
+
+        int ptID = playThrough.getPtID();
+        StandardMap standardMap = playThrough.getMap();
+        initPlay(abstractPlayer, ptID, standardMap);
     }
 
     public void playerJoinSaveState(Player player, SaveState saveState) {
@@ -83,23 +84,30 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
         abstractPlayer.setPlayThrough(saveState.getPlayThrough());
         player.teleport(saveState.getSaveLocation());
 
-        switch (saveState.getPlayThrough().getMap().getMapType()) {
-            case MAZE:
-                updatePlayerState(abstractPlayer, MazePlayer.class);
-                break;
-            case SEGMENTED:
-                updatePlayerState(abstractPlayer, SegmentedPlayer.class);
-                break;
-            case RANK_UP:
-                updatePlayerState(abstractPlayer, RankUpPlayer.class);
-                break;
-        }
+        int ptID = saveState.getPlayThrough().getPtID();
+        StandardMap standardMap = saveState.getPlayThrough().getMap();
+        initPlay(abstractPlayer, ptID, standardMap);
     }
 
-    public void playerLeaveMap(Player player) {
+    private void initPlay(AbstractPlayer abstractPlayer, int ptID, StandardMap map) {
+        ptThreadManager.startPTThread(abstractPlayer);
+        saveStateManager.setLoaded(ptID, true);
+        updatePlayerFromMap(abstractPlayer, map);
+    }
+
+    public void saveSaveState(Player player) {
         AbstractPlayer abstractPlayer = hashMap.get(player);
         if (abstractPlayer.getPlayThrough() == null) return;
         saveStateManager.saveSaveState(abstractPlayer);
+    }
+
+    public void playerLeaveMap(Player player) {
+        saveSaveState(player);
+        ptThreadManager.stopPTThread(player);
+
+        AbstractPlayer abstractPlayer = hashMap.get(player);
+        saveStateManager.setLoaded(abstractPlayer.getPlayThrough().getPtID(), false);
+
         updatePlayerState(abstractPlayer, SpawnPlayer.class);
     }
 
@@ -116,6 +124,7 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
 
     public void playerQuit(Player player) {
         AbstractPlayer iPlayer = hashMap.get(player);
+        ptThreadManager.stopPTThread(player);
         updateObject(iPlayer);
         hashMap.remove(player);
     }
@@ -234,6 +243,22 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
         }
 
         return count;
+    }
+
+    private void updatePlayerFromMap(AbstractPlayer abstractPlayer, StandardMap map) {
+        if (map == null) return;
+        switch (map.getMapType()) {
+            case MAZE:
+                updatePlayerState(abstractPlayer, MazePlayer.class);
+                break;
+            case SEGMENTED:
+                updatePlayerState(abstractPlayer, SegmentedPlayer.class);
+                break;
+            case BONUS:
+            case RANK_UP:
+                updatePlayerState(abstractPlayer, RankUpPlayer.class);
+                break;
+        }
     }
 
 }
