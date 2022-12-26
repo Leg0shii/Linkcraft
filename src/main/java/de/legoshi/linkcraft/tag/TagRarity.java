@@ -8,7 +8,8 @@ public enum TagRarity {
     COMMON,
     RARE,
     EPIC,
-    LEGENDARY;
+    LEGENDARY,
+    CUSTOM;
 
     public static ChatColor toColor(TagRarity tagRarity) {
         ChatColor result;
@@ -25,6 +26,9 @@ public enum TagRarity {
                 break;
             case LEGENDARY:
                 result = ChatColor.GOLD;
+                break;
+            case CUSTOM:
+                result = ChatColor.GREEN;
                 break;
             default:
                 result = ChatColor.WHITE;

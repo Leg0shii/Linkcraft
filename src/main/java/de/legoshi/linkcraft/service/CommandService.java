@@ -5,7 +5,6 @@ import de.legoshi.linkcraft.command.effectblock.EffectBlockCommand;
 import de.legoshi.linkcraft.command.fun.FunCommand;
 import de.legoshi.linkcraft.command.map.MapsCommand;
 import de.legoshi.linkcraft.command.saves.SavesCommand;
-import de.legoshi.linkcraft.command.sign.SignCommand;
 import de.legoshi.linkcraft.command.tag.TagCommand;
 import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.annotated.AnnotatedCommandTreeBuilder;
@@ -18,10 +17,7 @@ import me.fixeddev.commandflow.annotated.part.defaults.DefaultsModule;
 import me.fixeddev.commandflow.bukkit.factory.BukkitModule;
 import org.bukkit.plugin.Plugin;
 import team.unnamed.inject.Injector;
-
 import javax.inject.Inject;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class CommandService implements Service {
 
@@ -33,7 +29,6 @@ public class CommandService implements Service {
     @Inject private TagCommand tagCommand;
     @Inject private FunCommand funCommand;
     @Inject private MapsCommand mapsCommand;
-    @Inject private SignCommand signCommand;
     @Inject private EffectBlockCommand effectBlockCommand;
     @Inject private SavesCommand savesCommand;
     @Inject private SpawnCommand spawnCommand;
@@ -45,7 +40,6 @@ public class CommandService implements Service {
                 tagCommand,
                 funCommand,
                 mapsCommand,
-                signCommand,
                 effectBlockCommand,
                 savesCommand,
                 spawnCommand
@@ -56,7 +50,6 @@ public class CommandService implements Service {
         PartInjector partInjector = new SimplePartInjector();
         partInjector.install(new BukkitModule());
         partInjector.install(new DefaultsModule());
-
         AnnotatedCommandTreeBuilder treeBuilder = new AnnotatedCommandTreeBuilderImpl(
                 new AnnotatedCommandBuilderImpl(partInjector),
                 (clazz, parent) -> injector.getInstance(clazz)

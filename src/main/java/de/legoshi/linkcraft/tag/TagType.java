@@ -7,7 +7,7 @@ public enum TagType {
     HIDDEN,
     VICTOR,
     EVENT,
-    CUSTOM;
+    SPECIAL;
 
     public static ChatColor toColor(TagType tagType) {
         ChatColor result;
@@ -21,11 +21,11 @@ public enum TagType {
             case EVENT:
                 result = ChatColor.RED;
                 break;
-            case CUSTOM:
+            case SPECIAL:
                 result = ChatColor.DARK_AQUA;
                 break;
             default:
-                result =ChatColor.WHITE;
+                result = ChatColor.WHITE;
         }
         return result;
     }
