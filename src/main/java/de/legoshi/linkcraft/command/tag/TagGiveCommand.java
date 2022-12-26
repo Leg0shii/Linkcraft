@@ -36,7 +36,10 @@ public class TagGiveCommand implements CommandClass {
                 sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_GAVE_TAG, true, player, tag.getDisplayName()));
 
                 Player gaveTo = Bukkit.getPlayer(player);
-                gaveTo.sendMessage(MessageUtils.composeMessage(Messages.TAGS_UNLOCKED_TAG, true, gaveTo.getName(), tag.getDisplayName()));
+
+                if(gaveTo != null)
+                    gaveTo.sendMessage(MessageUtils.composeMessage(Messages.TAGS_UNLOCKED_TAG, true, gaveTo.getName(), tag.getDisplayName()));
+
             } else sender.sendMessage(MessageUtils.composeMessage(Messages.TAGS_GAVE_TAG_ERROR, true, player, tagId));
         }
         return true;

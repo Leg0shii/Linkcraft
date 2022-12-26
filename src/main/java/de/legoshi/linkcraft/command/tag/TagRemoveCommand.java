@@ -22,7 +22,7 @@ public class TagRemoveCommand implements CommandClass {
     public boolean removeTag(CommandSender sender, @Named("player") String player, @Named("tag") String tagId) {
         if (!playerManager.playerExists(player)) {
             sender.sendMessage(MessageUtils.composeMessage(Messages.NEVER_JOINED, true, player));
-            return false;
+            return true;
         }
 
         if (tagId.equalsIgnoreCase("all")) {
@@ -33,7 +33,7 @@ public class TagRemoveCommand implements CommandClass {
 
         if (!CommonsUtils.isNumeric(tagId)) {
             sender.sendMessage(MessageUtils.composeMessage(Messages.INVALID_ARG, true, tagId));
-            return false;
+            return true;
         }
 
         int id = (int) Float.parseFloat(tagId);

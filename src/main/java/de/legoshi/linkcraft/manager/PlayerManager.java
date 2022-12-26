@@ -44,7 +44,6 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
 
         abstractPlayer.setPlayThroughManager(playThroughManager);
         abstractPlayer.setSaveStateManager(saveStateManager);
-        saveName(player);
 
         hashMap.put(player, abstractPlayer);
 
@@ -117,11 +116,6 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
         hashMap.put(newPlayer.getPlayer(), newPlayer);
     }
 
-    public void saveName(Player player) {
-        String uniqueID = player.getUniqueId().toString();
-        dbManager.getMySQL().update("UPDATE lc_players SET name='" + player.getName() + "' WHERE user_id='" + uniqueID + "';");
-    }
-
     public void playerQuit(Player player) {
         AbstractPlayer iPlayer = hashMap.get(player);
         ptThreadManager.stopPTThread(player);
@@ -138,12 +132,10 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
         AsyncMySQL mySQL = dbManager.getMySQL();
 
         String uniqueID = abstractPlayer.getPlayer().getUniqueId().toString();
-        String name = abstractPlayer.getPlayer().getDisplayName();
 
-        String sql = "INSERT INTO lc_players (user_id, name) VALUES (?,?);";
+        String sql = "INSERT INTO lc_players (user_id) VALUES (?);";
         try (PreparedStatement stmt = mySQL.prepare(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, uniqueID);
-            stmt.setString(2, name);
             stmt.execute();
             return dbManager.getAutoGenID(stmt);
         } catch (Exception e) {
@@ -213,9 +205,12 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
         String uuid = uuidByName(player);
 
         try (PreparedStatement stmt = mySQL.prepare(sql)) {
+            System.out.println(uuid);
             stmt.setString(1, uuid);
             ResultSet result = stmt.executeQuery();
-            return result.next();
+            if(result.next()) {
+                return true;
+            }
         } catch(SQLException e) {
             e.printStackTrace();
         }

@@ -1,7 +1,9 @@
 package de.legoshi.linkcraft.gui;
 
+import de.themoep.inventorygui.GuiElementGroup;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -47,5 +49,11 @@ public abstract class GUIScrollable extends GUIPane {
             }
             return true;
         }), "Next page");
+    }
+
+    protected void noDataItem(char slot, String title) {
+        GuiElementGroup group = new GuiElementGroup(slot);
+        group.addElement(new StaticGuiElement(slot, new ItemStack(Material.PAPER, 1), ChatColor.RED + title));
+        this.current.addElement(group);
     }
 }

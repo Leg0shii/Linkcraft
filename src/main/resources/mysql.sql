@@ -5,7 +5,6 @@ CREATE TABLE IF NOT EXISTS `lc_players`
     `bonus_rank` TINYINT     NOT NULL DEFAULT (1),
     `maze_rank`  TINYINT     NOT NULL DEFAULT (1),
     `tag_id`     MEDIUMINT   NOT NULL DEFAULT (1),
-    `name`       VARCHAR(16) NOT NULL,
     PRIMARY KEY (`user_id`)
 );
 

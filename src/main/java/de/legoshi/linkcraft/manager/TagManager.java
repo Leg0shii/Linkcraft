@@ -3,11 +3,10 @@ package de.legoshi.linkcraft.manager;
 import de.legoshi.linkcraft.database.AsyncMySQL;
 import de.legoshi.linkcraft.database.DBManager;
 import de.legoshi.linkcraft.database.SaveableManager;
+import de.legoshi.linkcraft.gui.tag.TagHolder;
 import de.legoshi.linkcraft.player.AbstractPlayer;
-import de.legoshi.linkcraft.tag.PlayerTag;
-import de.legoshi.linkcraft.tag.TagData;
-import de.legoshi.linkcraft.tag.TagRarity;
-import de.legoshi.linkcraft.tag.TagType;
+import de.legoshi.linkcraft.tag.*;
+import de.legoshi.linkcraft.util.CommonsUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -17,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class TagManager implements SaveableManager<PlayerTag, Integer> {
 
@@ -137,10 +137,12 @@ public class TagManager implements SaveableManager<PlayerTag, Integer> {
     }
 
     public boolean hasTag(String player, int tagId) {
+        String sql = "SELECT * FROM lc_player_tags WHERE user_id=? AND tag_id=?;";
         AsyncMySQL mySQL = dbManager.getMySQL();
-        String sql = "SELECT * FROM lc_player_tags t JOIN lc_players p ON t.user_id=p.user_id WHERE p.name=? AND t.tag_id=?;";
+        String uuid = playerManager.uuidByName(player);
+
         try (PreparedStatement stmt = mySQL.prepare(sql)) {
-            stmt.setString(1, player);
+            stmt.setString(1, uuid);
             stmt.setInt(2, tagId);
             ResultSet resultSet = stmt.executeQuery();
             return resultSet.next();
@@ -192,6 +194,12 @@ public class TagManager implements SaveableManager<PlayerTag, Integer> {
             }
         }
 
+        removeTag(tagId, uuid);
+
+        return true;
+    }
+
+    public boolean removeTag(int tagId, String uuid) {
         try(PreparedStatement stmt = dbManager.getMySQL().prepare("DELETE FROM lc_player_tags WHERE user_id=? AND tag_id=?;")) {
             stmt.setString(1, uuid);
             stmt.setInt(2, tagId);
@@ -248,41 +256,87 @@ public class TagManager implements SaveableManager<PlayerTag, Integer> {
         return setTag(name, 0);
     }
 
+    public boolean setDefaultTag(Player player) {
+        return setTag(player, 0);
+    }
 
-    public ArrayList<TagData> getTags(int rarity, Player player, int page, int pageVolume) {
-        String sql = "SELECT collected.* " +
-                "FROM (" +
-                    "SELECT t.tag_id, t.name, t.rarity, t.type, t.description, l.date, COUNT(lt.tag_id) AS 'owned_by' " +
-                    "FROM lc_tags t JOIN lc_player_tags l ON t.tag_id=l.tag_id JOIN lc_player_tags lt on t.tag_id=lt.tag_id " +
-                    "WHERE rarity=? AND l.user_id=? " +
-                    "GROUP BY t.tag_id " +
-                    "ORDER BY t.type, t.tag_id " +
-                    ") collected " +
-                "UNION " +
-                "SELECT uncollected.* " +
-                "FROM (" +
-                    "SELECT t.tag_id, t.name, t.rarity, t.type, t.description, null as date, COUNT(l.tag_id) AS 'owned_by' " +
-                    "FROM lc_tags t LEFT JOIN lc_player_tags l ON t.tag_id=l.tag_id " +
-                    "WHERE t.rarity=? AND t.tag_id NOT IN (" +
+
+    private String getTagsSql(String collected, String uncollected, String limit, TagHolder.FilterState state) {
+        switch (state) {
+            case COLLECTED:
+                return collected + limit;
+            case UNCOLLECTED:
+                return uncollected + limit;
+            default:
+                return "SELECT collected.* " +
+                        "FROM (" +
+                        collected + ") collected " +
+                        "UNION " +
+                        "SELECT uncollected.* " +
+                        "FROM (" +
+                        uncollected + ") uncollected " + limit;
+        }
+    }
+
+    private String collectedTagsSql(int type) {
+        String sql = "SELECT t.tag_id, t.name, t.rarity, t.type, t.description, l.date, COUNT(lt.tag_id) AS 'owned_by' " +
+                     "FROM lc_tags t JOIN lc_player_tags l ON t.tag_id=l.tag_id JOIN lc_player_tags lt on t.tag_id=lt.tag_id " +
+                     "WHERE {} l.user_id=? " +
+                     "GROUP BY t.tag_id " +
+                     "ORDER BY t.rarity DESC, t.tag_id ";
+
+        return type != 0 ? CommonsUtils.format(sql, "{}", "t.type=? AND ") : CommonsUtils.format(sql, "{}", "");
+    }
+
+    private String uncollectedTagsSql(int type) {
+        String sql = "SELECT t.tag_id, t.name, t.rarity, t.type, t.description, null as date, COUNT(l.tag_id) AS 'owned_by' " +
+                     "FROM lc_tags t LEFT JOIN lc_player_tags l ON t.tag_id=l.tag_id " +
+                     "WHERE {} t.type != 0 AND t.rarity != 0 AND t.tag_id NOT IN (" +
                         "SELECT tag_id FROM lc_player_tags " +
                         "WHERE user_id=?" +
-                        ")" +
-                "GROUP BY t.tag_id " +
-                "ORDER BY t.type, t.tag_id " +
-                ") uncollected " +
-                "LIMIT ?, ?;";
+                     ") " +
+                     "GROUP BY t.tag_id " +
+                     "ORDER BY t.rarity DESC, t.tag_id ";
 
+        return type != 0 ? CommonsUtils.format(sql, "{}", "t.type=? AND ") : CommonsUtils.format(sql, "{}", "");
+    }
+
+    public ArrayList<TagData> getTags(Player player, int type, TagHolder.FilterState state, int page, int pageVolume) {
         int startPos = page * pageVolume;
         String uuid = player.getUniqueId().toString();
         ArrayList<TagData> tags = new ArrayList<>();
+        String limit = "LIMIT ?, ?";
 
+        String collected = collectedTagsSql(type);
+        String uncollected = uncollectedTagsSql(type);
+        String sql = getTagsSql(collected, uncollected, limit, state);
+
+        // Should probably separate into different methods instead of this mess, but system will change in the future anyway...
+        int i = 0;
         try(PreparedStatement stmt = dbManager.getMySQL().prepare(sql)) {
-            stmt.setInt(1, rarity);
-            stmt.setString(2, uuid);
-            stmt.setInt(3, rarity);
-            stmt.setString(4, uuid);
-            stmt.setInt(5, startPos);
-            stmt.setInt(6, pageVolume);
+            if(type != 0) {
+                stmt.setInt(1, type);
+            } else {
+                i = 1;
+            }
+            stmt.setString(2 - i, uuid);
+
+            if(state == TagHolder.FilterState.ALL) {
+                if(type != 0) {
+                    stmt.setInt(3, type);
+                } else {
+                    i = 2;
+                }
+                stmt.setString(4 - i, uuid);
+            } else if(type != 0) {
+                i = 2;
+            } else {
+                i = 3;
+            }
+
+            stmt.setInt(5 - i, startPos);
+            stmt.setInt(6 - i, pageVolume);
+
             ResultSet rs = stmt.executeQuery();
             while(rs.next()) {
                 tags.add(new TagData(rs.getInt("tag_id"),
@@ -300,64 +354,79 @@ public class TagManager implements SaveableManager<PlayerTag, Integer> {
         return tags;
     }
 
-    public ArrayList<TagData> getCollected(int rarity, Player player) {
-        String sql = "SELECT t.tag_id, t.name, t.rarity, t.type, t.description, l.date, COUNT(lt.tag_id) AS 'owned_by' " +
-                     "FROM lc_tags t JOIN lc_player_tags l ON t.tag_id=l.tag_id JOIN lc_player_tags lt ON t.tag_id=lt.tag_id " +
-                     "WHERE t.rarity=? AND l.user_id=? " +
-                     "GROUP BY t.tag_id " +
-                     "ORDER BY t.type, t.tag_id;";
+    // This is a potential use case for saving player names. This would allow to sort by players that have a cached profile
+    // Since if we transfer over tag data via UUID this method will return null Bukkit.getOfflinePlayer(UUID.fromString(playerUUID));
+    public ArrayList<TagOwnedData> getOwnedBy(int tagId, int page, int pageVolume) {
+        String sql = "SELECT user_id, date " +
+                "FROM lc_player_tags " +
+                "WHERE tag_id=? " +
+                "ORDER BY date " +
+                "LIMIT ?, ?;";
+        int startPos = page * pageVolume;
+        ArrayList<TagOwnedData> ownedBy = new ArrayList<>();
 
-        ArrayList<TagData> collected = new ArrayList<>();
 
         try(PreparedStatement stmt = dbManager.getMySQL().prepare(sql)) {
-            stmt.setInt(1, rarity);
-            stmt.setString(2, player.getUniqueId().toString());
+            stmt.setInt(1, tagId);
+            stmt.setInt(2, startPos);
+            stmt.setInt(3, pageVolume);
             ResultSet rs = stmt.executeQuery();
             while(rs.next()) {
-                collected.add(new TagData(rs.getInt("tag_id"),
-                        rs.getString("name"),
-                        rs.getInt("rarity"),
-                        rs.getInt("type"),
-                        rs.getString("description"),
-                        rs.getString("date"),
-                        rs.getInt("owned_by")));
+                ownedBy.add(new TagOwnedData(rs.getString("user_id"),
+                        rs.getString("date")));
             }
         } catch(SQLException e) {
             e.printStackTrace();
         }
-
-        return collected;
+        return ownedBy;
     }
 
-    public ArrayList<TagData> getUncollected(int rarity, Player player) {
-        ArrayList<TagData> uncollected = new ArrayList<>();
-        String sql = "SELECT t.tag_id, t.name, t.rarity, t.type, t.description, COUNT(l.tag_id) AS 'owned_by' " +
-                     "FROM lc_tags t LEFT JOIN lc_player_tags l ON t.tag_id=l.tag_id " +
-                     "WHERE t.rarity=? AND t.tag_id NOT IN (" +
-                        "SELECT tag_id FROM lc_player_tags " +
-                        "WHERE user_id=?" +
-                        ") " +
-                     "GROUP BY t.tag_id " +
-                     "ORDER BY t.type, t.tag_id;";
+    public HashMap<TagType, Integer> tagCounts() {
+        String sql = "SELECT COUNT(*) AS 'count' " +
+                     "FROM lc_tags " +
+                     "WHERE rarity != 5 AND rarity != 0 AND type != 0 " +
+                     "GROUP BY type " +
+                     "ORDER BY type";
+
+        HashMap<TagType, Integer> counts = new HashMap<>();
 
         try(PreparedStatement stmt = dbManager.getMySQL().prepare(sql)) {
-            stmt.setInt(1, rarity);
-            stmt.setString(2, player.getUniqueId().toString());
             ResultSet rs = stmt.executeQuery();
+
+            int i = 1;
             while(rs.next()) {
-                uncollected.add(new TagData(rs.getInt("tag_id"),
-                        rs.getString("name"),
-                        rs.getInt("rarity"),
-                        rs.getInt("type"),
-                        rs.getString("description"),
-                        "",
-                        rs.getInt("owned_by")));
+                counts.put(TagType.values()[i], rs.getInt("count"));
+                i++;
             }
         } catch(SQLException e) {
             e.printStackTrace();
         }
+        return counts;
+    }
 
-        return uncollected;
+    public HashMap<TagType, Integer> tagCountPlayer(Player player) {
+
+        String sql = "SELECT COUNT(*) AS 'tag_count_player' " +
+                "FROM lc_player_tags p JOIN lc_tags t ON p.tag_id=t.tag_id " +
+                "WHERE p.user_id=? AND t.type=?";
+
+        HashMap<TagType, Integer> counts = new HashMap<>();
+        String uuid = player.getUniqueId().toString();
+
+        for(int i = 1; i < TagType.values().length; i++) {
+            try(PreparedStatement stmt = dbManager.getMySQL().prepare(sql)) {
+                stmt.setString(1, uuid);
+                stmt.setInt(2, i);
+                ResultSet rs = stmt.executeQuery();
+                if(rs.next()) {
+                    counts.put(TagType.values()[i], rs.getInt("tag_count_player"));
+                }
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return counts;
     }
 
     private boolean executeSQL(int id, AsyncMySQL mySQL, String sql) {
@@ -370,6 +439,7 @@ public class TagManager implements SaveableManager<PlayerTag, Integer> {
         }
         return true;
     }
+
 
 
 }
