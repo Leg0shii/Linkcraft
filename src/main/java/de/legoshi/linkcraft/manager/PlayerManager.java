@@ -91,7 +91,7 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
 
     private void initPlay(AbstractPlayer abstractPlayer, int ptID, StandardMap map) {
         ptThreadManager.startPTThread(abstractPlayer);
-        saveStateManager.setLoaded(ptID, true);
+        saveStateManager.setLoaded(abstractPlayer, true);
         updatePlayerFromMap(abstractPlayer, map);
     }
 
@@ -106,7 +106,7 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
         ptThreadManager.stopPTThread(player);
 
         AbstractPlayer abstractPlayer = hashMap.get(player);
-        saveStateManager.setLoaded(abstractPlayer.getPlayThrough().getPtID(), false);
+        saveStateManager.setLoaded(abstractPlayer, false);
 
         updatePlayerState(abstractPlayer, SpawnPlayer.class);
     }

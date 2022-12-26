@@ -57,7 +57,9 @@ public class SaveStateManager implements SaveableManager<SaveState, Integer> {
         updateObject(saveState);
     }
 
-    public void setLoaded(int ptID, boolean value) {
+    public void setLoaded(AbstractPlayer abstractPlayer, boolean value) {
+        if (abstractPlayer.getPlayThrough() == null) return;
+        int ptID = abstractPlayer.getPlayThrough().getPtID();
         AsyncMySQL mySQL = dbManager.getMySQL();
         String sql = "UPDATE lc_saves SET loaded=? WHERE play_through_id=?;";
 
