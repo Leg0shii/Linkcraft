@@ -76,7 +76,16 @@ public class PlayThroughManager implements SaveableManager<PlayThrough, Integer>
 
     @Override
     public boolean deleteObject(Integer id) {
-        return false;
+        AsyncMySQL mySQL = dbManager.getMySQL();
+        String sql = "DELETE FROM lc_play_through WHERE id=?;";
+        try (PreparedStatement stmt = mySQL.prepare(sql)) {
+            stmt.setInt(1, id);
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     @Override

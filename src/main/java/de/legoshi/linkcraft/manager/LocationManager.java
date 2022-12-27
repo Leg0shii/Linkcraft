@@ -80,9 +80,17 @@ public class LocationManager implements SaveableManager<Location, Integer> {
         return true;
     }
 
-    // uuuuuuuuuuuuhm is this a good
     @Override
     public boolean deleteObject(Integer id) {
+        AsyncMySQL mySQL = dbManager.getMySQL();
+        String sql = "DELETE FROM lc_locations WHERE id=?;";
+        try (PreparedStatement stmt = mySQL.prepare(sql)) {
+            stmt.setInt(1, id);
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
         return true;
     }
 

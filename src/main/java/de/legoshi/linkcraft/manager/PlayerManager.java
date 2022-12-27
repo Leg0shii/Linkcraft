@@ -54,6 +54,8 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
             int ptID = playThrough.getPtID();
             StandardMap standardMap = playThrough.getMap();
             initPlay(abstractPlayer, ptID, standardMap);
+        } else {
+            player.performCommand("spawn");
         }
     }
 
@@ -132,10 +134,12 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
         AsyncMySQL mySQL = dbManager.getMySQL();
 
         String uniqueID = abstractPlayer.getPlayer().getUniqueId().toString();
+        String name = abstractPlayer.getPlayer().getName();
 
-        String sql = "INSERT INTO lc_players (user_id) VALUES (?);";
+        String sql = "INSERT INTO lc_players (user_id, name) VALUES (?, ?);";
         try (PreparedStatement stmt = mySQL.prepare(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, uniqueID);
+            stmt.setString(2, name);
             stmt.execute();
             return dbManager.getAutoGenID(stmt);
         } catch (Exception e) {
@@ -254,6 +258,13 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
                 updatePlayerState(abstractPlayer, RankUpPlayer.class);
                 break;
         }
+    }
+
+    public Player getPlayerFromUUID(String uuid) {
+        for (Player all : Bukkit.getOnlinePlayers()) {
+            if (all.getUniqueId().toString().equals(uuid)) return all;
+        }
+        return null;
     }
 
 }

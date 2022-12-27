@@ -17,6 +17,7 @@ public class SaveState {
     private String blockTypeName = "STONE";
 
     private Date quitDate;
+    private boolean loaded;
 
     public SaveState(PlayThrough playThrough, Location saveLocation, Date quitDate) {
         this.saveLocation = saveLocation;

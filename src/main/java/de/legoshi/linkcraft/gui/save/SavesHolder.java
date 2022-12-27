@@ -11,6 +11,7 @@ import de.legoshi.linkcraft.map.StandardMap;
 import de.legoshi.linkcraft.player.AbstractPlayer;
 import de.legoshi.linkcraft.player.PlayThrough;
 import de.legoshi.linkcraft.player.SaveState;
+import de.themoep.inventorygui.GuiElement;
 import de.themoep.inventorygui.GuiElementGroup;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
@@ -19,6 +20,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.checkerframework.checker.units.qual.C;
 
 import javax.inject.Inject;
 import java.sql.PreparedStatement;
@@ -35,6 +37,7 @@ public class SavesHolder extends GUIScrollable {
     @Inject private MapManager mapManager;
 
     protected String title;
+    protected String playerName;
     private final String[] guiSetup = {
             "ggggggggg",
             "ggggggggg",
@@ -46,6 +49,7 @@ public class SavesHolder extends GUIScrollable {
     public void openGui(Player player, InventoryGui parent) {
         super.openGui(player, parent);
         this.title = this.title == null ? "Your Saves" : this.title;
+        this.playerName = this.playerName == null ? player.getName() : this.playerName;
         this.current = new InventoryGui((JavaPlugin) Linkcraft.getPlugin(), player, title, guiSetup);
 
         fullCloseOnEsc();
@@ -57,7 +61,7 @@ public class SavesHolder extends GUIScrollable {
     @Override
     protected void registerGuiElements() {
         AsyncMySQL mySQL = dbManager.getMySQL();
-        String playerUUID = holder.getPlayer().getUniqueId().toString();
+        String playerUUID = playerManager.uuidByName(playerName);
         int currentPage = pageVolume * (page - 1);
         String sql = "SELECT s.id, s.loaded FROM lc_saves as s, lc_play_through as p " +
                 "WHERE s.play_through_id = p.id and p.user_id = ? AND p.completion = false;";
@@ -87,7 +91,7 @@ public class SavesHolder extends GUIScrollable {
         this.current.addElements(this.pageUp, this.pageDown, this.returnToParent);
     }
 
-    private StaticGuiElement mapElements(ResultSet resultSet) throws SQLException {
+    protected StaticGuiElement mapElements(ResultSet resultSet) throws SQLException {
         int saveStateID = resultSet.getInt("s.id");
         SaveState saveState = saveStateManager.requestObjectById(saveStateID, holder);
         PlayThrough playThrough = saveState.getPlayThrough();

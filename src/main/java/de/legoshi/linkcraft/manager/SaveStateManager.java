@@ -72,19 +72,6 @@ public class SaveStateManager implements SaveableManager<SaveState, Integer> {
         }
     }
 
-    /*public void setLoadedAllFalse(Player player) {
-        AsyncMySQL mySQL = dbManager.getMySQL();
-        String sql = "UPDATE lc_saves as s, lc_play_through as p SET s.loaded=false WHERE s.play_through_id=p.id AND p.user_id=?;";
-        String playerID = player.getUniqueId().toString();
-
-        try (PreparedStatement stmt = mySQL.prepare(sql)) {
-            stmt.setString(1, playerID);
-            stmt.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }*/
-
     public SaveState getLoadedSaveStates(AbstractPlayer abstractPlayer) {
         AsyncMySQL mySQL = dbManager.getMySQL();
         String sql = "SELECT s.id FROM lc_saves as s, lc_play_through as p WHERE s.play_through_id=p.id AND s.loaded=1 AND p.user_id=?;";
@@ -150,9 +137,34 @@ public class SaveStateManager implements SaveableManager<SaveState, Integer> {
         return true;
     }
 
+    public boolean deleteObject(Player player, Integer id) {
+        SaveState saveState = requestObjectById(id);
+        if (saveState.isLoaded() && player != null) {
+            player.performCommand("spawn");
+        }
+        return deleteObject(id);
+    }
+
     @Override
     public boolean deleteObject(Integer id) {
-        return false;
+        SaveState saveState = requestObjectById(id);
+
+        AsyncMySQL mySQL = dbManager.getMySQL();
+        String sql = "DELETE FROM lc_saves WHERE id=?;";
+        try (PreparedStatement stmt = mySQL.prepare(sql)) {
+            stmt.setInt(1, id);
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        int ptID = saveState.getPlayThrough().getPtID();
+        int locID = saveState.getLocationID();
+        boolean success = playThroughManager.deleteObject(ptID);
+        success = locationManager.deleteObject(locID);
+
+        return success;
     }
 
     @Deprecated
@@ -172,12 +184,14 @@ public class SaveStateManager implements SaveableManager<SaveState, Integer> {
                 int lID = resultSet.getInt("location_id");
                 Location saveLocation = locationManager.requestObjectById(lID);
                 Date quitDate = resultSet.getDate("quit_date");
+                boolean loaded = resultSet.getBoolean("loaded");
 
                 SaveState saveState = new SaveState(playThrough, saveLocation, quitDate);
                 saveState.setSaveID(id);
                 saveState.setLocationID(lID);
                 saveState.setSaveStateName(resultSet.getString("save_name"));
                 saveState.setBlockTypeName(resultSet.getString("block_type_name"));
+                saveState.setLoaded(loaded);
 
                 return saveState;
             }
