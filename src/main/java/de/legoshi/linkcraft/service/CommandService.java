@@ -1,7 +1,6 @@
 package de.legoshi.linkcraft.service;
 
 import de.legoshi.linkcraft.command.SpawnCommand;
-import de.legoshi.linkcraft.command.effectblock.EffectBlockCommand;
 import de.legoshi.linkcraft.command.fun.FunCommand;
 import de.legoshi.linkcraft.command.map.MapsCommand;
 import de.legoshi.linkcraft.command.saves.SavesCommand;
@@ -29,7 +28,6 @@ public class CommandService implements Service {
     @Inject private TagCommand tagCommand;
     @Inject private FunCommand funCommand;
     @Inject private MapsCommand mapsCommand;
-    @Inject private EffectBlockCommand effectBlockCommand;
     @Inject private SavesCommand savesCommand;
     @Inject private SpawnCommand spawnCommand;
 
@@ -40,7 +38,6 @@ public class CommandService implements Service {
                 tagCommand,
                 funCommand,
                 mapsCommand,
-                effectBlockCommand,
                 savesCommand,
                 spawnCommand
         );

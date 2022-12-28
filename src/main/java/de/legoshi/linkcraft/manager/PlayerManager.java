@@ -172,6 +172,7 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
         // player saves
         // play_through
         // player permissions
+        // ^ Could probably just be accomplished via an ON DELETE CASCADE on those tables' player id foreign key
         return true;
     }
 

@@ -9,7 +9,6 @@ public class ManagerModule extends AbstractModule {
     protected void configure() {
         bind(PlayerManager.class).singleton();
         bind(CooldownManager.class).singleton();
-        bind(EffectBlockManager.class).singleton();
         bind(TagManager.class).singleton();
         bind(SaveStateManager.class).singleton();
         bind(PlayThroughManager.class).singleton();
