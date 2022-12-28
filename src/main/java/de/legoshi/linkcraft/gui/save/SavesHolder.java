@@ -36,6 +36,8 @@ public class SavesHolder extends GUIScrollable {
     @Inject private SaveStateManager saveStateManager;
     @Inject private MapManager mapManager;
 
+    @Inject private SavesEdit savesEdit;
+
     protected String title;
     protected String playerName;
     private final String[] guiSetup = {
@@ -98,18 +100,23 @@ public class SavesHolder extends GUIScrollable {
         StandardMap map = mapManager.requestObjectById(playThrough.getMap().getId());
 
         boolean loaded = resultSet.getBoolean("s.loaded");
-        ItemStack itemStack = new ItemStack(Material.STONE);
+        ItemStack itemStack = new ItemStack(Material.valueOf(saveState.getBlockTypeName()));
         if (loaded) itemStack.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
 
         StaticGuiElement staticGuiElement;
         staticGuiElement = new StaticGuiElement('g', itemStack, click -> {
-            if (loaded) {
-                holder.sendMessage("You are already in this save state.");
-                return true;
+            if (click.getType().isRightClick()) {
+                if (loaded) {
+                    holder.sendMessage("You are already in this save state.");
+                    return true;
+                }
+                playerManager.playerJoinSaveState(holder, saveState);
+                holder.teleport(saveState.getSaveLocation());
+                holder.sendMessage("Joined save state.");
             }
-            playerManager.playerJoinSaveState(holder, saveState);
-            holder.teleport(saveState.getSaveLocation());
-            holder.sendMessage("Joined save state.");
+            if (click.getType().isLeftClick()) {
+                savesEdit.openGui(holder, this.current, saveStateID);
+            }
             return true;
         },
                 "§r" + saveState.getSaveStateName() + " (" + saveStateID + ")\n",

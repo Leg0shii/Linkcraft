@@ -42,8 +42,8 @@ public class AdminSavesHolder extends SavesHolder {
         StandardMap map = mapManager.requestObjectById(playThrough.getMap().getId());
 
         StaticGuiElement staticGuiElement;
-        staticGuiElement = new StaticGuiElement('g', new ItemStack(Material.STONE), click -> {
-            if (click.getType().isLeftClick() && click.getType().isShiftClick()) {
+        staticGuiElement = new StaticGuiElement('g', new ItemStack(Material.valueOf(saveState.getBlockTypeName())), click -> {
+            if (click.getType().isRightClick() && click.getType().isShiftClick()) {
                 String uuid = playerManager.uuidByName(this.playerName);
                 Player delSavePlayer = playerManager.getPlayerFromUUID(uuid);
                 boolean success = saveStateManager.deleteObject(delSavePlayer, saveStateID);
@@ -64,8 +64,8 @@ public class AdminSavesHolder extends SavesHolder {
                         "§r§l§6» §eTotal /prac: §7" + playThrough.getPracUsages() + "\n" +
                         "§r§l§6» §ePlaytime:      §7" + TimeUnit.MILLISECONDS.toHours(playThrough.getTimePlayedNormal()) + "h\n" +
                         "§r§l§6» §ePractime:     §7" + TimeUnit.MILLISECONDS.toHours(playThrough.getTimePlayedPrac()) + "h\n\n" +
-                        "§8Teleport - (Right Click)\n" +
-                        "§Delete - (Shift Left Click)\n"
+                        "§8Teleport - (Left Click)\n" +
+                        "§Delete - (Shift + Right Click)\n"
         );
         return staticGuiElement;
     }

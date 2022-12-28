@@ -74,6 +74,10 @@
             <id>unnamed-public</id>
             <url>https://repo.unnamed.team/repository/unnamed-public/</url>
         </repository>
+        <repository>
+            <id>codemc-snapshots</id>
+            <url>https://repo.codemc.io/repository/maven-snapshots/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -111,6 +115,11 @@
             <groupId>net.kyori</groupId>
             <artifactId>text-adapter-bukkit</artifactId>
             <version>3.0.6</version>
+        </dependency>
+        <dependency>
+            <groupId>net.wesjd</groupId>
+            <artifactId>anvilgui</artifactId>
+            <version>1.6.3-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

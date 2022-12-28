@@ -57,6 +57,30 @@ public class SaveStateManager implements SaveableManager<SaveState, Integer> {
         updateObject(saveState);
     }
 
+    public void updateBlock(int id, String blockName) {
+        AsyncMySQL mySQL = dbManager.getMySQL();
+        String sql = "UPDATE lc_saves SET block_type_name=? WHERE id=?;";
+        try (PreparedStatement stmt = mySQL.prepare(sql)) {
+            stmt.setString(1, blockName);
+            stmt.setInt(2, id);
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateName(int id, String saveName) {
+        AsyncMySQL mySQL = dbManager.getMySQL();
+        String sql = "UPDATE lc_saves SET save_name=? WHERE id=?;";
+        try (PreparedStatement stmt = mySQL.prepare(sql)) {
+            stmt.setString(1, saveName);
+            stmt.setInt(2, id);
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void setLoaded(AbstractPlayer abstractPlayer, boolean value) {
         if (abstractPlayer.getPlayThrough() == null) return;
         int ptID = abstractPlayer.getPlayThrough().getPtID();
