@@ -12,6 +12,8 @@ public class ManagerModule extends AbstractModule {
         bind(TagManager.class).singleton();
         bind(SaveStateManager.class).singleton();
         bind(PlayThroughManager.class).singleton();
+        bind(PracticeManager.class).singleton();
+        bind(LocationManager.class).singleton();
     }
 
 }

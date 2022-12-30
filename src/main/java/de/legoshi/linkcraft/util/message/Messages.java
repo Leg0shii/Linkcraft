@@ -71,11 +71,12 @@ public enum Messages {
     MAPS_REMOVE_ERROR("§cCouldn't remove the map.", "error"),
     MAPS_SET_START_ERROR("§cCouldn't set a new start for the map.", "error"),
 
-    EFFECT_BLOCK_ADD("§aRight click a block to add the command: {0}", "info"),
-    EFFECT_BLOCK_ADDED("§aSuccessfully added command to block", "info"),
-    EFFECT_BLOCK_REMOVE("§aRight click an effect block to delete", "info"),
-    EFFECT_BLOCK_REMOVED("§aSuccessfully deleted effect block", "info"),
-    EFFECT_BLOCK_REMOVED_ERR("§cThat block isn't an effect block", "info"),
+    PRAC_SUCCESS("§aYou are now in practice mode, do /unprac to stop.", "info"),
+    PRAC_UNPRAC("§cYou have stopped practicing.", "info"),
+
+    PRAC_NOT_ALLOWED("§cYou cannot practice right now.", "error"),
+    PRAC_IN_AIR("§cYou must be on a block to use the practice system!", "error"),
+    PRAC_NOT_IN_PRAC("§cYou are not in practice mode.", "error"),
 
     GG_DESC("§Sends §6§lG§e§lG§f in chat.", "description"),
     GL_DESC("§Sends §2§lG§a§lL ☺§f in chat.", "description"),
@@ -100,6 +101,7 @@ public enum Messages {
     PLAYER_NO_PERMISSION("§cYou don't have permission to run that command!", "error"),
     EFFECT_BLOCK_NO_PERMISSION("§cYou do not have permissions to click this!", "error"),
     INVALID_ARG_LENGTH("INVALID_ARG_LENGTH", "error"),
+    INVENTORY_FULL("§cCannot {0}, inventory full.", "error"),
 
     NEVER_JOINED("§c{0} has never joined the server.", "error"),
     REQUIRE_INTEGER("§c{0} must be an integer!", "error"),

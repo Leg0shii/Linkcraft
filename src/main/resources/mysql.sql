@@ -104,29 +104,13 @@ CREATE TABLE IF NOT EXISTS `lc_command_cooldowns`
     PRIMARY KEY (`command`)
 );
 
--- Chose MEDIUMINT because I doubt we will ever go over 8 million signs lol (feel free to change if you would like)
--- This table will store signs/heads with right click events (rankup signs/teleport heads/segmented cps)
--- Will likely have a foreign key to an effects table
-CREATE TABLE IF NOT EXISTS `lc_effect_blocks`
+CREATE TABLE IF NOT EXISTS `lc_practice`
 (
-    `id`    MEDIUMINT AUTO_INCREMENT NOT NULL,
-    `world` VARCHAR(36)              NOT NULL,
-    `x`     INT                      NOT NULL,
-    `y`     INT                      NOT NULL,
-    `z`     INT                      NOT NULL,
-    PRIMARY KEY (`id`)
-);
-
--- Executor would either be the player the clicked the sign or the server (default server?)
--- I don't see a single command being more than 200 characters.... but I could be wrong
-CREATE TABLE IF NOT EXISTS `lc_effects`
-(
-    `id`       MEDIUMINT AUTO_INCREMENT NOT NULL,
-    `block_id` MEDIUMINT                NOT NULL,
-    `command`  VARCHAR(200)             NOT NULL,
-    `executor` TINYINT                  NOT NULL DEFAULT (0),
-    PRIMARY KEY (`id`),
-    FOREIGN KEY (`block_id`) REFERENCES `lc_effect_blocks` (`id`) ON DELETE CASCADE
+    `user_id`     VARCHAR(36) NOT NULL,
+    `location_id` MEDIUMINT   NOT NULL,
+    PRIMARY KEY (`user_id`),
+    FOREIGN KEY (`location_id`) REFERENCES `lc_locations` (`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`user_id`) REFERENCES `lc_players` (`user_id`) ON DELETE CASCADE
 );
 
 -- working example for longer cooldown commands

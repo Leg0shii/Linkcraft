@@ -16,4 +16,7 @@ public class StaffPlayer extends AbstractPlayer {
         super(player, playerTag);
     }
 
+    @Override
+    public boolean canRemoveTags() { return true; }
+
 }

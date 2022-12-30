@@ -52,7 +52,7 @@ public class PlayerFactory {
     }
 
     private static PracticePlayer constructPracticePlayer(AbstractPlayer aPlayer) {
-        return new PracticePlayer(aPlayer.getPlayer(), aPlayer.getPlayerTag());
+        return new PracticePlayer(aPlayer.getPlayer(), aPlayer.getPlayerTag(), aPlayer.getClass());
     }
 
     private static StaffPlayer constructStaffPlayer(AbstractPlayer aPlayer) {

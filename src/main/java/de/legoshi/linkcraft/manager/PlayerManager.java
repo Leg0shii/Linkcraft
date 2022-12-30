@@ -26,6 +26,7 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
     @Inject private SaveStateManager saveStateManager;
     @Inject private PlayThroughManager playThroughManager;
     @Inject private PTThreadManager ptThreadManager;
+    @Inject private PracticeManager practiceManager;
     @Getter private final HashMap<Player, AbstractPlayer> hashMap;
 
     public PlayerManager() {
@@ -57,6 +58,8 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
         } else {
             player.performCommand("spawn");
         }
+
+        practiceManager.init(abstractPlayer);
     }
 
     public void playerJoinMap(Player player, StandardMap map) {

@@ -14,8 +14,12 @@ public interface IPlayer {
 
     void playerTeleportSignClick();
 
-    boolean canUseEffectBlocks();
-
     boolean isPlayingCourse();
+    boolean canPractice();
+    boolean canUsePractice();
+
+    boolean canRemoveTags();
+
+    boolean canUnpractice();
 
 }

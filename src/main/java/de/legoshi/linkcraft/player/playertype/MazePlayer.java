@@ -20,4 +20,7 @@ public class MazePlayer extends CoursePlayer {
         // update player permission to next rank
     }
 
+    @Override
+    public boolean canPractice() { return false; }
+
 }

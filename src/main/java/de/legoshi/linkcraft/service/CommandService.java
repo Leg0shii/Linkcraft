@@ -3,6 +3,8 @@ package de.legoshi.linkcraft.service;
 import de.legoshi.linkcraft.command.SpawnCommand;
 import de.legoshi.linkcraft.command.fun.FunCommand;
 import de.legoshi.linkcraft.command.map.MapsCommand;
+import de.legoshi.linkcraft.command.prac.PracCommand;
+import de.legoshi.linkcraft.command.prac.UnpracCommand;
 import de.legoshi.linkcraft.command.saves.SavesCommand;
 import de.legoshi.linkcraft.command.tag.TagCommand;
 import me.fixeddev.commandflow.CommandManager;
@@ -30,6 +32,8 @@ public class CommandService implements Service {
     @Inject private MapsCommand mapsCommand;
     @Inject private SavesCommand savesCommand;
     @Inject private SpawnCommand spawnCommand;
+    @Inject private PracCommand pracCommand;
+    @Inject private UnpracCommand unpracCommand;
 
     @Override
     public void start() {
@@ -39,7 +43,9 @@ public class CommandService implements Service {
                 funCommand,
                 mapsCommand,
                 savesCommand,
-                spawnCommand
+                spawnCommand,
+                pracCommand,
+                unpracCommand
         );
     }
 

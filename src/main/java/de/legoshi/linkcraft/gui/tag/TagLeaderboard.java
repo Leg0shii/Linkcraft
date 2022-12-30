@@ -2,6 +2,7 @@ package de.legoshi.linkcraft.gui.tag;
 
 import de.legoshi.linkcraft.Linkcraft;
 import de.legoshi.linkcraft.gui.GUIScrollable;
+import de.legoshi.linkcraft.manager.PlayerManager;
 import de.legoshi.linkcraft.manager.TagManager;
 import de.legoshi.linkcraft.tag.TagOwnedData;
 import de.legoshi.linkcraft.util.Dye;
@@ -29,9 +30,11 @@ public class TagLeaderboard extends GUIScrollable {
     private int tag;
     private String name;
     private String description;
-    private boolean opHolder;
+    private boolean canEdit;
     private String cName;
     @Inject private TagManager tagManager;
+    @Inject private PlayerManager playerManager;
+
     private final String[] guiSetup = {
             "ggggggggu",
             "ggggggggt",
@@ -46,7 +49,8 @@ public class TagLeaderboard extends GUIScrollable {
         this.current = new InventoryGui((JavaPlugin) Linkcraft.getPlugin(), player, "Tag Owners", guiSetup);
         this.name = tagName;
         this.description = tagDescription;
-        this.opHolder = holder.isOp();
+
+        this.canEdit = playerManager.getPlayer(player).canRemoveTags();
         this.cName = cName;
         fullCloseOnEsc();
         registerGuiElements();
@@ -71,7 +75,7 @@ public class TagLeaderboard extends GUIScrollable {
             return false;
         }
 
-        String opText = opHolder ? "\n" + ChatColor.RED + "Shift right click to remove tag from player" : "";
+        String opText = canEdit ? "\n" + ChatColor.RED + "Shift right click to remove tag from player" : "";
 
         this.current.removeElement('g');
         GuiElementGroup group = new GuiElementGroup('g');
@@ -97,8 +101,7 @@ public class TagLeaderboard extends GUIScrollable {
     }
 
     private boolean deleteTag(GuiElement.Click click, String uuid, String name) {
-        // TODO: CHANGE THIS TO SOME SORT OF STAFF/PERMISSION!!!
-        if(!opHolder) {
+        if(!canEdit) {
             return true;
         }
 

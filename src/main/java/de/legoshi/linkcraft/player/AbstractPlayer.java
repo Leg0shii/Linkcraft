@@ -77,15 +77,21 @@ public abstract class AbstractPlayer implements IPlayer {
 
     }
 
-    // Could make abstract...
-    @Override
-    public boolean canUseEffectBlocks() {
-        return true;
-    }
-
     @Override
     public boolean isPlayingCourse() {
         return false;
     }
+
+    @Override
+    public boolean canPractice() { return true; }
+
+    @Override
+    public boolean canUsePractice() { return false; }
+
+    @Override
+    public boolean canRemoveTags() { return false; }
+
+    @Override
+    public boolean canUnpractice() { return false; }
 
 }
