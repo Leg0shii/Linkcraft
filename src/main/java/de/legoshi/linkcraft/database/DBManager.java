@@ -58,7 +58,7 @@ public class DBManager {
     private void createSchema() {
         try (InputStream is = plugin.getResource("mysql.sql")) {
             for(String statement : getStatements(is)) {
-                mySQL.update(statement);
+                mySQL.updateSync(statement);
             }
         } catch(IOException e) {
             e.printStackTrace();

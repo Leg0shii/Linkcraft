@@ -58,6 +58,10 @@ public class AsyncMySQL {
         executor.execute(() -> sql.queryUpdate(statement));
     }
 
+    public void updateSync(String statement) {
+        sql.queryUpdate(statement);
+    }
+
     /**
      * Can be used to insert a new record into the database asynchronous if "auto increment"
      * is turned on for the "ID" column.
@@ -195,8 +199,7 @@ public class AsyncMySQL {
                     return;
                 }
                 Class.forName("com.mysql.cj.jdbc.Driver");
-                this.conn = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database + "?useSSL=false&autoReconnect=true&characterEncoding=UTF-8&useUnicode=yes&useConfigs=maxPerformance", this.user, this.password);
-                //&characterEncoding=latin1&useConfigs=maxPerformance
+                this.conn = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database + "?useSSL=false&autoReconnect=true&connectTimeout=0&socketTimeout=0&characterEncoding=UTF-8&useUnicode=yes&useConfigs=maxPerformance", this.user, this.password);
             }
 
         }
