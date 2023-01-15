@@ -137,12 +137,10 @@ public class PlayerManager implements SaveableManager<AbstractPlayer, String> {
         AsyncMySQL mySQL = dbManager.getMySQL();
 
         String uniqueID = abstractPlayer.getPlayer().getUniqueId().toString();
-        String name = abstractPlayer.getPlayer().getName();
 
-        String sql = "INSERT INTO lc_players (user_id, name) VALUES (?, ?);";
+        String sql = "INSERT INTO lc_players (user_id) VALUES (?);";
         try (PreparedStatement stmt = mySQL.prepare(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, uniqueID);
-            stmt.setString(2, name);
             stmt.execute();
             return dbManager.getAutoGenID(stmt);
         } catch (Exception e) {
